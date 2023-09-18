@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>深入理解DHALSIM：从dhalsim开始</title>
+      <link href="/2023/09/12/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DHALSIM%20%E4%BB%8Edhalsim%E5%BC%80%E5%A7%8B/"/>
+      <url>/2023/09/12/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DHALSIM%20%E4%BB%8Edhalsim%E5%BC%80%E5%A7%8B/</url>
+      
+        <content type="html"><![CDATA[<p>用过dhalsim的都知道，dhalsim的启动需要一个配置文件，在官方文档中，其启动方式为</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dhalsim &lt;path/to/config.yaml&gt;</span><br></pre></td></tr></table></figure><p>我们在安装完dhalsim后，居然可以直接用dhalsim启动，和windows中的环境变量类似，经过了解后，我们输入</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">which dhalsim</span><br></pre></td></tr></table></figure><p>终端返回的结果是<strong>usr&#x2F;loacl&#x2F;bin&#x2F;dhalsim</strong>，我们进入目录，发现: </p><p><img src="/2023/09/12/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DHALSIM%20%E4%BB%8Edhalsim%E5%BC%80%E5%A7%8B/1.png" alt="/"></p><p>而这个目录的意思是 “所有用户都可以运行的程序目录”，说白了这个目录是linux中可执行文件的位置，相当于“快捷方式”，这也就是我们直接就能输入dhalsim的原因。</p><h2 id="dhalsim"><a href="#dhalsim" class="headerlink" title="dhalsim"></a>dhalsim</h2><p>既然我们的程序是从它开始运行的，我们先来看看这个文件的内容: </p><p><img src="/2023/09/12/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DHALSIM%20%E4%BB%8Edhalsim%E5%BC%80%E5%A7%8B/2.png" alt="image-20230912215543344"></p><p>这端代码首先声明了python包的路径，第二行为<strong>setuptools</strong>库自动生成的注释，表示它是一个可执行脚本，分别指定了入口的python包名称dhalsim、入口点的类型为console_scripts，即为控制台脚本、入口点的名称为dhalsim。</p><p>接着第三行，<em>requires</em> 是一个类似注释的东西，表明这个脚本需要的软件包是dhalsim</p><p>正式代码，第9行表示，将变量sys.argv[0]中的例如.py\.pyw.\exe从字符串删除。sys.argv 通常用于运行python文件时外部向内部传参的记录变量，例如</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python test.py config.yaml</span><br></pre></td></tr></table></figure><p>中获取的sys.argv[]就是一个列表[ ‘test.py’,  ‘config.yaml’ ]</p><p>第10行，是找到名为dhalsim 的软件包</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2023/09/01/hello-world/"/>
+      <url>/2023/09/01/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
+</search>
