@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>系统架构 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>源代码</span></a>
+      <a class="language" href="../../en/latest/architecture.html" aria-label="Switch language">◎ English</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a aria-current="page" class="nav-link active" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>系统架构</h1>
+<p>平台采用<strong>多层闭环联合仿真</strong>思路：水力状态经传感器与采集通道进入控制层，PLC 基于控制逻辑更新执行器动作，动作再反馈给水力计算模块。网络层对通信过程提供仿真环境。</p>
+<h2>逻辑分层</h2>
+<table>
+<thead>
+<tr>
+  <th>层级</th>
+  <th>主要模块</th>
+  <th>关注的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>物理层</td>
+  <td>DHALSIM-epynet / EPANET</td>
+  <td>水位、压力、流量等状态演化</td>
+</tr>
+<tr>
+  <td>控制层</td>
+  <td>OpenPLC</td>
+  <td>PLC 输入、控制逻辑、执行器指令</td>
+</tr>
+<tr>
+  <td>监控层</td>
+  <td>SCADA 通信与采集</td>
+  <td>数据上报、下发和缓存</td>
+</tr>
+<tr>
+  <td>网络层</td>
+  <td>ns-3 + Linux Network Namespace</td>
+  <td>拓扑、链路状态、通信扰动</td>
+</tr>
+<tr>
+  <td>编排层</td>
+  <td>Python 运行器</td>
+  <td>配置、进程启动、同步、结果导出</td>
+</tr>
+</tbody>
+</table>
+<h2>一个典型闭环</h2>
+<ol>
+<li>读取当前水力状态与传感器变量。</li>
+<li>将观测数据通过通信路径送入 PLC / SCADA 相关模块。</li>
+<li>执行 PLC 控制逻辑，确定泵阀等动作。</li>
+<li>将新的控制动作作用于水力系统，并推进仿真步。</li>
+<li>保存日志与状态，为下一轮控制提供输入。</li>
+</ol>
+<p>上述流程是对研究架构的概念性说明，具体执行顺序应以运行器源码为准。</p>
+<h2>代码入口</h2>
+<ul>
+<li><code>scripts/run_all.sh</code>：示例运行的总调度脚本。</li>
+<li><code>src/network/</code>：网络拓扑和运行环境生成相关模块。</li>
+<li><code>src/control/</code>：PLC 程序生成、编译和运行相关模块。</li>
+<li><code>src/runtime/</code>：闭环同步与运行时逻辑。</li>
+<li><code>src/io/</code>：实验数据导出。</li>
+</ul>
+<p>详见公开仓库中的 <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/scripts/run_all.sh">run_all.sh</a>。</p>
+<h2>未来可以补充的图</h2>
+<p>正式发布前建议加入：平台总体架构图、单轮同步时序图，以及 MITM / DoS / PLC 逻辑攻击的跨层传播图。图中各箭头应明确区分数据流、控制流、网络通信和攻击影响路径。</p>
+
+      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../en/latest/architecture.html">English</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

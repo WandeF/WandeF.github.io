@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Configuration · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>Source Code</span></a>
+      <a class="language" href="../../zh/latest/configuration.html" aria-label="Switch language">◎ 中文</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a aria-current="page" class="nav-link active" href="configuration.html">Configuration</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>Configuration</h1>
+<p>The published runner accepts a YAML file and defaults to <code>examples/c_town/config.yaml</code>.</p>
+<h2>What configuration controls</h2>
+<ul>
+<li>Input hydraulic network files and simulation settings.</li>
+<li>External paths for OpenPLC and ns-3.</li>
+<li>Output directories and run length.</li>
+<li>Network, control, and experiment settings.</li>
+</ul>
+<p>The installer explicitly processes several top-level path keys:</p>
+<table>
+<thead>
+<tr>
+  <th>Key</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>root_path</code></td>
+  <td>Working directory for external dependencies</td>
+</tr>
+<tr>
+  <td><code>openplc_path</code></td>
+  <td>OpenPLC checkout or build directory</td>
+</tr>
+<tr>
+  <td><code>ns3_path</code></td>
+  <td>ns-3 checkout or build directory</td>
+</tr>
+<tr>
+  <td><code>inp_file</code></td>
+  <td>EPANET input file</td>
+</tr>
+<tr>
+  <td><code>output_path</code></td>
+  <td>Directory for generated results</td>
+</tr>
+</tbody>
+</table>
+<p>These keys can be verified against <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/install.sh">install.sh</a>. Other keys have deliberately been left for a future source-verified reference.</p>
+<h2>Recommended practice</h2>
+<p>Keep the original validated baseline configuration intact. Make copies for new experiments and record the git commit, exact YAML, invocation, and outputs for each run.</p>
+<h2>To be completed</h2>
+<ul>
+<li>Full field reference grouped by subsystem.</li>
+<li>Verified baseline and attack YAML examples.</li>
+<li>Mapping rules connecting network topology, PLC signals, and hydraulic elements.</li>
+</ul>
+<p>Source review: <a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
+<h2>Additional source-checked fields</h2>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Baseline value or role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>iterations</code></td>
+  <td>100; runner can override</td>
+</tr>
+<tr>
+  <td><code>noise_scale</code></td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td><code>time</code></td>
+  <td>EPANET duration 86400 seconds; hydraulic step 300 seconds</td>
+</tr>
+<tr>
+  <td><code>physics</code></td>
+  <td><code>inp_controls: strip</code>, <code>step_order: next-run</code>, <code>init_flag: 0</code></td>
+</tr>
+<tr>
+  <td><code>plcs</code></td>
+  <td>Sensors, actuators and control rules for PLC1–PLC8</td>
+</tr>
+<tr>
+  <td><code>network</code></td>
+  <td>ns-3 backend, realtime scheduling, routing, nodes, links, LANs and TAPs</td>
+</tr>
+<tr>
+  <td><code>attacks.enabled</code></td>
+  <td>Global switch in attack presets</td>
+</tr>
+<tr>
+  <td><code>attacks.scenarios</code></td>
+  <td>Scenario types, triggers, targets and type-specific options</td>
+</tr>
+</tbody>
+</table>
+<p>Published types include <code>modbus_mitm</code>, <code>udp_dos</code>, and <code>openplc_logic_injection</code>. An <code>iteration_window</code> trigger uses <code>start_iteration</code> and <code>end_iteration</code>. Scenarios also need matching network endpoints, interception rules or logic injection settings; adding only a switch to the baseline is insufficient. See actual presets under <a href="experiments.html">experiments</a>.</p>
+
+      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../zh/latest/configuration.html">中文</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

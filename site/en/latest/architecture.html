@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Architecture · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>Source Code</span></a>
+      <a class="language" href="../../zh/latest/architecture.html" aria-label="Switch language">◎ 中文</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a aria-current="page" class="nav-link active" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>Architecture</h1>
+<p>The platform follows a <strong>closed-loop, multi-layer co-simulation</strong> approach. Sensor measurements inform controller decisions; PLC outputs affect actuators; and actuator states are fed back into the hydraulic model. Network simulation mediates communication in the cyber layer.</p>
+<h2>Layers</h2>
+<table>
+<thead>
+<tr>
+  <th>Layer</th>
+  <th>Major components</th>
+  <th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Physical</td>
+  <td>DHALSIM-epynet / EPANET</td>
+  <td>Tank levels, pressures, flows</td>
+</tr>
+<tr>
+  <td>Control</td>
+  <td>OpenPLC</td>
+  <td>PLC logic and actuator commands</td>
+</tr>
+<tr>
+  <td>Supervisory</td>
+  <td>SCADA communication</td>
+  <td>Data acquisition, commands, and caching</td>
+</tr>
+<tr>
+  <td>Network</td>
+  <td>ns-3 and Linux Network Namespace</td>
+  <td>Topology and communication impairment</td>
+</tr>
+<tr>
+  <td>Orchestration</td>
+  <td>Python scripts</td>
+  <td>Configuration, synchronization, execution, export</td>
+</tr>
+</tbody>
+</table>
+<h2>Conceptual simulation cycle</h2>
+<ol>
+<li>Obtain the current hydraulic state and relevant sensor values.</li>
+<li>Exchange observations through the cyber/control communication path.</li>
+<li>Run the PLC control logic and compute new actuator actions.</li>
+<li>Apply the actions to the hydraulic model and advance the simulation.</li>
+<li>Save the observable evidence for subsequent analysis.</li>
+</ol>
+<p>The exact execution sequence is defined by the runtime implementation; the cycle above is a conceptual explanation.</p>
+<h2>Source-code entry points</h2>
+<ul>
+<li><code>scripts/run_all.sh</code>: top-level example runner.</li>
+<li><code>src/network/</code>: network and topology generation.</li>
+<li><code>src/control/</code>: PLC generation, compilation, and execution.</li>
+<li><code>src/runtime/</code>: closed-loop runtime orchestration.</li>
+<li><code>src/io/</code>: experiment result export.</li>
+</ul>
+<p>See the published <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/scripts/run_all.sh">run_all.sh</a>.</p>
+<h2>Planned illustrations</h2>
+<p>Before final release, add an overall architecture figure, a single-iteration sequence diagram, and attack propagation diagrams. Clearly differentiate data flow, control flow, network traffic, and attack influence.</p>
+
+      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../zh/latest/architecture.html">中文</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

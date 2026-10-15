@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Contributing · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>Source Code</span></a>
+      <a class="language" href="../../zh/latest/contributing.html" aria-label="Switch language">◎ 中文</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a aria-current="page" class="nav-link active" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>Contributing &amp; Feedback</h1>
+<p>Suggestions on functionality, installation, and reproducibility are welcome. A formal contribution policy and the open-source license will be established as the release plan is finalized.</p>
+<h2>Reporting a problem</h2>
+<p>Please use the project's <a href="https://github.com/WandeF/hydro-cps-sim/issues">GitHub Issues</a> and include:</p>
+<ol>
+<li>OS and Python / Conda versions.</li>
+<li>Git commit and sanitized configuration files.</li>
+<li>Reproduction commands and relevant errors.</li>
+<li>Expected and actual results.</li>
+</ol>
+<h2>Updating the website</h2>
+<p>The website is intentionally separated from the simulator repository. Edit Markdown pages under <code>content/zh/</code> and <code>content/en/</code>, then run:</p>
+<pre><code class="language-bash">python build.py
+</code></pre>
+<p>Generated files are written to <code>site/</code>. Preview locally with <code>python -m http.server 8000 --directory site</code>. Push to <code>main</code> in <a href="https://github.com/WandeF/WandeF.github.io">WandeF/WandeF.github.io</a> to build and deploy automatically to <a href="https://wandef.github.io/">https://wandef.github.io/</a>.</p>
+<h2>Before an official public release</h2>
+<p>Consider adding <code>LICENSE</code>, <code>CONTRIBUTING.md</code>, version-management guidance, and a responsible security disclosure process.</p>
+
+      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../zh/latest/contributing.html">中文</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

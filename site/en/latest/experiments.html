@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Experiments · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>Source Code</span></a>
+      <a class="language" href="../../zh/latest/experiments.html" aria-label="Switch language">◎ 中文</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a aria-current="page" class="nav-link active" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>Security Experiments</h1>
+<p>A core research goal is to trace how cyber events propagate through <strong>communication → information freshness/integrity → controller decisions → hydraulic behavior</strong>.</p>
+<h2>Research scenarios</h2>
+<table>
+<thead>
+<tr>
+  <th>Scenario</th>
+  <th>Primary disturbance</th>
+  <th>Evidence of interest</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Man-in-the-Middle (MITM)</td>
+  <td>Altered communication values</td>
+  <td>Input corruption, PLC decisions, physical deviations</td>
+</tr>
+<tr>
+  <td>Denial of Service (DoS)</td>
+  <td>Delay, packet loss, or timeout</td>
+  <td>Data freshness, cached values, control timing</td>
+</tr>
+<tr>
+  <td>PLC logic manipulation</td>
+  <td>Modified control rules</td>
+  <td>Logic integrity, actuator outputs, physical trajectories</td>
+</tr>
+</tbody>
+</table>
+<h2>Published configuration files</h2>
+<p>The table reflects actual YAML contents. Windows are control iterations. These presets were reviewed in source but were not executed as full simulations for this website.</p>
+<table>
+<thead>
+<tr>
+  <th>Configuration</th>
+  <th>Target or purpose</th>
+  <th>Attack iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config.yaml"><code>config.yaml</code></a></td>
+  <td>无攻击基线 / Baseline</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_mitm_plc4.yaml"><code>config_mitm_plc4.yaml</code></a></td>
+  <td>PLC4 下发 / Downlink</td>
+  <td>20–40</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_mitm_plc9.yaml"><code>config_mitm_plc9.yaml</code></a></td>
+  <td>PLC8 T7 响应 / Response</td>
+  <td>20–40</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_mitm_composite_plc7_plc9.yaml"><code>config_mitm_composite_plc7_plc9.yaml</code></a></td>
+  <td>PLC6 T5 + PLC8 T7</td>
+  <td>20–40 / 30–50</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_dos_plc2_single.yaml"><code>config_dos_plc2_single.yaml</code></a></td>
+  <td>PLC2 · 单源 / Single source</td>
+  <td>5–90</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_dos_plc2_three_bots.yaml"><code>config_dos_plc2_three_bots.yaml</code></a></td>
+  <td>PLC2 · 三源 / Three sources</td>
+  <td>5–90</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_openplc_logic_plc4.yaml"><code>config_openplc_logic_plc4.yaml</code></a></td>
+  <td>PLC4 · PU10 T7 阈值 / Threshold</td>
+  <td>20–90</td>
+</tr>
+</tbody>
+</table>
+<p>PLC7/PLC9 in filenames are historical names; the current targets are PLC6/PLC8 as defined by YAML. The older <code>README_attack_mitm.md</code> refers to missing <code>config_mitm.yaml</code> and <code>scripts/compare_attack_results.py</code>.</p>
+<p>After installation, select an existing configuration in the simulation environment (source-checked command, not executed during this deployment):</p>
+<pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config_mitm_plc4.yaml --logic-wait 0.3
+</code></pre>
+<p>Run and preserve a baseline before the attack run. Exports under <code>reports/csv/</code> include <code>physics.csv</code>, <code>actuator_state.csv</code>, <code>scada_observed_long.csv</code>, <code>scada_observed_wide.csv</code>, <code>scada_observed_key.csv</code>, <code>attack_schedule.csv</code>, <code>attack_events.csv</code>, <code>scada_timeout_events.csv</code>, and <code>cycle_timing.csv</code>. Attack events or timeouts alone do not establish physical deviation; compare aligned baseline evidence.</p>
+<h2>Suggested methodology</h2>
+<ol>
+<li>Fix hydraulic scenarios, control programs, time horizon, and random settings where applicable.</li>
+<li>Record attack-free baseline results including CSV files and runtime logs.</li>
+<li>Change only the attack variables under evaluation.</li>
+<li>Align network-level, control-level, and hydraulic observations.</li>
+<li>Analyze repeated runs, not just a single simulation trace.</li>
+</ol>
+<h2>Why cross-layer evidence matters</h2>
+<p>The same tank-level deviation could reflect false sensor values, a stale observation after a timeout, or an unauthorized PLC logic change. Evidence from upstream layers is essential for attribution. In a DoS scenario, communication failure alone does not guarantee a control deviation; propagation depends in part on whether fresh data is required at the relevant control iteration.</p>
+<h2>Documentation to add before release</h2>
+<ul>
+<li>Runnable attack configurations and a field-by-field reference.</li>
+<li>Validated commands for both baseline and attack scenarios.</li>
+<li>Output-directory conventions and metric definitions.</li>
+<li>Reproducible plots, seeds, and versioned configurations.</li>
+</ul>
+<blockquote>
+<p>Experimental results and publication claims should be added only after verification and paper finalization.</p>
+</blockquote>
+<p>Source review: <a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
+
+      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../zh/latest/experiments.html">中文</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

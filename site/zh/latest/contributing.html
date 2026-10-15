@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>贡献与反馈 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>源代码</span></a>
+      <a class="language" href="../../en/latest/contributing.html" aria-label="Switch language">◎ English</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a aria-current="page" class="nav-link active" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>贡献与反馈</h1>
+<p>欢迎围绕功能、安装流程和复现实验提出建议。项目开源许可和正式贡献流程需在发布计划明确后确定。</p>
+<h2>报告问题</h2>
+<p>如果遇到异常，建议通过项目的 <a href="https://github.com/WandeF/hydro-cps-sim/issues">GitHub Issues</a> 反馈，并尽量提供：</p>
+<ol>
+<li>操作系统、Python / Conda 版本。</li>
+<li>所用 Git 提交号、配置文件（删除个人路径与敏感信息）。</li>
+<li>重现问题的命令与关键报错。</li>
+<li>预期结果与实际结果。</li>
+</ol>
+<h2>网站文档更新</h2>
+<p>本文档网站位于 <a href="https://github.com/WandeF/WandeF.github.io">WandeF/WandeF.github.io</a>，与软件源码分开维护。修改位于 <code>content/zh/</code> 和 <code>content/en/</code> 的 Markdown 文件后执行：</p>
+<pre><code class="language-bash">python build.py
+</code></pre>
+<p>构建产物写入 <code>site/</code>。本地通过 <code>python -m http.server 8000 --directory site</code> 即可预览；推送到 <code>main</code> 后，GitHub Actions 自动构建并部署到 <a href="https://wandef.github.io/">https://wandef.github.io/</a>。</p>
+<h2>贡献范围</h2>
+<p>当前文档主要用于研究团队内部整理与公开发布前的预览。正式接受外部贡献前，建议补充 <code>LICENSE</code>、<code>CONTRIBUTING.md</code>、版本管理规则和负责任披露说明。</p>
+
+      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../en/latest/contributing.html">English</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

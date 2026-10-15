@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>配置说明 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>源代码</span></a>
+      <a class="language" href="../../en/latest/configuration.html" aria-label="Switch language">◎ English</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a aria-current="page" class="nav-link active" href="configuration.html">配置说明</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>配置说明</h1>
+<p>当前公开运行器使用 YAML 配置文件组织实验场景，默认入口为 <code>examples/c_town/config.yaml</code>。</p>
+<h2>配置文件在运行中的作用</h2>
+<ul>
+<li>指定水网模型及其输入文件。</li>
+<li>指向 OpenPLC、ns-3 等组件所在目录。</li>
+<li>指定输出目录及仿真轮数。</li>
+<li>保存水网控制、网络及实验设置。</li>
+</ul>
+<p>安装脚本会处理示例 YAML 中的若干路径键，源码中明确出现了：</p>
+<table>
+<thead>
+<tr>
+  <th>路径键</th>
+  <th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>root_path</code></td>
+  <td>第三方依赖工作目录</td>
+</tr>
+<tr>
+  <td><code>openplc_path</code></td>
+  <td>OpenPLC 源码或构建目录</td>
+</tr>
+<tr>
+  <td><code>ns3_path</code></td>
+  <td>ns-3 源码或构建目录</td>
+</tr>
+<tr>
+  <td><code>inp_file</code></td>
+  <td>EPANET 水网输入文件</td>
+</tr>
+<tr>
+  <td><code>output_path</code></td>
+  <td>实验结果输出目录</td>
+</tr>
+</tbody>
+</table>
+<p>这些字段可在 <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/install.sh">install.sh</a> 中核对。其他 YAML 字段需要针对当前版本的真实配置文件补全，暂不在此猜测。</p>
+<h2>建议工作方式</h2>
+<p>不要直接修改唯一的基准配置；可以复制已验证的 <code>config.yaml</code>，然后在副本中改变实验参数。每次实验应记录所用源码提交、配置文件、启动命令与日志位置。</p>
+<h2>待完善内容</h2>
+<ul>
+<li>按模块给出完整 YAML 字段字典。</li>
+<li>附一个可运行的 baseline 配置和一个已验证攻击配置。</li>
+<li>解释配置与网络拓扑、PLC 映射、物理模型间的约束。</li>
+</ul>
+<p>源码核对：<a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
+<h2>已核对的其他字段</h2>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>当前基线值或作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>iterations</code></td>
+  <td>100；可由运行命令覆盖</td>
+</tr>
+<tr>
+  <td><code>noise_scale</code></td>
+  <td>0.0</td>
+</tr>
+<tr>
+  <td><code>time</code></td>
+  <td>EPANET 总时长 86400 秒、水力步长 300 秒</td>
+</tr>
+<tr>
+  <td><code>physics</code></td>
+  <td><code>inp_controls: strip</code>、<code>step_order: next-run</code>、<code>init_flag: 0</code></td>
+</tr>
+<tr>
+  <td><code>plcs</code></td>
+  <td>PLC1–PLC8 的传感器、执行器与控制规则</td>
+</tr>
+<tr>
+  <td><code>network</code></td>
+  <td>ns-3 后端、实时调度、路由、节点、链路、LAN 和 TAP</td>
+</tr>
+<tr>
+  <td><code>attacks.enabled</code></td>
+  <td>攻击配置的总开关</td>
+</tr>
+<tr>
+  <td><code>attacks.scenarios</code></td>
+  <td>场景类型、触发器、目标和类型特有参数</td>
+</tr>
+</tbody>
+</table>
+<p>攻击场景类型包括 <code>modbus_mitm</code>、<code>udp_dos</code>、<code>openplc_logic_injection</code>。<code>trigger.type: iteration_window</code> 使用 <code>start_iteration</code> / <code>end_iteration</code>；场景还需对应的攻击节点、拦截规则或逻辑注入设置，不应仅向基线追加一个开关。参见<a href="experiments.html">攻防实验</a>中的实际配置。</p>
+
+      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../en/latest/configuration.html">English</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

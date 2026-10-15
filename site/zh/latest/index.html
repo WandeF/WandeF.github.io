@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>首页 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>源代码</span></a>
+      <a class="language" href="../../en/latest/index.html" aria-label="Switch language">◎ English</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a aria-current="page" class="nav-link active" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><div class="hero">
+<div class="hero-kicker">CPS² Lab · Water CPS Security</div>
+<h1>Hydro-CPS-Sim</h1>
+<p>面向供水网络的信息物理系统安全联合仿真平台。将水力过程、PLC 控制、SCADA 通信与网络仿真连接起来，为网络攻击评估、跨层影响分析和防御研究提供可扩展的实验环境。</p>
+<div class="hero-buttons"><a href="quickstart.html">快速开始 →</a><a href="architecture.html" class="outline">了解系统架构</a><a class="outline" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">访问 GitHub ↗</a></div>
+</div>
+
+<p><span class="eyebrow">Project Overview</span></p>
+<h2>研究平台能做什么？</h2>
+<div class="feature-grid">
+<div class="feature"><span class="glyph">▤</span><strong>跨层联合仿真</strong><p>连接水力模型、控制逻辑和通信过程，观察网络层事件如何影响物理水网。</p></div>
+<div class="feature"><span class="glyph">⌁</span><strong>攻击影响评估</strong><p>为 MITM、DoS 与 PLC 逻辑篡改等研究场景提供实验与分析框架；实际可执行场景以源码和配置为准。</p></div>
+<div class="feature"><span class="glyph">▦</span><strong>可复现实验流程</strong><p>以配置文件组织仿真，通过脚本启动多组件闭环，并导出运行日志与 CSV 结果。</p></div>
+<div class="feature"><span class="glyph">◇</span><strong>面向研究扩展</strong><p>围绕控制、网络和物理层扩展实验设置，用于研究攻击传播、异常检测及防御策略。</p></div>
+</div>
+
+<h2>从网络事件到物理响应</h2>
+<div class="layers"><div class="layer">攻击与扰动<small>MITM / DoS / Logic</small></div><div class="layer">通信仿真<small>ns-3 + Namespace</small></div><div class="layer">SCADA / PLC<small>采集与控制</small></div><div class="layer">水力计算<small>DHALSIM-epynet</small></div><div class="layer">结果分析<small>日志 / CSV</small></div></div>
+
+<p>平台关注一个核心问题：<strong>网络攻击如何通过数据采集、控制决策和执行过程，逐步传播到物理水力系统？</strong></p>
+<h2>从哪里开始？</h2>
+<ol>
+<li>阅读<a href="introduction.html">项目简介</a>，了解研究问题与适用范围。</li>
+<li>查看<a href="installation.html">安装与环境</a>，确认操作系统与依赖。</li>
+<li>跟随<a href="quickstart.html">快速开始</a>，运行示例水网。</li>
+<li>参考<a href="experiments.html">攻防实验</a>，设计基线与攻击对照。</li>
+</ol>
+<blockquote>
+<p><strong>版本提示：</strong> 本站是已部署的研究软件文档初版。公开源码仓库目前仍在整理中，尚未核实的配置字段、论文信息与实验结论不会在这里当作已发布事实。</p>
+</blockquote>
+
+      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../en/latest/index.html">English</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

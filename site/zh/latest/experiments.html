@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>攻防实验 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>源代码</span></a>
+      <a class="language" href="../../en/latest/experiments.html" aria-label="Switch language">◎ English</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a aria-current="page" class="nav-link active" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>攻防实验</h1>
+<p>Hydro-CPS-Sim 的研究重点之一，是沿着<strong>网络事件 → 数据状态 → 控制决策 → 水力响应</strong>的链路分析攻击传播机制。</p>
+<h2>研究场景</h2>
+<table>
+<thead>
+<tr>
+  <th>攻击类型</th>
+  <th>网络或控制层变化</th>
+  <th>重点观测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>MITM（中间人攻击）</td>
+  <td>通信内容可能遭到修改</td>
+  <td>输入数据与真实物理状态的偏差、决策变化</td>
+</tr>
+<tr>
+  <td>DoS（拒绝服务）</td>
+  <td>通信延迟、丢包或超时</td>
+  <td>数据新鲜度、缓存使用、控制时机</td>
+</tr>
+<tr>
+  <td>PLC 逻辑篡改</td>
+  <td>控制规则可能发生变化</td>
+  <td>PLC 逻辑、执行器输出、物理轨迹</td>
+</tr>
+</tbody>
+</table>
+<h2>源码中实际提供的配置</h2>
+<p>下表按 YAML 内容核对，窗口单位为控制轮次。仅核对了源码与配置，尚未完整运行这些仿真实验。</p>
+<table>
+<thead>
+<tr>
+  <th>配置文件</th>
+  <th>目标或用途</th>
+  <th>攻击轮次</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config.yaml"><code>config.yaml</code></a></td>
+  <td>无攻击基线 / Baseline</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_mitm_plc4.yaml"><code>config_mitm_plc4.yaml</code></a></td>
+  <td>PLC4 下发 / Downlink</td>
+  <td>20–40</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_mitm_plc9.yaml"><code>config_mitm_plc9.yaml</code></a></td>
+  <td>PLC8 T7 响应 / Response</td>
+  <td>20–40</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_mitm_composite_plc7_plc9.yaml"><code>config_mitm_composite_plc7_plc9.yaml</code></a></td>
+  <td>PLC6 T5 + PLC8 T7</td>
+  <td>20–40 / 30–50</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_dos_plc2_single.yaml"><code>config_dos_plc2_single.yaml</code></a></td>
+  <td>PLC2 · 单源 / Single source</td>
+  <td>5–90</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_dos_plc2_three_bots.yaml"><code>config_dos_plc2_three_bots.yaml</code></a></td>
+  <td>PLC2 · 三源 / Three sources</td>
+  <td>5–90</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/examples/c_town/config_openplc_logic_plc4.yaml"><code>config_openplc_logic_plc4.yaml</code></a></td>
+  <td>PLC4 · PU10 T7 阈值 / Threshold</td>
+  <td>20–90</td>
+</tr>
+</tbody>
+</table>
+<p>文件名中的 PLC7/PLC9 是历史命名；当前配置中的实际目标为 PLC6/PLC8，应读取 YAML 内容确认。旧 <code>README_attack_mitm.md</code> 中的 <code>config_mitm.yaml</code> 和 <code>scripts/compare_attack_results.py</code> 在该版本中不存在。</p>
+<p>安装成功后，可在仿真环境中选择实际配置（下例为源码核对命令，未在本次部署中运行）：</p>
+<pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config_mitm_plc4.yaml --logic-wait 0.3
+</code></pre>
+<p>先运行基线并保存结果，再运行攻击配置。导出目录 <code>reports/csv/</code> 包含 <code>physics.csv</code>、<code>actuator_state.csv</code>、<code>scada_observed_long.csv</code>、<code>scada_observed_wide.csv</code>、<code>scada_observed_key.csv</code>、<code>attack_schedule.csv</code>、<code>attack_events.csv</code>、<code>scada_timeout_events.csv</code> 和 <code>cycle_timing.csv</code>。攻击事件或超时记录并不等于已经产生物理偏离，需要与基线对齐分析。</p>
+<h2>推荐的对照流程</h2>
+<ol>
+<li>固定水网、PLC 逻辑、仿真时长和必要的随机性设置。</li>
+<li>运行无攻击基线（baseline），保存每轮 CSV 与日志。</li>
+<li>仅改变准备考察的攻击变量，运行对照实验。</li>
+<li>对齐网络、PLC 和水力时间记录，分析关键轮次。</li>
+<li>汇总重复实验结果，而不仅是展示单次运行曲线。</li>
+</ol>
+<h2>跨层分析不应只看最终水位</h2>
+<p>同样的水箱水位偏差，可能来自错误传感数据、通信超时导致的陈旧数据，或者 PLC 控制规则改变。因此需要同时收集上游证据。对于 DoS，发生通信超时并不保证会导致控制偏离，实际传播还取决于控制所需数据是否及时更新。</p>
+<h2>发布前建议补充</h2>
+<ul>
+<li>攻击 YAML 示例与字段表（从实际代码中逐项核对）。</li>
+<li>基线实验和各攻击实验的一键运行命令。</li>
+<li>数据目录约定、时间戳含义及评价指标。</li>
+<li>可复现实验图与必要的参数、随机种子说明。</li>
+</ul>
+<blockquote>
+<p>实验数据、攻击成功率和论文结论应在论文定稿及验证后补入，避免把讨论中的结论误写成已经公开复现的结果。</p>
+</blockquote>
+<p>源码核对：<a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
+
+      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../en/latest/experiments.html">English</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

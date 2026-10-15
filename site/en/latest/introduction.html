@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Introduction · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>Source Code</span></a>
+      <a class="language" href="../../zh/latest/introduction.html" aria-label="Switch language">◎ 中文</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a aria-current="page" class="nav-link active" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>Introduction</h1>
+<p>Hydro-CPS-Sim is a research co-simulation platform for <strong>water distribution cyber-physical systems</strong>. It is designed for security experimentation, cross-layer impact assessment, and defense-method evaluation.</p>
+<h2>Motivation</h2>
+<p>Hydraulic simulators capture the evolution of pressures, flows, and tank levels, while network simulators characterize topology, delays, and packet loss. Studying cyber-physical incidents requires combining both aspects with an actual control loop.</p>
+<h2>Main components</h2>
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>DHALSIM-epynet / EPANET</td>
+  <td>Hydraulic simulation and physical-state updates</td>
+</tr>
+<tr>
+  <td>OpenPLC</td>
+  <td>PLC control-program execution</td>
+</tr>
+<tr>
+  <td>ns-3</td>
+  <td>Communication-network simulation</td>
+</tr>
+<tr>
+  <td>Linux Network Namespace</td>
+  <td>Isolated Linux network environments</td>
+</tr>
+<tr>
+  <td>Python orchestration modules</td>
+  <td>Configuration, process coordination, state exchange, and output</td>
+</tr>
+</tbody>
+</table>
+<h2>Example research questions</h2>
+<ul>
+<li>At what control iteration does manipulated input data change a PLC decision?</li>
+<li>Does packet loss or timeout necessarily cause an actuator deviation?</li>
+<li>Can similar physical anomalies arise from different cyber or control causes?</li>
+<li>How can network traces, controller behavior, and physical trajectories be aligned?</li>
+</ul>
+<h2>Scope</h2>
+<p>This is a research simulation tool, not software for operating a real water utility. Availability of specific attack configurations and parameter names must be checked against the corresponding repository version. Simulation results should not be interpreted directly as quantitative risk assessments for production systems.</p>
+<p>Repository: <a href="https://github.com/WandeF/hydro-cps-sim">https://github.com/WandeF/hydro-cps-sim</a></p>
+
+      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../zh/latest/introduction.html">中文</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>

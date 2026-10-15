@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>项目简介 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
+      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
+    </a>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>源代码</span></a>
+      <a class="language" href="../../en/latest/introduction.html" aria-label="Switch language">◎ English</a>
+      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
+      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
+      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
+      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a aria-current="page" class="nav-link active" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content"><h1>项目简介</h1>
+<p>Hydro-CPS-Sim 是一个围绕**供水系统（Water Distribution Systems）**构建的 CPS 安全联合仿真研究平台，主要服务于工业网络攻击影响分析、攻击路径研究和防御方法验证。</p>
+<h2>研究动机</h2>
+<p>传统水力模拟工具擅长计算流量、压力、水箱水位等物理变量，但难以独立体现真实控制和通信过程；网络仿真工具能够刻画时延、丢包和拓扑，却往往缺少真实水力反馈。将两者在闭环中整合，可以分析攻击是否、何时以及如何影响物理系统。</p>
+<h2>项目组件</h2>
+<table>
+<thead>
+<tr>
+  <th>组件</th>
+  <th>在研究平台中的作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>DHALSIM-epynet / EPANET</td>
+  <td>水网水力计算及物理状态更新</td>
+</tr>
+<tr>
+  <td>OpenPLC</td>
+  <td>PLC 程序执行与控制逻辑</td>
+</tr>
+<tr>
+  <td>ns-3</td>
+  <td>通信网络建模与仿真</td>
+</tr>
+<tr>
+  <td>Linux Network Namespace</td>
+  <td>将主机网络过程映射到隔离网络环境</td>
+</tr>
+<tr>
+  <td>Python 协调与分析模块</td>
+  <td>配置读取、组件编排、状态交互和实验结果导出</td>
+</tr>
+</tbody>
+</table>
+<h2>典型研究问题</h2>
+<ul>
+<li>攻击导致的数据篡改，在哪个控制轮次改变 PLC 决策？</li>
+<li>丢包或通信超时是否必然引起泵阀控制偏离？</li>
+<li>相同的物理异常，是否可能来自不同的网络和逻辑原因？</li>
+<li>如何将网络日志、控制轨迹和水力变量关联起来进行因果分析？</li>
+</ul>
+<h2>当前边界</h2>
+<p>该项目旨在科研仿真和方法验证，不是现实供水设施的运维控制软件。不同攻击场景的可用性、参数名称和示例数据需与对应提交版本核对。任何未经过验证的实验结果不应作为真实供水系统风险的直接量化结论。</p>
+<p>公开代码：<a href="https://github.com/WandeF/hydro-cps-sim">https://github.com/WandeF/hydro-cps-sim</a></p>
+
+      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../en/latest/introduction.html">English</a></div></footer>
+    </div></main>
+  </div>
+</body>
+</html>
