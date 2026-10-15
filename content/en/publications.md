@@ -1,17 +1,14 @@
 # Publications & Citation
 
-Hydro-CPS-Sim is intended to accompany research publications, an open-source release, and relevant software intellectual-property documentation. The final version of this page should provide accurate bibliographic metadata and links to reproducible source-code releases.
+## Related research
 
-## Citation placeholder
+The project manuscript has the Chinese working title “网络攻击下水务CPS的跨层影响分析：Hydro-CPS-Sim联合仿真平台” (descriptively, cross-layer impact analysis of cyberattacks on water CPS using Hydro-CPS-Sim). It covers platform design and implementation, normal-loop consistency, network calibration, MITM / DoS / PLC logic injection, propagation timing and PLC scalability.
 
-```bibtex
-@misc{hydrocpssim_placeholder,
-  title        = {Hydro-CPS-Sim},
-  note         = {Placeholder only: replace with the official publication record}
-}
-```
+Architecture figures, workflow illustrations, C-Town dependencies and analysis methods have been adapted for [architecture](architecture.html), [introduction](introduction.html) and [experiments](experiments.html). This update explains the method; it does not independently audit the manuscript's raw experimental data or publish the full manuscript and result plots.
 
-**Do not cite this placeholder as a real publication.** Replace it with verified authors, title, venue, year, DOI, and other information once available.
+## Publication status and citation
+
+The supplied draft still contains venue and affiliation placeholders; it does not establish a published record. Verified title, authors, venue, year, DOI or preprint links will be added when available. No fictitious BibTeX entry is provided.
 
 ## Licensing
 

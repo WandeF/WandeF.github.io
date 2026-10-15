@@ -40,64 +40,85 @@
         <div class="document-actions"><a href="../../en/latest/architecture.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <h1>系统架构</h1>
-<p>平台采用<strong>多层闭环联合仿真</strong>思路：水力状态经传感器与采集通道进入控制层，PLC 基于控制逻辑更新执行器动作，动作再反馈给水力计算模块。网络层对通信过程提供仿真环境。</p>
-<h2>逻辑分层</h2>
+<p>Hydro-CPS-Sim 将水力求解、可执行 PLC 程序、工业协议与网络路径连接为闭环。攻击从协议、网络或控制入口介入，再经控制判断和执行器反馈影响水力状态。</p>
+<h2>平台总体架构</h2>
+<figure>
+<a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Hydro-CPS-Sim 场景配置、编排、物理、控制、网络、同步与记录模块架构图" loading="lazy" width="4978" height="3116"></a>
+<figcaption>平台总体架构。图来自项目论文工作稿；点击可查看原图。</figcaption>
+</figure>
+
 <table>
 <thead>
 <tr>
-  <th>层级</th>
-  <th>主要模块</th>
-  <th>关注的问题</th>
+  <th>模块</th>
+  <th>实现与职责</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-  <td>物理层</td>
-  <td>DHALSIM-epynet / EPANET</td>
-  <td>水位、压力、流量等状态演化</td>
+  <td>场景配置</td>
+  <td>YAML 描述水网、PLC/SCADA 映射、控制规则、网络、攻击与运行参数</td>
 </tr>
 <tr>
-  <td>控制层</td>
-  <td>OpenPLC</td>
-  <td>PLC 输入、控制逻辑、执行器指令</td>
+  <td>联合仿真编排</td>
+  <td>生成 ST 程序、编译 PLC、生成网络环境、启动进程并导出结果</td>
 </tr>
 <tr>
-  <td>监控层</td>
-  <td>SCADA 通信与采集</td>
-  <td>数据上报、下发和缓存</td>
+  <td>物理过程</td>
+  <td>DHALSIM-epynet / EPANET 推进水力状态，接收泵阀动作</td>
 </tr>
 <tr>
-  <td>网络层</td>
-  <td>ns-3 + Linux Network Namespace</td>
-  <td>拓扑、链路状态、通信扰动</td>
+  <td>控制与监控</td>
+  <td>OpenPLC 执行控制逻辑；PLC Adapter 衔接输入输出；SCADA 通过 Modbus TCP 采集与转发数据</td>
 </tr>
 <tr>
-  <td>编排层</td>
-  <td>Python 运行器</td>
-  <td>配置、进程启动、同步、结果导出</td>
+  <td>网络通信</td>
+  <td>Linux network namespace 提供独立网络身份，经 TAP/veth 接入 ns-3</td>
+</tr>
+<tr>
+  <td>攻击执行</td>
+  <td>在配置的协议、网络或控制入口执行 MITM、DoS 或逻辑注入</td>
+</tr>
+<tr>
+  <td>同步</td>
+  <td>通过文件系统标志协调多进程，按实验轮次交换状态</td>
+</tr>
+<tr>
+  <td>数据记录</td>
+  <td>汇集攻击、通信、控制、执行器与水力记录，供基线对照使用</td>
 </tr>
 </tbody>
 </table>
-<h2>一个典型闭环</h2>
+<h2>闭环运行流程</h2>
+<figure>
+<a href="../../assets/closed_loop_experiment_workflow.png" target="_blank" rel="noopener"><img src="../../assets/closed_loop_experiment_workflow.png" alt="场景生成、启动、SCADA 采集、PLC 控制与水力反馈闭环流程" loading="lazy" width="2888" height="1818"></a>
+<figcaption>闭环运行的概念流程。实现细节与执行顺序以对应版本运行器为准。</figcaption>
+</figure>
+
 <ol>
-<li>读取当前水力状态与传感器变量。</li>
-<li>将观测数据通过通信路径送入 PLC / SCADA 相关模块。</li>
-<li>执行 PLC 控制逻辑，确定泵阀等动作。</li>
-<li>将新的控制动作作用于水力系统，并推进仿真步。</li>
-<li>保存日志与状态，为下一轮控制提供输入。</li>
+<li><strong>环境生成</strong>：读取水网和 YAML 配置，生成控制程序、地址映射、ns-3 拓扑与命名空间配置。</li>
+<li><strong>初始化</strong>：启动 OpenPLC、SCADA 与网络进程，准备物理状态和同步目录。</li>
+<li><strong>采集与转发</strong>：水力模块提供当前传感器状态，SCADA 通过 Modbus TCP 采集数据并转发跨 PLC 控制依赖。</li>
+<li><strong>控制执行</strong>：OpenPLC 根据当前输入和有效规则生成泵阀命令。</li>
+<li><strong>水力反馈</strong>：执行器状态进入下一步水力求解，产生新的水位、压力和流量。</li>
+<li><strong>记录与对照</strong>：保存该轮数据，推进下一轮，并在运行后与同条件基线对齐。</li>
 </ol>
-<p>上述流程是对研究架构的概念性说明，具体执行顺序应以运行器源码为准。</p>
+<p>这里的“轮次”用于模块协调；物理时间应读取水力引擎的 <code>sim_time</code>。内部事件可能缩短水力步长，不能直接将轮次乘以名义步长作为真实时间。</p>
+<h2>独立网络节点与协议交互</h2>
+<p>每个 PLC、SCADA 和攻击节点运行在各自的 Linux network namespace 中，拥有独立接口和协议栈。ns-3 为这些端点提供可配置的链路、路由与网络动态。正常 Modbus 通信和攻击流量通过配置的网络路径交互。</p>
+<p>这种部署保留了 PLC 程序执行、寄存器/线圈映射、协议请求与响应、超时及数据保持等中间环节。它使研究者能够观察通信异常是否改变控制输入，以及输入变化是否真正触发执行器动作。</p>
+<p>OpenPLC 是软件 PLC，命名空间中的节点仍共享主机资源。该平台不等同于工业硬件的实时调度、现场 I/O 或完整设备协议栈；不能仅凭拓扑隔离推断非目标节点绝不受间接影响。</p>
 <h2>代码入口</h2>
 <ul>
-<li><code>scripts/run_all.sh</code>：示例运行的总调度脚本。</li>
-<li><code>src/network/</code>：网络拓扑和运行环境生成相关模块。</li>
-<li><code>src/control/</code>：PLC 程序生成、编译和运行相关模块。</li>
-<li><code>src/runtime/</code>：闭环同步与运行时逻辑。</li>
-<li><code>src/io/</code>：实验数据导出。</li>
+<li><code>scripts/run_all.sh</code>：环境准备、运行和清理的总入口。</li>
+<li><code>src/control/</code>：ST 程序生成、编译与 OpenPLC 启动。</li>
+<li><code>src/network/</code>：命名空间与 ns-3 拓扑生成。</li>
+<li><code>src/runtime/</code>、<code>src/sync/</code>：闭环协调与同步。</li>
+<li><code>src/scada/</code>、<code>src/plc/</code>、<code>src/comm/</code>：数据采集、适配与 Modbus 交互。</li>
+<li><code>src/attack/</code>：攻击启动与执行。</li>
+<li><code>src/io/</code>：水力接口与结果导出。</li>
 </ul>
-<p>详见公开仓库中的 <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/scripts/run_all.sh">run_all.sh</a>。</p>
-<h2>未来可以补充的图</h2>
-<p>正式发布前建议加入：平台总体架构图、单轮同步时序图，以及 MITM / DoS / PLC 逻辑攻击的跨层传播图。图中各箭头应明确区分数据流、控制流、网络通信和攻击影响路径。</p>
+<p>设计说明参考项目论文工作稿的架构与实现章节。运行接口核对版本：<a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a>。</p>
 
       <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
     </div></main>

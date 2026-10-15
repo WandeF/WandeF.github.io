@@ -28,3 +28,28 @@ Hydro-CPS-Sim 是一个围绕**供水系统（Water Distribution Systems）**构
 该项目旨在科研仿真和方法验证，不是现实供水设施的运维控制软件。不同攻击场景的可用性、参数名称和示例数据需与对应提交版本核对。任何未经过验证的实验结果不应作为真实供水系统风险的直接量化结论。
 
 公开代码：<https://github.com/WandeF/hydro-cps-sim>
+
+## 研究目标与分析方法
+
+项目围绕四个问题组织跨层实验：攻击如何进入控制输入或控制规则；不同入口如何形成不同传播路径；通信退化在什么条件下转化为控制偏离；如何用分层观测与基线对照解释物理后果。
+
+实验通过指定的协议、网络或控制入口施加干预，保持水力反馈正常运行，并同时记录中间状态。分析既关注异常最早出现在哪一层，也关注传播在哪一层停止，而非预先假定网络攻击一定造成物理偏差。
+
+## C-Town 示例与控制依赖
+
+<figure>
+<a href="../../assets/ctown_water_topology.png" target="_blank" rel="noopener"><img src="../../assets/ctown_water_topology.png" alt="C-Town 水网、PLC1 至 PLC8 管理区域、跨区水位依赖及论文研究场景的攻击入口" loading="lazy" width="6240" height="6675"></a>
+<figcaption>项目论文工作稿中的 C-Town 拓扑与控制依赖示意，基于 C-Town 模型绘制。图下方攻击标记属于论文研究场景，并非所有公开示例的默认配置；点击查看原图。</figcaption>
+</figure>
+
+| 数据来源 | 经 SCADA 转发后的控制用途 |
+| --- | --- |
+| PLC2 的 T1 | PLC1 对 PU1、PU2 的控制 |
+| PLC3 的 T2、T3 | 本地 V2 与 PU4、PU5 的控制 |
+| PLC6 的 T5 | PLC4 对 PU8 的控制 |
+| PLC8 的 T7 | PLC4 对 PU10、PU11 的控制 |
+| PLC7 的 T4 | PLC5 对 PU6、PU7 的控制 |
+
+PLC4 的本地 T6 主要用于监测。上述分区表示逻辑管理关系，并不意味着所有关联传感器都安装在同一机柜。跨区依赖使数据完整性和新鲜度能够影响另一控制区域的泵阀判断。
+
+更多内容参见[系统架构](architecture.html)和[攻防实验](experiments.html)。本节依据论文工作稿及已核对源码整理；论文历史归档中的 PLC 编号应在使用时与具体配置重新对应。

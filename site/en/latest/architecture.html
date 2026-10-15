@@ -40,64 +40,85 @@
         <div class="document-actions"><a href="../../zh/latest/architecture.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <h1>Architecture</h1>
-<p>The platform follows a <strong>closed-loop, multi-layer co-simulation</strong> approach. Sensor measurements inform controller decisions; PLC outputs affect actuators; and actuator states are fed back into the hydraulic model. Network simulation mediates communication in the cyber layer.</p>
-<h2>Layers</h2>
+<p>Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial protocols and network paths in a closed loop. Attacks enter through a protocol, network or control interface and can affect hydraulics through controller decisions and actuator feedback.</p>
+<h2>Platform architecture</h2>
+<figure>
+<a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Scenario configuration, orchestration, physical, control, network, synchronization and logging modules" loading="lazy" width="4978" height="3116"></a>
+<figcaption>Platform architecture from the project manuscript draft. Click to view the original image.</figcaption>
+</figure>
+
 <table>
 <thead>
 <tr>
-  <th>Layer</th>
-  <th>Major components</th>
-  <th>Focus</th>
+  <th>Module</th>
+  <th>Implementation and responsibility</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-  <td>Physical</td>
-  <td>DHALSIM-epynet / EPANET</td>
-  <td>Tank levels, pressures, flows</td>
-</tr>
-<tr>
-  <td>Control</td>
-  <td>OpenPLC</td>
-  <td>PLC logic and actuator commands</td>
-</tr>
-<tr>
-  <td>Supervisory</td>
-  <td>SCADA communication</td>
-  <td>Data acquisition, commands, and caching</td>
-</tr>
-<tr>
-  <td>Network</td>
-  <td>ns-3 and Linux Network Namespace</td>
-  <td>Topology and communication impairment</td>
+  <td>Scenario configuration</td>
+  <td>YAML describes the water model, PLC/SCADA mappings, control rules, network, attacks and runtime settings</td>
 </tr>
 <tr>
   <td>Orchestration</td>
-  <td>Python scripts</td>
-  <td>Configuration, synchronization, execution, export</td>
+  <td>Generates ST programs, compiles PLCs, creates the network environment, starts processes and exports results</td>
+</tr>
+<tr>
+  <td>Physical process</td>
+  <td>DHALSIM-epynet / EPANET advances hydraulics using pump and valve states</td>
+</tr>
+<tr>
+  <td>Control and supervision</td>
+  <td>OpenPLC executes logic; PLC Adapters bridge I/O; SCADA acquires and forwards data over Modbus TCP</td>
+</tr>
+<tr>
+  <td>Communication</td>
+  <td>Linux network namespaces provide separate network identities connected to ns-3 through TAP/veth interfaces</td>
+</tr>
+<tr>
+  <td>Attack execution</td>
+  <td>Injects MITM, DoS or logic modifications at configured interfaces</td>
+</tr>
+<tr>
+  <td>Synchronization</td>
+  <td>Filesystem markers coordinate process state exchange by experiment iteration</td>
+</tr>
+<tr>
+  <td>Logging</td>
+  <td>Collects attack, communication, control, actuator and hydraulic records for baseline comparisons</td>
 </tr>
 </tbody>
 </table>
-<h2>Conceptual simulation cycle</h2>
+<h2>Closed-loop workflow</h2>
+<figure>
+<a href="../../assets/closed_loop_experiment_workflow.png" target="_blank" rel="noopener"><img src="../../assets/closed_loop_experiment_workflow.png" alt="Scenario generation, process launch, SCADA acquisition, PLC execution and hydraulic feedback" loading="lazy" width="2888" height="1818"></a>
+<figcaption>Conceptual experiment workflow. Exact sequencing is defined by the corresponding runtime version.</figcaption>
+</figure>
+
 <ol>
-<li>Obtain the current hydraulic state and relevant sensor values.</li>
-<li>Exchange observations through the cyber/control communication path.</li>
-<li>Run the PLC control logic and compute new actuator actions.</li>
-<li>Apply the actions to the hydraulic model and advance the simulation.</li>
-<li>Save the observable evidence for subsequent analysis.</li>
+<li><strong>Generate the environment:</strong> Read the model and YAML, then generate control programs, address mappings, the ns-3 topology and namespace configuration.</li>
+<li><strong>Initialize:</strong> Start OpenPLC, SCADA and network processes; prepare physical state and synchronization directories.</li>
+<li><strong>Acquire and forward:</strong> Obtain current sensor state and use SCADA Modbus TCP exchanges to forward cross-PLC control dependencies.</li>
+<li><strong>Execute control:</strong> OpenPLC evaluates current inputs and effective rules to produce pump and valve commands.</li>
+<li><strong>Feed back:</strong> Apply actuator states to the next hydraulic step to obtain updated levels, pressures and flows.</li>
+<li><strong>Record and compare:</strong> Save iteration evidence, advance the loop and compare completed runs with matching baselines.</li>
 </ol>
-<p>The exact execution sequence is defined by the runtime implementation; the cycle above is a conceptual explanation.</p>
-<h2>Source-code entry points</h2>
+<p>Iterations coordinate processes. Read hydraulic <code>sim_time</code> for physical time: internal events can shorten steps, so multiplying an iteration number by the nominal step does not establish the actual engine time.</p>
+<h2>Independent endpoints and protocol exchanges</h2>
+<p>Each PLC, SCADA and attack endpoint runs in a separate Linux network namespace with its own interfaces and protocol stack. ns-3 supplies configurable links, routing and network dynamics. Normal Modbus exchanges and attack traffic follow the configured network paths.</p>
+<p>This preserves intermediate behavior such as program execution, register/coil mappings, request/response exchanges, timeouts and held observations. Researchers can inspect whether communication anomalies change controller inputs and whether those inputs actually trigger actuator changes.</p>
+<p>OpenPLC is a software PLC, and namespace endpoints still share host resources. This environment does not reproduce all hardware scheduling, field I/O or device protocol behavior. Topological separation alone does not guarantee that other endpoints experience no indirect effects.</p>
+<h2>Source entry points</h2>
 <ul>
-<li><code>scripts/run_all.sh</code>: top-level example runner.</li>
-<li><code>src/network/</code>: network and topology generation.</li>
-<li><code>src/control/</code>: PLC generation, compilation, and execution.</li>
-<li><code>src/runtime/</code>: closed-loop runtime orchestration.</li>
-<li><code>src/io/</code>: experiment result export.</li>
+<li><code>scripts/run_all.sh</code>: preparation, execution and cleanup.</li>
+<li><code>src/control/</code>: ST generation, compilation and OpenPLC launch.</li>
+<li><code>src/network/</code>: namespace and ns-3 topology generation.</li>
+<li><code>src/runtime/</code>, <code>src/sync/</code>: loop coordination and synchronization.</li>
+<li><code>src/scada/</code>, <code>src/plc/</code>, <code>src/comm/</code>: acquisition, adapters and Modbus exchanges.</li>
+<li><code>src/attack/</code>: attack launch and execution.</li>
+<li><code>src/io/</code>: hydraulic interfaces and result exports.</li>
 </ul>
-<p>See the published <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/scripts/run_all.sh">run_all.sh</a>.</p>
-<h2>Planned illustrations</h2>
-<p>Before final release, add an overall architecture figure, a single-iteration sequence diagram, and attack propagation diagrams. Clearly differentiate data flow, control flow, network traffic, and attack influence.</p>
+<p>Design descriptions follow the architecture and implementation sections of the project manuscript draft. Runtime interfaces were checked against <a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a>.</p>
 
       <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
     </div></main>

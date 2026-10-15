@@ -68,6 +68,21 @@
 </tr>
 </tbody>
 </table>
+<h2>Three entry points and propagation mechanisms</h2>
+<figure>
+<a href="../../assets/attack_cross_layer_propagation_paths.png" target="_blank" rel="noopener"><img src="../../assets/attack_cross_layer_propagation_paths.png" alt="MITM, DoS and PLC logic injection paths through communication or control rules to actuators and hydraulic feedback" loading="lazy" width="4663" height="1993"></a>
+<figcaption>Propagation paths from the manuscript draft. Arrows indicate possible paths, not guaranteed downstream effects in every run. Click to view the original.</figcaption>
+</figure>
+
+<ul>
+<li><strong>MITM changes input content.</strong> The manuscript scenario modifies T7 data sent from SCADA to PLC4. A biased input can cross the PU10 pump-off threshold earlier; actual action changes depend on process state and rules.</li>
+<li><strong>DoS reduces input freshness.</strong> Congestion on the PLC7 acquisition path can cause timeouts, leaving SCADA to retain an older T4 observation and forward it to PLC5. Propagation to PU6/PU7 and hydraulics requires the stale input to change a relevant control decision.</li>
+<li><strong>Logic injection changes effective rules.</strong> Modifying the T7 pump-off threshold for PU10 at PLC4 models an attacker with program modification capability. Injection and first control deviation need not coincide: process state must trigger the modified rule.</li>
+</ul>
+<p>An input may be shared by several rules. Changing that input and changing only one threshold can produce different subsequent behavior. Compare first deviation, state retention, reopening and other actuators consuming the same input.</p>
+<h2>Manuscript scenarios versus public presets</h2>
+<p>The manuscript describes 80-iteration runs, an attack window of iterations 15–55 and a DoS scenario targeting the PLC7 acquisition path. The source table below describes public presets at the reviewed commit: for example, the DoS files target PLC2 during iterations 5–90. These settings are not interchangeable.</p>
+<p>This page explains the research method without presenting unpublished manuscript settings as verified one-command reproductions. Reproduction requires the exact commit, complete YAML, water model, control mapping, attack window and archived data. Historical fields such as <code>PLC9_T7</code> also require mapping to the current T7 acquisition endpoint.</p>
 <h2>Published configuration files</h2>
 <p>The table reflects actual YAML contents. Windows are control iterations. These presets were reviewed in source but were not executed as full simulations for this website.</p>
 <table>
@@ -131,6 +146,42 @@
 </ol>
 <h2>Why cross-layer evidence matters</h2>
 <p>The same tank-level deviation could reflect false sensor values, a stale observation after a timeout, or an unauthorized PLC logic change. Evidence from upstream layers is essential for attribution. In a DoS scenario, communication failure alone does not guarantee a control deviation; propagation depends in part on whether fresh data is required at the relevant control iteration.</p>
+<h2>Organizing cross-layer evidence</h2>
+<p>Record four possible first events: attack activation <code>t_A</code>, communication anomaly <code>t_C</code>, actuator deviation from baseline <code>t_U</code>, and physical deviation crossing a predefined threshold <code>t_P</code>. Logic injection may have no communication-anomaly stage, making <code>t_C</code> inapplicable. Mark events absent from the observation window as unobserved rather than assigning them to the last iteration.</p>
+<table>
+<thead>
+<tr>
+  <th>Layer</th>
+  <th>Suggested evidence</th>
+  <th>Distinctions to preserve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Attack</td>
+  <td>Scheduling, modified frames and injected rules</td>
+  <td>Configured window versus actual activation</td>
+</tr>
+<tr>
+  <td>Communication and input</td>
+  <td>Timeouts, successful reads, held SCADA values and downlink records</td>
+  <td>Failed communication, stale values and inputs actually delivered to a controller</td>
+</tr>
+<tr>
+  <td>Control</td>
+  <td>Effective thresholds, previous state and actuator outputs</td>
+  <td>Baseline mismatch, nominal decisions from true inputs and expected execution from delivered inputs</td>
+</tr>
+<tr>
+  <td>Physical</td>
+  <td>Levels, pressures, flows and actual <code>sim_time</code></td>
+  <td>Iteration-aligned versus equal-engine-time deviations</td>
+</tr>
+</tbody>
+</table>
+<p>For discrete control, report mismatched actuator states divided by comparable states. For continuous variables, consider RMSE, mean absolute deviation and peak absolute deviation. Define variables, windows, units, missing-data treatment and denominators. State whether RTT includes only successful requests and how repeated runs use seeds and aggregation.</p>
+<p><strong>Time alignment:</strong> Internal hydraulic events can make the same iteration correspond to different physical times. An iteration-aligned peak is not automatically a simultaneous net attack effect. When needed, compare common actual engine-time observations and report the number of matches. Wall-clock communication update frequency is also distinct from PLC scan frequency.</p>
+<p><strong>Scalability scope:</strong> The manuscript's PLC scalability tests are separate from C-Town attack experiments and exclude hydraulic computation. Communication and control throughput does not establish the performance of a full water-network loop.</p>
 <h2>Documentation to add before release</h2>
 <ul>
 <li>Runnable attack configurations and a field-by-field reference.</li>

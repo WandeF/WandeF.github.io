@@ -12,3 +12,7 @@ Reviewed read-only: [WandeF/hydro-cps-sim @ 2406aa649738c585e635b3661d1b9431db73
 - Baseline defaults: 100 iterations; EPANET duration 86400 seconds, hydraulic step 300 seconds, `noise_scale: 0.0`; PLC4 consumes remote T5 and T7. Exact current fields remain defined by source.
 
 Validation scope: website build, generated HTML/local links, bilingual search index and deployment configuration. No installation of simulator dependencies, privileged network setup, or full water-network simulation was performed for this documentation task. Repository source code was not changed. Runtime replication, figures, official citation metadata and licensing remain follow-up work.
+
+## Manuscript documentation update
+
+Architecture, workflow, C-Town dependencies and research-method descriptions were added from the author-provided manuscript on 2026-10-15. See `ASSET_SOURCES.md` for figure provenance and the distinction between manuscript scenarios and reviewed public presets. This does not extend the runtime validation scope above.
