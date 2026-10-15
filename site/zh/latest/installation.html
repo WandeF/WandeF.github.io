@@ -8,20 +8,17 @@
 </head>
 <body data-lang="zh">
   <header class="site-header">
-    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
-      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
-    </a>
-    <div class="header-actions">
-      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>源代码</span></a>
-      <a class="language" href="../../en/latest/installation.html" aria-label="Switch language">◎ English</a>
-      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
-    </div>
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
   </header>
   <div class="shell">
-    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
-      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
-      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
-      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+    <aside class="sidebar" id="doc-nav" aria-label="文档导航">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="搜索文档…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
       <nav class="nav"><div class="nav-heading">项目概览</div>
 <a class="nav-link" href="index.html">首页</a>
 <a class="nav-link" href="introduction.html">项目简介</a>
@@ -37,7 +34,12 @@
 <a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
       <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
     </aside>
-    <main class="main"><div class="content" id="page-content"><h1>安装与环境</h1>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>安装与环境</span></div>
+        <div class="document-actions"><a href="../../en/latest/installation.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1>安装与环境</h1>
 <p>这里的安装说明根据公开的 <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/install.sh"><code>install.sh</code></a> 整理。执行前建议先阅读脚本，了解其对系统软件包和第三方仓库的修改。</p>
 <h2>支持的环境</h2>
 <table>
@@ -99,7 +101,7 @@ conda activate hydro-cps
 <p>源码核对：<a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
 <p>安装脚本会更新所有 C-Town 示例 YAML 的五个顶层路径键，并将修改前的文件保存到 <code>output/install-backups/</code>。迁移机器后需重新检查路径；不要直接沿用源码中的开发者绝对路径。</p>
 
-      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../en/latest/installation.html">English</a></div></footer>
+      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
     </div></main>
   </div>
 </body>

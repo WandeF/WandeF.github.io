@@ -8,20 +8,17 @@
 </head>
 <body data-lang="zh">
   <header class="site-header">
-    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
-      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
-    </a>
-    <div class="header-actions">
-      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>源代码</span></a>
-      <a class="language" href="../../en/latest/introduction.html" aria-label="Switch language">◎ English</a>
-      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
-    </div>
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
   </header>
   <div class="shell">
-    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
-      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
-      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
-      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+    <aside class="sidebar" id="doc-nav" aria-label="文档导航">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="搜索文档…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
       <nav class="nav"><div class="nav-heading">项目概览</div>
 <a class="nav-link" href="index.html">首页</a>
 <a aria-current="page" class="nav-link active" href="introduction.html">项目简介</a>
@@ -37,7 +34,12 @@
 <a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
       <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
     </aside>
-    <main class="main"><div class="content" id="page-content"><h1>项目简介</h1>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>项目简介</span></div>
+        <div class="document-actions"><a href="../../en/latest/introduction.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1>项目简介</h1>
 <p>Hydro-CPS-Sim 是一个围绕**供水系统（Water Distribution Systems）**构建的 CPS 安全联合仿真研究平台，主要服务于工业网络攻击影响分析、攻击路径研究和防御方法验证。</p>
 <h2>研究动机</h2>
 <p>传统水力模拟工具擅长计算流量、压力、水箱水位等物理变量，但难以独立体现真实控制和通信过程；网络仿真工具能够刻画时延、丢包和拓扑，却往往缺少真实水力反馈。将两者在闭环中整合，可以分析攻击是否、何时以及如何影响物理系统。</p>
@@ -83,7 +85,7 @@
 <p>该项目旨在科研仿真和方法验证，不是现实供水设施的运维控制软件。不同攻击场景的可用性、参数名称和示例数据需与对应提交版本核对。任何未经过验证的实验结果不应作为真实供水系统风险的直接量化结论。</p>
 <p>公开代码：<a href="https://github.com/WandeF/hydro-cps-sim">https://github.com/WandeF/hydro-cps-sim</a></p>
 
-      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../en/latest/introduction.html">English</a></div></footer>
+      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
     </div></main>
   </div>
 </body>

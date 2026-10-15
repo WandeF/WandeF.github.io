@@ -73,6 +73,9 @@ def build_one(lang: str, slug: str, label: str):
     tmpl = (ROOT / 'template.html').read_text(encoding='utf-8')
     replacements = {
         '__LANG__': lang,
+        '__DOCS__': '文档' if lang == 'zh' else 'Docs',
+        '__PAGE_LABEL__': html.escape(label),
+        '__SIDEBAR__': strings['sidebar'],
         '__TITLE__': html.escape(page_title),
         '__DESCRIPTION__': html.escape(strings['tagline'], quote=True),
         '__NAV__': nav_html(lang, slug),

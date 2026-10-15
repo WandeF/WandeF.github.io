@@ -8,20 +8,17 @@
 </head>
 <body data-lang="en">
   <header class="site-header">
-    <a href="index.html" class="brand" aria-label="Hydro-CPS-Sim">
-      <span class="brand-mark">C<span>²</span></span><span class="brand-copy"><b>Hydro-CPS-Sim</b><small>CPS² Lab · Research Software</small></span>
-    </a>
-    <div class="header-actions">
-      <a class="github-link" href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener" aria-label="GitHub">◆ <span>Source Code</span></a>
-      <a class="language" href="../../zh/latest/installation.html" aria-label="Switch language">◎ 中文</a>
-      <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
-    </div>
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
   </header>
   <div class="shell">
-    <aside class="sidebar" id="doc-nav" aria-label="Documentation navigation">
-      <div class="sidebar-title"><span class="mini-logo">CPS² LAB</span><span class="version">v0 · docs</span></div>
-      <div class="sidebar-search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation"><kbd>/</kbd></div>
-      <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
       <nav class="nav"><div class="nav-heading">Overview</div>
 <a class="nav-link" href="index.html">Home</a>
 <a class="nav-link" href="introduction.html">Introduction</a>
@@ -37,7 +34,12 @@
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
       <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
     </aside>
-    <main class="main"><div class="content" id="page-content"><h1>Installation</h1>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Installation</span></div>
+        <div class="document-actions"><a href="../../zh/latest/installation.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1>Installation</h1>
 <p>These instructions are based on the published <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/install.sh"><code>install.sh</code></a>. Review the script before running it, since it installs system packages and checks out external dependencies.</p>
 <h2>Source-defined environment requirements</h2>
 <table>
@@ -97,7 +99,7 @@ conda activate hydro-cps
 <p>Source review: <a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
 <p>The installer rewrites five top-level path keys in every C-Town YAML and saves changed originals under <code>output/install-backups/</code>. Check paths after moving to a different machine; do not reuse developer-specific absolute paths from the source.</p>
 
-      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub Repository ↗</a> · <a href="../../zh/latest/installation.html">中文</a></div></footer>
+      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
     </div></main>
   </div>
 </body>
