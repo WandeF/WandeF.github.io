@@ -83,22 +83,22 @@
 <pre><code class="language-bash">git clone https://github.com/WandeF/hydro-cps-sim.git
 cd hydro-cps-sim
 </code></pre>
-<h2>预检查</h2>
+<h2>查看安装计划</h2>
 <p>查看安装计划，不修改系统：</p>
 <pre><code class="language-bash">bash install.sh --dry-run
 </code></pre>
 <h2>正式安装</h2>
-<p>确认环境及权限后再运行：</p>
+<p>运行安装脚本：</p>
 <pre><code class="language-bash">bash install.sh
 conda activate hydro-cps
 </code></pre>
 <p>安装过程中可能需要较长时间编译 OpenPLC 和 ns-3。默认环境名为 <code>hydro-cps</code>；脚本也支持 <code>--env</code>、<code>--jobs</code>、<code>--parent</code> 等参数，详见 <code>bash install.sh --help</code>。</p>
 <h2>安装完成后的自检</h2>
-<p>安装脚本末尾包含基础测试过程；如需再次运行仓库中的 Python 单元测试：</p>
+<p>安装程序会检查 EPANET 动态库并运行 Python 单元测试。你也可以手动运行测试：</p>
 <pre><code class="language-bash">python -m unittest discover -s tests
 </code></pre>
-<p>安装程序会执行 EPANET 动态库加载检查和 Python 单元测试。安装完成后，继续<a href="quickstart.html">快速开始</a>运行 C-Town 示例。</p>
-<p>安装脚本会更新所有 C-Town 示例 YAML 的五个顶层路径键，并将修改前的文件保存到 <code>output/install-backups/</code>。迁移机器后需重新检查路径；不要直接沿用源码中的开发者绝对路径。</p>
+<p>安装完成后，继续<a href="quickstart.html">快速开始</a>运行 C-Town 示例。</p>
+<p>安装脚本会更新所有 C-Town 示例 YAML 的五个顶层路径键，并将修改前的文件保存到 <code>output/install-backups/</code>。更换机器或依赖目录时，更新配置中的路径。</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

@@ -41,19 +41,18 @@
       </div>
       <h1>Hydro-CPS-Sim Documentation</h1>
 <p>A co-simulation platform for water cyber-physical system security research.</p>
-<p>Hydro-CPS-Sim connects hydraulic dynamics, PLC control, SCADA communications, and network simulation to support attack-impact evaluation, cross-layer analysis, and defense research.</p>
+<p>Hydro-CPS-Sim connects hydraulic dynamics, PLC control, SCADA communications, and network simulation to run attack experiments, explore system behavior and develop security methods.</p>
 <p>Source code: <a href="https://github.com/WandeF/hydro-cps-sim">WandeF/hydro-cps-sim</a></p>
 <h2>Overview</h2>
 <ul>
 <li><strong>Cross-layer co-simulation</strong>: Link hydraulic models, control logic, and communication processes to study how cyber events affect the physical network.</li>
-<li><strong>Attack-impact evaluation</strong>: Support research into MITM, DoS, and PLC logic modification scenarios. Runnable cases depend on the published code and configurations.</li>
-<li><strong>Reproducible workflows</strong>: Organize experiments through configuration files and scripts, and export logs and CSV results for analysis.</li>
+<li><strong>Attack experiments</strong>: Use MITM, DoS and PLC logic injection scenarios with configurable targets, parameters and active windows.</li>
+<li><strong>Configuration and execution</strong>: Set up scenarios with YAML, run simulations through scripts and export logs and CSV results.</li>
 <li><strong>Research extensibility</strong>: Investigate control, network, and hydraulic effects within a modular experiment framework.</li>
 </ul>
-<p>The key research question is: <strong>How do cyberattacks propagate through sensing, control decisions, and actuation into physical water-system behavior?</strong></p>
-<p>A typical research path: attacks and disturbances → network communication (ns-3 / Namespace) → SCADA / PLC → hydraulics (DHALSIM-epynet) → log and CSV analysis.</p>
-<h2>Platform and research method</h2>
-<p>Explore the <a href="architecture.html">architecture and closed-loop workflow</a>, <a href="introduction.html">C-Town control dependencies</a>, and <a href="experiments.html">attack propagation and evidence organization</a> to understand how network, control and hydraulics interact.</p>
+<p>To get started, follow <a href="installation.html">Installation</a>, then run the C-Town example in <a href="quickstart.html">Quick Start</a>.</p>
+<h2>Explore the platform</h2>
+<p>Explore the <a href="architecture.html">architecture and closed-loop workflow</a>, <a href="introduction.html">C-Town control dependencies</a>, and <a href="experiments.html">attack types and example configurations</a> to understand how network, control and hydraulics interact.</p>
 <h2>Documentation</h2>
 <ul>
 <li>Overview<ul>

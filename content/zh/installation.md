@@ -22,7 +22,7 @@ git clone https://github.com/WandeF/hydro-cps-sim.git
 cd hydro-cps-sim
 ```
 
-## 预检查
+## 查看安装计划
 
 查看安装计划，不修改系统：
 
@@ -32,7 +32,7 @@ bash install.sh --dry-run
 
 ## 正式安装
 
-确认环境及权限后再运行：
+运行安装脚本：
 
 ```bash
 bash install.sh
@@ -43,12 +43,12 @@ conda activate hydro-cps
 
 ## 安装完成后的自检
 
-安装脚本末尾包含基础测试过程；如需再次运行仓库中的 Python 单元测试：
+安装程序会检查 EPANET 动态库并运行 Python 单元测试。你也可以手动运行测试：
 
 ```bash
 python -m unittest discover -s tests
 ```
 
-安装程序会执行 EPANET 动态库加载检查和 Python 单元测试。安装完成后，继续[快速开始](quickstart.html)运行 C-Town 示例。
+安装完成后，继续[快速开始](quickstart.html)运行 C-Town 示例。
 
-安装脚本会更新所有 C-Town 示例 YAML 的五个顶层路径键，并将修改前的文件保存到 `output/install-backups/`。迁移机器后需重新检查路径；不要直接沿用源码中的开发者绝对路径。
+安装脚本会更新所有 C-Town 示例 YAML 的五个顶层路径键，并将修改前的文件保存到 `output/install-backups/`。更换机器或依赖目录时，更新配置中的路径。

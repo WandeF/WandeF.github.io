@@ -87,16 +87,17 @@ cd hydro-cps-sim
 <pre><code class="language-bash">bash install.sh --dry-run
 </code></pre>
 <h2>Install</h2>
-<p>After checking the required privileges and system compatibility:</p>
+<p>Run the installer:</p>
 <pre><code class="language-bash">bash install.sh
 conda activate hydro-cps
 </code></pre>
 <p>Building ns-3 and OpenPLC may take some time. The default environment is named <code>hydro-cps</code>; see <code>bash install.sh --help</code> for <code>--env</code>, <code>--jobs</code>, and <code>--parent</code> options.</p>
-<h2>Run the project test suite</h2>
+<h2>Run the tests</h2>
+<p>The installer checks EPANET library loading and runs the Python test suite. You can also run the tests manually:</p>
 <pre><code class="language-bash">python -m unittest discover -s tests
 </code></pre>
-<p>The installer checks EPANET shared-library loading and runs the Python test suite. After installation, follow <a href="quickstart.html">Quick Start</a> to run the C-Town example.</p>
-<p>The installer rewrites five top-level path keys in every C-Town YAML and saves changed originals under <code>output/install-backups/</code>. Check paths after moving to a different machine; do not reuse developer-specific absolute paths from the source.</p>
+<p>After installation, follow <a href="quickstart.html">Quick Start</a> to run the C-Town example.</p>
+<p>The installer rewrites five top-level path keys in every C-Town YAML and saves changed originals under <code>output/install-backups/</code>. Update the paths when moving to another machine or dependency directory.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

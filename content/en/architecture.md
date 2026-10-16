@@ -1,6 +1,6 @@
 # Architecture
 
-Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial protocols and network paths in a closed loop. Attacks enter through a protocol, network or control interface and can affect hydraulics through controller decisions and actuator feedback.
+Hydro-CPS-Sim includes hydraulic, PLC, SCADA, network and attack modules. Data exchange and state synchronization connect these modules in a closed-loop simulation.
 
 ## Platform architecture
 
@@ -9,7 +9,7 @@ Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial
 <figcaption>Platform architecture: scenario configuration, orchestration and runtime modules.</figcaption>
 </figure>
 
-| Module | Implementation and responsibility |
+| Module | Function |
 | --- | --- |
 | Scenario configuration | YAML describes the water model, PLC/SCADA mappings, control rules, network, attacks and runtime settings |
 | Orchestration | Generates ST programs, compiles PLCs, creates the network environment, starts processes and exports results |
@@ -32,13 +32,13 @@ Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial
 3. **Acquire and forward:** Obtain current sensor state and use SCADA Modbus TCP exchanges to forward cross-PLC control dependencies.
 4. **Execute control:** OpenPLC evaluates current inputs and effective rules to produce pump and valve commands.
 5. **Feed back:** Apply actuator states to the next hydraulic step to obtain updated levels, pressures and flows.
-6. **Record and compare:** Save iteration evidence, advance the loop and compare completed runs with matching baselines.
+6. **Save results:** Record the current iteration and advance to the next simulation step.
 
-## Independent endpoints and protocol exchanges
+## Network connections
 
 Each PLC, SCADA and attack endpoint runs in a separate Linux network namespace with its own interfaces and protocol stack. ns-3 supplies configurable links, routing and network dynamics. Normal Modbus exchanges and attack traffic follow the configured network paths.
 
-This preserves intermediate behavior such as program execution, register/coil mappings, request/response exchanges, timeouts and held observations. Researchers can inspect whether communication anomalies change controller inputs and whether those inputs actually trigger actuator changes.
+SCADA accesses PLC registers and coils over Modbus TCP to collect measurements and send control data. Network settings affect these requests and responses. Logs provide communication, measurement-update and control-output records.
 
 ## Source entry points
 

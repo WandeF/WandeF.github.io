@@ -1,6 +1,6 @@
 # Contributing & Feedback
 
-Suggestions on functionality, installation, and reproducibility are welcome. A formal contribution policy and the open-source license will be established as the release plan is finalized.
+You are welcome to report issues, improve the documentation or contribute features.
 
 ## Reporting a problem
 
@@ -23,4 +23,4 @@ Generated files are written to `site/`. Preview locally with `python -m http.ser
 
 ## Contribution areas
 
-Contributions can improve installation and configuration instructions, add reproducible examples, fix issues or refine translations. Describe the purpose, applicable version and validation of each change. Include configurations and run records with experimental data.
+Contributions can improve installation and configuration instructions, add reproducible examples, fix issues or refine translations. Briefly describe your changes and how you tested them. Include configurations and run records with experiment examples.

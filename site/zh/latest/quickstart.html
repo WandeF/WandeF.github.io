@@ -49,7 +49,7 @@
 conda activate hydro-cps
 bash scripts/run_all.sh --logic-wait 0.3
 </code></pre>
-<p>如果希望先缩短实验轮数，可以使用运行器的 <code>--iterations</code> 参数，例如：</p>
+<p>使用 <code>--iterations</code> 设置仿真轮数。下面运行 10 轮：</p>
 <pre><code class="language-bash">bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
 </code></pre>
 <p>此命令将仿真缩短为 10 轮，适合检查启动与结果导出流程。</p>
@@ -90,10 +90,10 @@ bash scripts/run_all.sh --logic-wait 0.3
 <p>具体帮助信息可由 <code>bash scripts/run_all.sh --help</code> 查询。</p>
 <h2>查看输出</h2>
 <p>实验结果导出到 <code>output_path</code> 指定目录下的 <code>reports/csv</code>，日志与阶段耗时分别保存在 <code>logs/</code> 和 <code>timing/</code> 中。</p>
-<p>运行结束后，终端还会打印类似下面的提示：</p>
+<p>运行结束后，终端显示结果位置：</p>
 <pre><code class="language-text">[DONE] Results: &lt;output_path&gt;/reports/csv
 </code></pre>
-<p>真实路径取决于配置文件中的 <code>output_path</code>，请勿直接复制上面的占位符作为命令。</p>
+<p>其中 <code>&lt;output_path&gt;</code> 对应配置中的输出目录。</p>
 <h2>下一步</h2>
 <p>请参考<a href="experiments.html">攻防实验</a>了解如何组织基线与攻击条件对照，通过<a href="configuration.html">配置说明</a>调整场景参数。</p>
 

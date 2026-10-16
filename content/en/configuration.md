@@ -2,7 +2,7 @@
 
 Hydro-CPS-Sim organizes experiments using YAML configuration files. The default is `examples/c_town/config.yaml`.
 
-## What configuration controls
+## Configuration files
 
 - Input hydraulic network files and simulation settings.
 - External paths for OpenPLC and ns-3.
@@ -21,13 +21,13 @@ The installer updates five top-level path fields in the example configurations:
 
 Update these paths when moving environments or replacing a model. Set `output_path` to a dedicated experiment output directory.
 
-## Recommended practice
+## Creating a scenario
 
-Keep the original validated baseline configuration intact. Make copies for new experiments and record the git commit, exact YAML, invocation, and outputs for each run.
+Copy `config.yaml` to create a scenario, change its water model, control or network settings, and select the file with `--config` when running the simulation.
 
-## Configuration constraints
+## Sensor and control mappings
 
-PLC sensor and actuator names must match the water model, and cross-PLC dependencies must be forwarded through SCADA. Use consistent identifiers for network endpoints, namespaces and attack targets. When copying a scenario, check its model, control mapping and network topology together.
+The `plcs` section assigns sensors and actuators from the water model to PLCs. SCADA forwards cross-PLC data. The `network` section defines endpoints, namespaces and connections for PLC, SCADA and attack nodes.
 
 ## Simulation and control parameters
 
@@ -42,4 +42,4 @@ PLC sensor and actuator names must match the water model, and cross-PLC dependen
 | `attacks.enabled` | Global switch in attack presets |
 | `attacks.scenarios` | Scenario types, triggers, targets and type-specific options |
 
-Attack types include `modbus_mitm`, `udp_dos`, and `openplc_logic_injection`. An `iteration_window` trigger uses `start_iteration` and `end_iteration`. Scenarios also need matching network endpoints, interception rules or logic injection settings; adding only a switch to the baseline is insufficient. See actual presets under [experiments](experiments.html).
+Attack types include `modbus_mitm`, `udp_dos` and `openplc_logic_injection`. Use `trigger.type: iteration_window` with `start_iteration` and `end_iteration` to set the active window. Start with the [experiment presets](experiments.html) to configure nodes, targets and rules for each type.

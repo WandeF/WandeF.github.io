@@ -2,24 +2,22 @@
 
 A co-simulation platform for water cyber-physical system security research.
 
-Hydro-CPS-Sim connects hydraulic dynamics, PLC control, SCADA communications, and network simulation to support attack-impact evaluation, cross-layer analysis, and defense research.
+Hydro-CPS-Sim connects hydraulic dynamics, PLC control, SCADA communications, and network simulation to run attack experiments, explore system behavior and develop security methods.
 
 Source code: [WandeF/hydro-cps-sim](https://github.com/WandeF/hydro-cps-sim)
 
 ## Overview
 
 - **Cross-layer co-simulation**: Link hydraulic models, control logic, and communication processes to study how cyber events affect the physical network.
-- **Attack-impact evaluation**: Support research into MITM, DoS, and PLC logic modification scenarios. Runnable cases depend on the published code and configurations.
-- **Reproducible workflows**: Organize experiments through configuration files and scripts, and export logs and CSV results for analysis.
+- **Attack experiments**: Use MITM, DoS and PLC logic injection scenarios with configurable targets, parameters and active windows.
+- **Configuration and execution**: Set up scenarios with YAML, run simulations through scripts and export logs and CSV results.
 - **Research extensibility**: Investigate control, network, and hydraulic effects within a modular experiment framework.
 
-The key research question is: **How do cyberattacks propagate through sensing, control decisions, and actuation into physical water-system behavior?**
+To get started, follow [Installation](installation.html), then run the C-Town example in [Quick Start](quickstart.html).
 
-A typical research path: attacks and disturbances → network communication (ns-3 / Namespace) → SCADA / PLC → hydraulics (DHALSIM-epynet) → log and CSV analysis.
+## Explore the platform
 
-## Platform and research method
-
-Explore the [architecture and closed-loop workflow](architecture.html), [C-Town control dependencies](introduction.html), and [attack propagation and evidence organization](experiments.html) to understand how network, control and hydraulics interact.
+Explore the [architecture and closed-loop workflow](architecture.html), [C-Town control dependencies](introduction.html), and [attack types and example configurations](experiments.html) to understand how network, control and hydraulics interact.
 
 ## Documentation
 

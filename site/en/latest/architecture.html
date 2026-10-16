@@ -40,7 +40,7 @@
         <div class="document-actions"><a href="../../zh/latest/architecture.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <h1>Architecture</h1>
-<p>Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial protocols and network paths in a closed loop. Attacks enter through a protocol, network or control interface and can affect hydraulics through controller decisions and actuator feedback.</p>
+<p>Hydro-CPS-Sim includes hydraulic, PLC, SCADA, network and attack modules. Data exchange and state synchronization connect these modules in a closed-loop simulation.</p>
 <h2>Platform architecture</h2>
 <figure>
 <a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Scenario configuration, orchestration, physical, control, network, synchronization and logging modules" loading="lazy" width="4978" height="3116"></a>
@@ -51,7 +51,7 @@
 <thead>
 <tr>
   <th>Module</th>
-  <th>Implementation and responsibility</th>
+  <th>Function</th>
 </tr>
 </thead>
 <tbody>
@@ -101,11 +101,11 @@
 <li><strong>Acquire and forward:</strong> Obtain current sensor state and use SCADA Modbus TCP exchanges to forward cross-PLC control dependencies.</li>
 <li><strong>Execute control:</strong> OpenPLC evaluates current inputs and effective rules to produce pump and valve commands.</li>
 <li><strong>Feed back:</strong> Apply actuator states to the next hydraulic step to obtain updated levels, pressures and flows.</li>
-<li><strong>Record and compare:</strong> Save iteration evidence, advance the loop and compare completed runs with matching baselines.</li>
+<li><strong>Save results:</strong> Record the current iteration and advance to the next simulation step.</li>
 </ol>
-<h2>Independent endpoints and protocol exchanges</h2>
+<h2>Network connections</h2>
 <p>Each PLC, SCADA and attack endpoint runs in a separate Linux network namespace with its own interfaces and protocol stack. ns-3 supplies configurable links, routing and network dynamics. Normal Modbus exchanges and attack traffic follow the configured network paths.</p>
-<p>This preserves intermediate behavior such as program execution, register/coil mappings, request/response exchanges, timeouts and held observations. Researchers can inspect whether communication anomalies change controller inputs and whether those inputs actually trigger actuator changes.</p>
+<p>SCADA accesses PLC registers and coils over Modbus TCP to collect measurements and send control data. Network settings affect these requests and responses. Logs provide communication, measurement-update and control-output records.</p>
 <h2>Source entry points</h2>
 <ul>
 <li><code>scripts/run_all.sh</code>: preparation, execution and cleanup.</li>

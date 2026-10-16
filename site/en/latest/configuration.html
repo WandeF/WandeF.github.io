@@ -41,7 +41,7 @@
       </div>
       <h1>Configuration</h1>
 <p>Hydro-CPS-Sim organizes experiments using YAML configuration files. The default is <code>examples/c_town/config.yaml</code>.</p>
-<h2>What configuration controls</h2>
+<h2>Configuration files</h2>
 <ul>
 <li>Input hydraulic network files and simulation settings.</li>
 <li>External paths for OpenPLC and ns-3.</li>
@@ -80,10 +80,10 @@
 </tbody>
 </table>
 <p>Update these paths when moving environments or replacing a model. Set <code>output_path</code> to a dedicated experiment output directory.</p>
-<h2>Recommended practice</h2>
-<p>Keep the original validated baseline configuration intact. Make copies for new experiments and record the git commit, exact YAML, invocation, and outputs for each run.</p>
-<h2>Configuration constraints</h2>
-<p>PLC sensor and actuator names must match the water model, and cross-PLC dependencies must be forwarded through SCADA. Use consistent identifiers for network endpoints, namespaces and attack targets. When copying a scenario, check its model, control mapping and network topology together.</p>
+<h2>Creating a scenario</h2>
+<p>Copy <code>config.yaml</code> to create a scenario, change its water model, control or network settings, and select the file with <code>--config</code> when running the simulation.</p>
+<h2>Sensor and control mappings</h2>
+<p>The <code>plcs</code> section assigns sensors and actuators from the water model to PLCs. SCADA forwards cross-PLC data. The <code>network</code> section defines endpoints, namespaces and connections for PLC, SCADA and attack nodes.</p>
 <h2>Simulation and control parameters</h2>
 <table>
 <thead>
@@ -127,7 +127,7 @@
 </tr>
 </tbody>
 </table>
-<p>Attack types include <code>modbus_mitm</code>, <code>udp_dos</code>, and <code>openplc_logic_injection</code>. An <code>iteration_window</code> trigger uses <code>start_iteration</code> and <code>end_iteration</code>. Scenarios also need matching network endpoints, interception rules or logic injection settings; adding only a switch to the baseline is insufficient. See actual presets under <a href="experiments.html">experiments</a>.</p>
+<p>Attack types include <code>modbus_mitm</code>, <code>udp_dos</code> and <code>openplc_logic_injection</code>. Use <code>trigger.type: iteration_window</code> with <code>start_iteration</code> and <code>end_iteration</code> to set the active window. Start with the <a href="experiments.html">experiment presets</a> to configure nodes, targets and rules for each type.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

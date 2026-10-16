@@ -49,7 +49,7 @@
 conda activate hydro-cps
 bash scripts/run_all.sh --logic-wait 0.3
 </code></pre>
-<p>You may override the configured number of iterations to try a shorter run:</p>
+<p>Use <code>--iterations</code> to set the run length. This example runs 10 iterations:</p>
 <pre><code class="language-bash">bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
 </code></pre>
 <p>This command limits the simulation to 10 iterations to check startup and result export.</p>
@@ -91,7 +91,7 @@ bash scripts/run_all.sh --logic-wait 0.3
 <p>Results are exported to <code>reports/csv</code> under <code>output_path</code>. Logs and stage timings are saved in <code>logs/</code> and <code>timing/</code>. At completion, the script prints:</p>
 <pre><code class="language-text">[DONE] Results: &lt;output_path&gt;/reports/csv
 </code></pre>
-<p>The actual path comes from <code>output_path</code> in the configuration. The placeholder above is not a literal path.</p>
+<p>Here, <code>&lt;output_path&gt;</code> is the output directory set in the configuration.</p>
 <p>Continue with <a href="experiments.html">experiments</a> and <a href="configuration.html">configuration</a>.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>

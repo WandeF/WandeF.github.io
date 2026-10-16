@@ -12,7 +12,7 @@ conda activate hydro-cps
 bash scripts/run_all.sh --logic-wait 0.3
 ```
 
-如果希望先缩短实验轮数，可以使用运行器的 `--iterations` 参数，例如：
+使用 `--iterations` 设置仿真轮数。下面运行 10 轮：
 
 ```bash
 bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
@@ -42,13 +42,13 @@ bash scripts/run_all.sh --config examples/c_town/config.yaml
 
 实验结果导出到 `output_path` 指定目录下的 `reports/csv`，日志与阶段耗时分别保存在 `logs/` 和 `timing/` 中。
 
-运行结束后，终端还会打印类似下面的提示：
+运行结束后，终端显示结果位置：
 
 ```text
 [DONE] Results: <output_path>/reports/csv
 ```
 
-真实路径取决于配置文件中的 `output_path`，请勿直接复制上面的占位符作为命令。
+其中 `<output_path>` 对应配置中的输出目录。
 
 ## 下一步
 

@@ -30,7 +30,7 @@ bash install.sh --dry-run
 
 ## Install
 
-After checking the required privileges and system compatibility:
+Run the installer:
 
 ```bash
 bash install.sh
@@ -39,12 +39,14 @@ conda activate hydro-cps
 
 Building ns-3 and OpenPLC may take some time. The default environment is named `hydro-cps`; see `bash install.sh --help` for `--env`, `--jobs`, and `--parent` options.
 
-## Run the project test suite
+## Run the tests
+
+The installer checks EPANET library loading and runs the Python test suite. You can also run the tests manually:
 
 ```bash
 python -m unittest discover -s tests
 ```
 
-The installer checks EPANET shared-library loading and runs the Python test suite. After installation, follow [Quick Start](quickstart.html) to run the C-Town example.
+After installation, follow [Quick Start](quickstart.html) to run the C-Town example.
 
-The installer rewrites five top-level path keys in every C-Town YAML and saves changed originals under `output/install-backups/`. Check paths after moving to a different machine; do not reuse developer-specific absolute paths from the source.
+The installer rewrites five top-level path keys in every C-Town YAML and saves changed originals under `output/install-backups/`. Update the paths when moving to another machine or dependency directory.

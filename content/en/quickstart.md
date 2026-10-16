@@ -12,7 +12,7 @@ conda activate hydro-cps
 bash scripts/run_all.sh --logic-wait 0.3
 ```
 
-You may override the configured number of iterations to try a shorter run:
+Use `--iterations` to set the run length. This example runs 10 iterations:
 
 ```bash
 bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
@@ -44,6 +44,6 @@ Results are exported to `reports/csv` under `output_path`. Logs and stage timing
 [DONE] Results: <output_path>/reports/csv
 ```
 
-The actual path comes from `output_path` in the configuration. The placeholder above is not a literal path.
+Here, `<output_path>` is the output directory set in the configuration.
 
 Continue with [experiments](experiments.html) and [configuration](configuration.html).

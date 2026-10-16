@@ -2,7 +2,7 @@
 
 Hydro-CPS-Sim 使用 YAML 配置文件组织实验场景，默认配置为 `examples/c_town/config.yaml`。
 
-## 配置文件在运行中的作用
+## 配置文件
 
 - 指定水网模型及其输入文件。
 - 指向 OpenPLC、ns-3 等组件所在目录。
@@ -21,13 +21,13 @@ Hydro-CPS-Sim 使用 YAML 配置文件组织实验场景，默认配置为 `exam
 
 迁移环境或更换模型时，请更新这些路径，并确保 `output_path` 指向专用的实验输出目录。
 
-## 建议工作方式
+## 创建场景
 
-不要直接修改唯一的基准配置；可以复制已验证的 `config.yaml`，然后在副本中改变实验参数。每次实验应记录所用源码提交、配置文件、启动命令与日志位置。
+复制 `config.yaml` 作为新场景，修改其中的水网、控制或网络参数，然后通过 `--config` 指定配置文件运行。
 
-## 配置之间的约束
+## 传感器与控制映射
 
-PLC 的传感器与执行器名称须与水网模型一致，跨 PLC 控制依赖须能通过 SCADA 转发。网络端点、命名空间和攻击目标应使用一致的标识。复制场景后，需同时检查模型、控制映射和网络拓扑。
+`plcs` 将水网中的传感器和执行器分配给各个 PLC。跨 PLC 的数据由 SCADA 转发。`network` 定义 PLC、SCADA 和攻击节点的网络端点、命名空间与连接关系。
 
 ## 仿真与控制参数
 
@@ -42,4 +42,4 @@ PLC 的传感器与执行器名称须与水网模型一致，跨 PLC 控制依�
 | `attacks.enabled` | 攻击配置的总开关 |
 | `attacks.scenarios` | 场景类型、触发器、目标和类型特有参数 |
 
-攻击场景类型包括 `modbus_mitm`、`udp_dos`、`openplc_logic_injection`。`trigger.type: iteration_window` 使用 `start_iteration` / `end_iteration`；场景还需对应的攻击节点、拦截规则或逻辑注入设置，不应仅向基线追加一个开关。参见[攻防实验](experiments.html)中的实际配置。
+攻击类型包括 `modbus_mitm`、`udp_dos` 和 `openplc_logic_injection`。使用 `trigger.type: iteration_window` 设置轮次窗口，`start_iteration` 和 `end_iteration` 分别指定开始与结束轮次。各类型的节点、目标和规则可从[攻防实验](experiments.html)中的示例配置开始修改。

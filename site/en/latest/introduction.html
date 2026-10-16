@@ -40,57 +40,26 @@
         <div class="document-actions"><a href="../../zh/latest/introduction.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <h1>Introduction</h1>
-<p>Hydro-CPS-Sim is a research co-simulation platform for <strong>water distribution cyber-physical systems</strong>. It is designed for security experimentation, cross-layer impact assessment, and defense-method evaluation.</p>
-<h2>Motivation</h2>
-<p>Hydraulic simulators capture the evolution of pressures, flows, and tank levels, while network simulators characterize topology, delays, and packet loss. Studying cyber-physical incidents requires combining both aspects with an actual control loop.</p>
-<h2>Main components</h2>
-<table>
-<thead>
-<tr>
-  <th>Component</th>
-  <th>Role</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>DHALSIM-epynet / EPANET</td>
-  <td>Hydraulic simulation and physical-state updates</td>
-</tr>
-<tr>
-  <td>OpenPLC</td>
-  <td>PLC control-program execution</td>
-</tr>
-<tr>
-  <td>ns-3</td>
-  <td>Communication-network simulation</td>
-</tr>
-<tr>
-  <td>Linux Network Namespace</td>
-  <td>Isolated Linux network environments</td>
-</tr>
-<tr>
-  <td>Python orchestration modules</td>
-  <td>Configuration, process coordination, state exchange, and output</td>
-</tr>
-</tbody>
-</table>
-<h2>Example research questions</h2>
-<ul>
-<li>At what control iteration does manipulated input data change a PLC decision?</li>
-<li>Does packet loss or timeout necessarily cause an actuator deviation?</li>
-<li>Can similar physical anomalies arise from different cyber or control causes?</li>
-<li>How can network traces, controller behavior, and physical trajectories be aligned?</li>
-</ul>
-<h2>Scope</h2>
-<p>This is a research simulation tool, not software for operating a real water utility. Availability of specific attack configurations and parameter names must be checked against the corresponding repository version. Simulation results should not be interpreted directly as quantitative risk assessments for production systems.</p>
-<p>Repository: <a href="https://github.com/WandeF/hydro-cps-sim">https://github.com/WandeF/hydro-cps-sim</a></p>
-<h2>Research goals and method</h2>
-<p>The project asks four connected questions: how attacks enter control inputs or rules; how different entry points create distinct propagation paths; when communication degradation becomes control deviation; and how layered observations and baseline comparisons explain physical consequences.</p>
-<p>Experiments intervene at designated protocol, network or control interfaces while retaining hydraulic feedback and recording intermediate states. Analysis examines both where anomalies first appear and where propagation stops, without assuming that every cyberattack must cause a physical deviation.</p>
-<h2>C-Town example and control dependencies</h2>
+<h2>Water cyber-physical systems</h2>
+<p>A water cyber-physical system connects a distribution network with sensors, controllers and communication networks. Sensors measure tank levels, pressures and flows. PLCs use these measurements to control pumps and valves, while SCADA monitors the system and forwards data. Actuator actions change the network state, and new measurements enter the next control cycle.</p>
+<p>Studying security in these systems involves network communication, control programs and hydraulics together. Modified sensor data can change a pump decision, while a communication failure can leave a controller using an earlier measurement.</p>
+<h2>Platform overview</h2>
+<p>Hydro-CPS-Sim is a co-simulation platform for water-system security research. It connects EPANET hydraulics, OpenPLC programs, Modbus TCP communication and ns-3 networking in one closed loop, with support for MITM, DoS and PLC logic injection experiments.</p>
+<p>You can select a water model, control rules, network topology and attack scenario through configuration files. The platform starts the components, coordinates data exchange and hydraulic computation, and saves logs and CSV results. Source code is available in the <a href="https://github.com/WandeF/hydro-cps-sim">GitHub repository</a>.</p>
+<h2>Platform components</h2>
+<h3>Hydraulic simulation</h3>
+<p>DHALSIM-epynet / EPANET computes tank levels, node pressures and pipe flows. Pump and valve states from the PLCs update the hydraulic model, so control changes affect subsequent hydraulic states.</p>
+<h3>PLCs and SCADA</h3>
+<p>OpenPLC executes Structured Text (ST) control programs. SCADA reads sensor measurements over Modbus TCP and forwards cross-PLC dependencies to the relevant controllers. PLC Adapters connect hydraulic data with PLC inputs and outputs.</p>
+<h3>Communication network</h3>
+<p>Linux network namespaces provide separate network environments for PLC, SCADA and attack endpoints. TAP/veth interfaces connect them to ns-3, where you can configure link bandwidth, delay and topology.</p>
+<h3>Attacks and logging</h3>
+<p>The platform provides Modbus data manipulation, UDP DoS and PLC logic injection. Attacks can act on communication data, network paths or control rules. Sensor observations, actuator states, attack events and hydraulic variables are recorded during execution for comparison across experiments.</p>
+<h2>C-Town example</h2>
+<p>The C-Town example contains several PLC control regions. Some controllers use tank measurements acquired in other regions, with SCADA forwarding the data.</p>
 <figure>
 <a href="../../assets/ctown_water_topology.png" target="_blank" rel="noopener"><img src="../../assets/ctown_water_topology.png" alt="C-Town network, PLC1 to PLC8 regions, cross-region tank-level dependencies and attack entry points" loading="lazy" width="6240" height="6675"></a>
-<figcaption>C-Town network, control regions and cross-region dependencies. Attack annotations show the cross-layer analysis scenarios; see <a href="experiments.html">Experiments</a> for other presets and parameters.</figcaption>
+<figcaption>C-Town network topology, PLC control regions and cross-region data dependencies.</figcaption>
 </figure>
 
 <h3>Logical relationships between PLCs</h3>
@@ -124,8 +93,9 @@
 </tr>
 </tbody>
 </table>
-<p>Local T6 at PLC4 is primarily monitored. Regions represent logical ownership, not necessarily a shared physical cabinet. Cross-region dependencies allow measurement integrity and freshness to influence actuator decisions in another region.</p>
-<p>See <a href="architecture.html">architecture</a> and <a href="experiments.html">experiments</a>.</p>
+<p>PLC4 also monitors local T6 and uses T5 and T7 measurements to control the corresponding pumps.</p>
+<h2>Requirements and extension</h2>
+<p>The platform runs on Ubuntu and uses Python to coordinate hydraulic, control and network components. Components are organized into separate modules. You can adjust scenarios through YAML configuration or extend the control, network and attack modules. See <a href="installation.html">Installation</a> for requirements and <a href="quickstart.html">Quick Start</a> for your first experiment.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>
