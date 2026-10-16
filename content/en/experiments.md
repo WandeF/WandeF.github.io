@@ -14,7 +14,7 @@ A core research goal is to trace how cyber events propagate through **communicat
 
 <figure>
 <a href="../../assets/attack_cross_layer_propagation_paths.png" target="_blank" rel="noopener"><img src="../../assets/attack_cross_layer_propagation_paths.png" alt="MITM, DoS and PLC logic injection paths through communication or control rules to actuators and hydraulic feedback" loading="lazy" width="4663" height="1993"></a>
-<figcaption>Cross-layer attack propagation paths. Downstream effects depend on communication state, control conditions and hydraulic feedback. Click to view the original.</figcaption>
+<figcaption>Cross-layer attack propagation paths. Downstream effects depend on communication state, control conditions and hydraulic feedback.</figcaption>
 </figure>
 
 - **MITM changes input content.** The cross-layer analysis scenario modifies T7 data sent from SCADA to PLC4. A biased input can cross the PU10 pump-off threshold earlier; actual action changes depend on process state and rules.

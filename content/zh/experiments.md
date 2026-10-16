@@ -14,7 +14,7 @@ Hydro-CPS-Sim 的研究重点之一，是沿着**网络事件 → 数据状态 �
 
 <figure>
 <a href="../../assets/attack_cross_layer_propagation_paths.png" target="_blank" rel="noopener"><img src="../../assets/attack_cross_layer_propagation_paths.png" alt="MITM、DoS 和 PLC 逻辑注入经通信或控制规则影响泵阀并反馈至水力过程的路径" loading="lazy" width="4663" height="1993"></a>
-<figcaption>三类攻击的跨层传播路径。箭头表示可能的通路；后续影响取决于通信状态、控制条件和水力反馈。点击查看原图。</figcaption>
+<figcaption>三类攻击的跨层传播路径。箭头表示可能的通路；后续影响取决于通信状态、控制条件和水力反馈。</figcaption>
 </figure>
 
 - **MITM：输入内容改变。** 跨层分析场景修改 SCADA 下发至 PLC4 的 T7 数据，偏移后的输入可能提前越过 PU10 的关泵阈值。是否产生动作变化，还取决于当前状态与控制规则。

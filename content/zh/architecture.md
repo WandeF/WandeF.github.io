@@ -6,7 +6,7 @@ Hydro-CPS-Sim 将水力求解、可执行 PLC 程序、工业协议与网络路�
 
 <figure>
 <a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Hydro-CPS-Sim 场景配置、编排、物理、控制、网络、同步与记录模块架构图" loading="lazy" width="4978" height="3116"></a>
-<figcaption>平台总体架构：场景配置、联合仿真编排与各运行模块。点击查看原图。</figcaption>
+<figcaption>平台总体架构：场景配置、联合仿真编排与各运行模块。</figcaption>
 </figure>
 
 | 模块 | 实现与职责 |
@@ -24,7 +24,7 @@ Hydro-CPS-Sim 将水力求解、可执行 PLC 程序、工业协议与网络路�
 
 <figure>
 <a href="../../assets/closed_loop_experiment_workflow.png" target="_blank" rel="noopener"><img src="../../assets/closed_loop_experiment_workflow.png" alt="场景生成、启动、SCADA 采集、PLC 控制与水力反馈闭环流程" loading="lazy" width="2888" height="1818"></a>
-<figcaption>闭环运行流程：场景生成、数据采集、控制执行与水力反馈。点击查看原图。</figcaption>
+<figcaption>闭环运行流程：场景生成、数据采集、控制执行与水力反馈。</figcaption>
 </figure>
 
 1. **环境生成**：读取水网和 YAML 配置，生成控制程序、地址映射、ns-3 拓扑与命名空间配置。
@@ -34,15 +34,11 @@ Hydro-CPS-Sim 将水力求解、可执行 PLC 程序、工业协议与网络路�
 5. **水力反馈**：执行器状态进入下一步水力求解，产生新的水位、压力和流量。
 6. **记录与对照**：保存该轮数据，推进下一轮，并在运行后与同条件基线对齐。
 
-这里的“轮次”用于模块协调；物理时间应读取水力引擎的 `sim_time`。内部事件可能缩短水力步长，不能直接将轮次乘以名义步长作为真实时间。
-
 ## 独立网络节点与协议交互
 
 每个 PLC、SCADA 和攻击节点运行在各自的 Linux network namespace 中，拥有独立接口和协议栈。ns-3 为这些端点提供可配置的链路、路由与网络动态。正常 Modbus 通信和攻击流量通过配置的网络路径交互。
 
 这种部署保留了 PLC 程序执行、寄存器/线圈映射、协议请求与响应、超时及数据保持等中间环节。它使研究者能够观察通信异常是否改变控制输入，以及输入变化是否真正触发执行器动作。
-
-OpenPLC 是软件 PLC，命名空间中的节点仍共享主机资源。该平台不等同于工业硬件的实时调度、现场 I/O 或完整设备协议栈；不能仅凭拓扑隔离推断非目标节点绝不受间接影响。
 
 ## 代码入口
 

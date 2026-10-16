@@ -39,8 +39,10 @@ Experiments intervene at designated protocol, network or control interfaces whil
 
 <figure>
 <a href="../../assets/ctown_water_topology.png" target="_blank" rel="noopener"><img src="../../assets/ctown_water_topology.png" alt="C-Town network, PLC1 to PLC8 regions, cross-region tank-level dependencies and attack entry points" loading="lazy" width="6240" height="6675"></a>
-<figcaption>C-Town network, control regions and cross-region dependencies. Attack annotations show the cross-layer analysis scenarios; see <a href="experiments.html">Experiments</a> for other presets and parameters. Click to view the original.</figcaption>
+<figcaption>C-Town network, control regions and cross-region dependencies. Attack annotations show the cross-layer analysis scenarios; see <a href="experiments.html">Experiments</a> for other presets and parameters.</figcaption>
 </figure>
+
+### Logical relationships between PLCs
 
 | Measurement source | Control dependency forwarded through SCADA |
 | --- | --- |
@@ -52,4 +54,4 @@ Experiments intervene at designated protocol, network or control interfaces whil
 
 Local T6 at PLC4 is primarily monitored. Regions represent logical ownership, not necessarily a shared physical cabinet. Cross-region dependencies allow measurement integrity and freshness to influence actuator decisions in another region.
 
-See [architecture](architecture.html) and [experiments](experiments.html). When using historical experiment archives, map PLC identifiers to the sensor assignments in the corresponding configuration.
+See [architecture](architecture.html) and [experiments](experiments.html).

@@ -39,8 +39,10 @@ Hydro-CPS-Sim 是一个围绕**供水系统（Water Distribution Systems）**构
 
 <figure>
 <a href="../../assets/ctown_water_topology.png" target="_blank" rel="noopener"><img src="../../assets/ctown_water_topology.png" alt="C-Town 水网、PLC1 至 PLC8 管理区域、跨区水位依赖及攻击入口" loading="lazy" width="6240" height="6675"></a>
-<figcaption>C-Town 水网拓扑、控制分区与跨区数据依赖。图中攻击入口对应跨层分析场景，其他预设的目标和参数参见<a href="experiments.html">攻防实验</a>。点击查看原图。</figcaption>
+<figcaption>C-Town 水网拓扑、控制分区与跨区数据依赖。图中攻击入口对应跨层分析场景，其他预设的目标和参数参见<a href="experiments.html">攻防实验</a>。</figcaption>
 </figure>
+
+### PLC间的逻辑关系
 
 | 数据来源 | 经 SCADA 转发后的控制用途 |
 | --- | --- |
@@ -52,4 +54,4 @@ Hydro-CPS-Sim 是一个围绕**供水系统（Water Distribution Systems）**构
 
 PLC4 的本地 T6 主要用于监测。上述分区表示逻辑管理关系，并不意味着所有关联传感器都安装在同一机柜。跨区依赖使数据完整性和新鲜度能够影响另一控制区域的泵阀判断。
 
-更多内容参见[系统架构](architecture.html)和[攻防实验](experiments.html)。使用历史实验归档时，应将 PLC 编号与所用配置中的传感器映射对应。
+更多内容参见[系统架构](architecture.html)和[攻防实验](experiments.html)。

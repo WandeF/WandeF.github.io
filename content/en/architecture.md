@@ -6,7 +6,7 @@ Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial
 
 <figure>
 <a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Scenario configuration, orchestration, physical, control, network, synchronization and logging modules" loading="lazy" width="4978" height="3116"></a>
-<figcaption>Platform architecture: scenario configuration, orchestration and runtime modules. Click to view the original image.</figcaption>
+<figcaption>Platform architecture: scenario configuration, orchestration and runtime modules.</figcaption>
 </figure>
 
 | Module | Implementation and responsibility |
@@ -24,7 +24,7 @@ Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial
 
 <figure>
 <a href="../../assets/closed_loop_experiment_workflow.png" target="_blank" rel="noopener"><img src="../../assets/closed_loop_experiment_workflow.png" alt="Scenario generation, process launch, SCADA acquisition, PLC execution and hydraulic feedback" loading="lazy" width="2888" height="1818"></a>
-<figcaption>Closed-loop workflow: scenario generation, data acquisition, control execution and hydraulic feedback. Click to view the original image.</figcaption>
+<figcaption>Closed-loop workflow: scenario generation, data acquisition, control execution and hydraulic feedback.</figcaption>
 </figure>
 
 1. **Generate the environment:** Read the model and YAML, then generate control programs, address mappings, the ns-3 topology and namespace configuration.
@@ -34,15 +34,11 @@ Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial
 5. **Feed back:** Apply actuator states to the next hydraulic step to obtain updated levels, pressures and flows.
 6. **Record and compare:** Save iteration evidence, advance the loop and compare completed runs with matching baselines.
 
-Iterations coordinate processes. Read hydraulic `sim_time` for physical time: internal events can shorten steps, so multiplying an iteration number by the nominal step does not establish the actual engine time.
-
 ## Independent endpoints and protocol exchanges
 
 Each PLC, SCADA and attack endpoint runs in a separate Linux network namespace with its own interfaces and protocol stack. ns-3 supplies configurable links, routing and network dynamics. Normal Modbus exchanges and attack traffic follow the configured network paths.
 
 This preserves intermediate behavior such as program execution, register/coil mappings, request/response exchanges, timeouts and held observations. Researchers can inspect whether communication anomalies change controller inputs and whether those inputs actually trigger actuator changes.
-
-OpenPLC is a software PLC, and namespace endpoints still share host resources. This environment does not reproduce all hardware scheduling, field I/O or device protocol behavior. Topological separation alone does not guarantee that other endpoints experience no indirect effects.
 
 ## Source entry points
 
