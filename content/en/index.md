@@ -17,8 +17,6 @@ The key research question is: **How do cyberattacks propagate through sensing, c
 
 A typical research path: attacks and disturbances → network communication (ns-3 / Namespace) → SCADA / PLC → hydraulics (DHALSIM-epynet) → log and CSV analysis.
 
-> **Documentation status:** This is the deployed working draft of the research software documentation. Unverified configuration keys, publication details, and experiment claims are deliberately left as follow-up work.
-
 ## Platform and research method
 
 Explore the [architecture and closed-loop workflow](architecture.html), [C-Town control dependencies](introduction.html), and [attack propagation and evidence organization](experiments.html) to understand how network, control and hydraulics interact.

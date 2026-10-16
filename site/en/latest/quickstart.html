@@ -32,7 +32,7 @@
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
-      <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
     </aside>
     <main class="main"><div class="content" id="page-content">
       <div class="breadcrumbs">
@@ -40,7 +40,7 @@
         <div class="document-actions"><a href="../../zh/latest/quickstart.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <h1>Quick Start</h1>
-<p>This guide uses the project's C-Town example as an entry point. The commands follow the currently published run script and assume a successful installation.</p>
+<p>After installation, run your first closed-loop simulation with the C-Town example.</p>
 <blockquote>
 <p>Each run clears <code>runtime/</code>, <code>reports/</code>, <code>st/</code>, and <code>plcs/</code> under the configured output directory. Copy results to a separate directory before the next experiment. Start as a normal user; the script requests sudo when needed.</p>
 </blockquote>
@@ -52,7 +52,7 @@ bash scripts/run_all.sh --logic-wait 0.3
 <p>You may override the configured number of iterations to try a shorter run:</p>
 <pre><code class="language-bash">bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
 </code></pre>
-<p>The value <code>10</code> is illustrative, not a validated benchmark configuration.</p>
+<p>This command limits the simulation to 10 iterations to check startup and result export.</p>
 <h2>Select a configuration</h2>
 <pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config.yaml
 </code></pre>
@@ -88,14 +88,13 @@ bash scripts/run_all.sh --logic-wait 0.3
 </table>
 <p>Run <code>bash scripts/run_all.sh --help</code> for the definitive interface.</p>
 <h2>Outputs</h2>
-<p>According to the runner, the exported CSV files are located under the configured output directory in <code>reports/csv</code>. At completion, the script prints a message resembling:</p>
+<p>Results are exported to <code>reports/csv</code> under <code>output_path</code>. Logs and stage timings are saved in <code>logs/</code> and <code>timing/</code>. At completion, the script prints:</p>
 <pre><code class="language-text">[DONE] Results: &lt;output_path&gt;/reports/csv
 </code></pre>
 <p>The actual path comes from <code>output_path</code> in the configuration. The placeholder above is not a literal path.</p>
 <p>Continue with <a href="experiments.html">experiments</a> and <a href="configuration.html">configuration</a>.</p>
-<p>Source review: <a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
 
-      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>
   </div>
 </body>

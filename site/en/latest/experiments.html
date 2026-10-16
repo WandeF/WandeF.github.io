@@ -32,7 +32,7 @@
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
-      <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
     </aside>
     <main class="main"><div class="content" id="page-content">
       <div class="breadcrumbs">
@@ -71,20 +71,20 @@
 <h2>Three entry points and propagation mechanisms</h2>
 <figure>
 <a href="../../assets/attack_cross_layer_propagation_paths.png" target="_blank" rel="noopener"><img src="../../assets/attack_cross_layer_propagation_paths.png" alt="MITM, DoS and PLC logic injection paths through communication or control rules to actuators and hydraulic feedback" loading="lazy" width="4663" height="1993"></a>
-<figcaption>Propagation paths from the manuscript draft. Arrows indicate possible paths, not guaranteed downstream effects in every run. Click to view the original.</figcaption>
+<figcaption>Cross-layer attack propagation paths. Downstream effects depend on communication state, control conditions and hydraulic feedback. Click to view the original.</figcaption>
 </figure>
 
 <ul>
-<li><strong>MITM changes input content.</strong> The manuscript scenario modifies T7 data sent from SCADA to PLC4. A biased input can cross the PU10 pump-off threshold earlier; actual action changes depend on process state and rules.</li>
+<li><strong>MITM changes input content.</strong> The cross-layer analysis scenario modifies T7 data sent from SCADA to PLC4. A biased input can cross the PU10 pump-off threshold earlier; actual action changes depend on process state and rules.</li>
 <li><strong>DoS reduces input freshness.</strong> Congestion on the PLC7 acquisition path can cause timeouts, leaving SCADA to retain an older T4 observation and forward it to PLC5. Propagation to PU6/PU7 and hydraulics requires the stale input to change a relevant control decision.</li>
 <li><strong>Logic injection changes effective rules.</strong> Modifying the T7 pump-off threshold for PU10 at PLC4 models an attacker with program modification capability. Injection and first control deviation need not coincide: process state must trigger the modified rule.</li>
 </ul>
 <p>An input may be shared by several rules. Changing that input and changing only one threshold can produce different subsequent behavior. Compare first deviation, state retention, reopening and other actuators consuming the same input.</p>
-<h2>Manuscript scenarios versus public presets</h2>
-<p>The manuscript describes 80-iteration runs, an attack window of iterations 15–55 and a DoS scenario targeting the PLC7 acquisition path. The source table below describes public presets at the reviewed commit: for example, the DoS files target PLC2 during iterations 5–90. These settings are not interchangeable.</p>
-<p>This page explains the research method without presenting unpublished manuscript settings as verified one-command reproductions. Reproduction requires the exact commit, complete YAML, water model, control mapping, attack window and archived data. Historical fields such as <code>PLC9_T7</code> also require mapping to the current T7 acquisition endpoint.</p>
-<h2>Published configuration files</h2>
-<p>The table reflects actual YAML contents. Windows are control iterations. These presets were reviewed in source but were not executed as full simulations for this website.</p>
+<h2>Scenario settings and configuration selection</h2>
+<p>The cross-layer analysis scenarios run for 80 iterations with attacks active during iterations 15–55 and DoS targeting the PLC7 acquisition path. The example presets below have their own targets and windows: the DoS presets target PLC2 during iterations 5–90. Select the intended scenario and check its targets, run length and control dependencies before execution.</p>
+<p>For reproduction, use matching versions of the source, complete YAML, water model, control mapping and baseline data. Map historical fields such as <code>PLC9_T7</code> to the T7 acquisition endpoint in the selected configuration; do not infer targets from filenames alone.</p>
+<h2>Example configurations</h2>
+<p>The table lists example configurations for <a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">revision <code>2406aa6</code></a>. Windows are measured in control iterations.</p>
 <table>
 <thead>
 <tr>
@@ -131,8 +131,8 @@
 </tr>
 </tbody>
 </table>
-<p>PLC7/PLC9 in filenames are historical names; the current targets are PLC6/PLC8 as defined by YAML. The older <code>README_attack_mitm.md</code> refers to missing <code>config_mitm.yaml</code> and <code>scripts/compare_attack_results.py</code>.</p>
-<p>After installation, select an existing configuration in the simulation environment (source-checked command, not executed during this deployment):</p>
+<p>Some MITM filenames retain historical PLC7/PLC9 identifiers, while their configurations target PLC6/PLC8. Select scenarios using the targets, variable mappings and trigger windows defined in YAML.</p>
+<p>After installation, select a configuration to start the experiment:</p>
 <pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config_mitm_plc4.yaml --logic-wait 0.3
 </code></pre>
 <p>Run and preserve a baseline before the attack run. Exports under <code>reports/csv/</code> include <code>physics.csv</code>, <code>actuator_state.csv</code>, <code>scada_observed_long.csv</code>, <code>scada_observed_wide.csv</code>, <code>scada_observed_key.csv</code>, <code>attack_schedule.csv</code>, <code>attack_events.csv</code>, <code>scada_timeout_events.csv</code>, and <code>cycle_timing.csv</code>. Attack events or timeouts alone do not establish physical deviation; compare aligned baseline evidence.</p>
@@ -181,20 +181,11 @@
 </table>
 <p>For discrete control, report mismatched actuator states divided by comparable states. For continuous variables, consider RMSE, mean absolute deviation and peak absolute deviation. Define variables, windows, units, missing-data treatment and denominators. State whether RTT includes only successful requests and how repeated runs use seeds and aggregation.</p>
 <p><strong>Time alignment:</strong> Internal hydraulic events can make the same iteration correspond to different physical times. An iteration-aligned peak is not automatically a simultaneous net attack effect. When needed, compare common actual engine-time observations and report the number of matches. Wall-clock communication update frequency is also distinct from PLC scan frequency.</p>
-<p><strong>Scalability scope:</strong> The manuscript's PLC scalability tests are separate from C-Town attack experiments and exclude hydraulic computation. Communication and control throughput does not establish the performance of a full water-network loop.</p>
-<h2>Documentation to add before release</h2>
-<ul>
-<li>Runnable attack configurations and a field-by-field reference.</li>
-<li>Validated commands for both baseline and attack scenarios.</li>
-<li>Output-directory conventions and metric definitions.</li>
-<li>Reproducible plots, seeds, and versioned configurations.</li>
-</ul>
-<blockquote>
-<p>Experimental results and publication claims should be added only after verification and paper finalization.</p>
-</blockquote>
-<p>Source review: <a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
+<p><strong>Scalability scope:</strong> PLC scalability tests are separate from C-Town attack experiments and exclude hydraulic computation. Communication and control throughput does not establish the performance of a full water-network loop.</p>
+<h2>Saving and reproducing experiments</h2>
+<p>Save the source revision, complete configuration, input model, invocation, random seeds and output directory for each run. Pair attack runs with baselines using matching initial states and network conditions. When aggregating repeated runs, state whether seeds are independent, how metrics are combined and how failed or missing records are handled.</p>
 
-      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>
   </div>
 </body>

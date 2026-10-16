@@ -13,7 +13,7 @@
 
 ## 网站文档更新
 
-本文档网站位于 [WandeF/WandeF.github.io](https://github.com/WandeF/WandeF.github.io)，与软件源码分开维护。修改位于 `content/zh/` 和 `content/en/` 的 Markdown 文件后执行：
+文档仓库：[WandeF/WandeF.github.io](https://github.com/WandeF/WandeF.github.io)。修改位于 `content/zh/` 和 `content/en/` 的 Markdown 文件后执行：
 
 ```bash
 python build.py
@@ -23,4 +23,4 @@ python build.py
 
 ## 贡献范围
 
-当前文档主要用于研究团队内部整理与公开发布前的预览。正式接受外部贡献前，建议补充 `LICENSE`、`CONTRIBUTING.md`、版本管理规则和负责任披露说明。
+欢迎改进安装与配置说明、补充可复现示例、修复问题并完善中英文翻译。提交修改时，请说明用途、适用版本和验证方法；涉及实验数据时，附上配置与运行记录。

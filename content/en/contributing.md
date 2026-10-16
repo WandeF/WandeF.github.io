@@ -13,7 +13,7 @@ Please use the project's [GitHub Issues](https://github.com/WandeF/hydro-cps-sim
 
 ## Updating the website
 
-The website is intentionally separated from the simulator repository. Edit Markdown pages under `content/zh/` and `content/en/`, then run:
+Documentation repository: [WandeF/WandeF.github.io](https://github.com/WandeF/WandeF.github.io). Edit Markdown pages under `content/zh/` and `content/en/`, then run:
 
 ```bash
 python build.py
@@ -21,6 +21,6 @@ python build.py
 
 Generated files are written to `site/`. Preview locally with `python -m http.server 8000 --directory site`. Push to `main` in [WandeF/WandeF.github.io](https://github.com/WandeF/WandeF.github.io) to build and deploy automatically to <https://wandef.github.io/>.
 
-## Before an official public release
+## Contribution areas
 
-Consider adding `LICENSE`, `CONTRIBUTING.md`, version-management guidance, and a responsible security disclosure process.
+Contributions can improve installation and configuration instructions, add reproducible examples, fix issues or refine translations. Describe the purpose, applicable version and validation of each change. Include configurations and run records with experimental data.

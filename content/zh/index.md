@@ -17,8 +17,6 @@ Hydro-CPS-Sim 将水力过程、PLC 控制、SCADA 通信与网络仿真连接�
 
 典型研究链路：攻击与扰动 → 网络通信（ns-3 / Namespace）→ SCADA / PLC → 水力计算（DHALSIM-epynet）→ 日志与 CSV 分析。
 
-> **文档状态：** 本站是已部署的研究软件文档初版。公开源码仓库目前仍在整理中，尚未核实的配置字段、论文信息与实验结论不会在这里当作已发布事实。
-
 ## 平台与研究方法
 
 查看[系统架构与闭环流程](architecture.html)、[C-Town 控制依赖](introduction.html)以及[三类攻击的跨层传播与证据组织](experiments.html)，了解平台如何连接网络、控制与水力过程。

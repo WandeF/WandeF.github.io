@@ -32,7 +32,7 @@
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
-      <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
     </aside>
     <main class="main"><div class="content" id="page-content">
       <div class="breadcrumbs">
@@ -40,7 +40,7 @@
         <div class="document-actions"><a href="../../zh/latest/configuration.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <h1>Configuration</h1>
-<p>The published runner accepts a YAML file and defaults to <code>examples/c_town/config.yaml</code>.</p>
+<p>Hydro-CPS-Sim organizes experiments using YAML configuration files. The default is <code>examples/c_town/config.yaml</code>.</p>
 <h2>What configuration controls</h2>
 <ul>
 <li>Input hydraulic network files and simulation settings.</li>
@@ -48,7 +48,7 @@
 <li>Output directories and run length.</li>
 <li>Network, control, and experiment settings.</li>
 </ul>
-<p>The installer explicitly processes several top-level path keys:</p>
+<p>The installer updates five top-level path fields in the example configurations:</p>
 <table>
 <thead>
 <tr>
@@ -79,17 +79,12 @@
 </tr>
 </tbody>
 </table>
-<p>These keys can be verified against <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/install.sh">install.sh</a>. Other keys have deliberately been left for a future source-verified reference.</p>
+<p>Update these paths when moving environments or replacing a model. Set <code>output_path</code> to a dedicated experiment output directory.</p>
 <h2>Recommended practice</h2>
 <p>Keep the original validated baseline configuration intact. Make copies for new experiments and record the git commit, exact YAML, invocation, and outputs for each run.</p>
-<h2>To be completed</h2>
-<ul>
-<li>Full field reference grouped by subsystem.</li>
-<li>Verified baseline and attack YAML examples.</li>
-<li>Mapping rules connecting network topology, PLC signals, and hydraulic elements.</li>
-</ul>
-<p>Source review: <a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
-<h2>Additional source-checked fields</h2>
+<h2>Configuration constraints</h2>
+<p>PLC sensor and actuator names must match the water model, and cross-PLC dependencies must be forwarded through SCADA. Use consistent identifiers for network endpoints, namespaces and attack targets. When copying a scenario, check its model, control mapping and network topology together.</p>
+<h2>Simulation and control parameters</h2>
 <table>
 <thead>
 <tr>
@@ -132,9 +127,9 @@
 </tr>
 </tbody>
 </table>
-<p>Published types include <code>modbus_mitm</code>, <code>udp_dos</code>, and <code>openplc_logic_injection</code>. An <code>iteration_window</code> trigger uses <code>start_iteration</code> and <code>end_iteration</code>. Scenarios also need matching network endpoints, interception rules or logic injection settings; adding only a switch to the baseline is insufficient. See actual presets under <a href="experiments.html">experiments</a>.</p>
+<p>Attack types include <code>modbus_mitm</code>, <code>udp_dos</code>, and <code>openplc_logic_injection</code>. An <code>iteration_window</code> trigger uses <code>start_iteration</code> and <code>end_iteration</code>. Scenarios also need matching network endpoints, interception rules or logic injection settings; adding only a switch to the baseline is insufficient. See actual presets under <a href="experiments.html">experiments</a>.</p>
 
-      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>
   </div>
 </body>

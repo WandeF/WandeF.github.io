@@ -32,7 +32,7 @@
 <div class="nav-heading">社区与研究</div>
 <a class="nav-link" href="publications.html">论文与引用</a>
 <a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
-      <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+      <div class="sidebar-bottom">Hydro-CPS-Sim 文档<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
     </aside>
     <main class="main"><div class="content" id="page-content">
       <div class="breadcrumbs">
@@ -40,7 +40,7 @@
         <div class="document-actions"><a href="../../en/latest/configuration.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <h1>配置说明</h1>
-<p>当前公开运行器使用 YAML 配置文件组织实验场景，默认入口为 <code>examples/c_town/config.yaml</code>。</p>
+<p>Hydro-CPS-Sim 使用 YAML 配置文件组织实验场景，默认配置为 <code>examples/c_town/config.yaml</code>。</p>
 <h2>配置文件在运行中的作用</h2>
 <ul>
 <li>指定水网模型及其输入文件。</li>
@@ -48,7 +48,7 @@
 <li>指定输出目录及仿真轮数。</li>
 <li>保存水网控制、网络及实验设置。</li>
 </ul>
-<p>安装脚本会处理示例 YAML 中的若干路径键，源码中明确出现了：</p>
+<p>安装程序会更新示例配置中的五个顶层路径字段：</p>
 <table>
 <thead>
 <tr>
@@ -79,17 +79,12 @@
 </tr>
 </tbody>
 </table>
-<p>这些字段可在 <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/install.sh">install.sh</a> 中核对。其他 YAML 字段需要针对当前版本的真实配置文件补全，暂不在此猜测。</p>
+<p>迁移环境或更换模型时，请更新这些路径，并确保 <code>output_path</code> 指向专用的实验输出目录。</p>
 <h2>建议工作方式</h2>
 <p>不要直接修改唯一的基准配置；可以复制已验证的 <code>config.yaml</code>，然后在副本中改变实验参数。每次实验应记录所用源码提交、配置文件、启动命令与日志位置。</p>
-<h2>待完善内容</h2>
-<ul>
-<li>按模块给出完整 YAML 字段字典。</li>
-<li>附一个可运行的 baseline 配置和一个已验证攻击配置。</li>
-<li>解释配置与网络拓扑、PLC 映射、物理模型间的约束。</li>
-</ul>
-<p>源码核对：<a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
-<h2>已核对的其他字段</h2>
+<h2>配置之间的约束</h2>
+<p>PLC 的传感器与执行器名称须与水网模型一致，跨 PLC 控制依赖须能通过 SCADA 转发。网络端点、命名空间和攻击目标应使用一致的标识。复制场景后，需同时检查模型、控制映射和网络拓扑。</p>
+<h2>仿真与控制参数</h2>
 <table>
 <thead>
 <tr>
@@ -134,7 +129,7 @@
 </table>
 <p>攻击场景类型包括 <code>modbus_mitm</code>、<code>udp_dos</code>、<code>openplc_logic_injection</code>。<code>trigger.type: iteration_window</code> 使用 <code>start_iteration</code> / <code>end_iteration</code>；场景还需对应的攻击节点、拦截规则或逻辑注入设置，不应仅向基线追加一个开关。参见<a href="experiments.html">攻防实验</a>中的实际配置。</p>
 
-      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>
   </div>
 </body>

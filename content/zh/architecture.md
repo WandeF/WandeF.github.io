@@ -6,7 +6,7 @@ Hydro-CPS-Sim 将水力求解、可执行 PLC 程序、工业协议与网络路�
 
 <figure>
 <a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Hydro-CPS-Sim 场景配置、编排、物理、控制、网络、同步与记录模块架构图" loading="lazy" width="4978" height="3116"></a>
-<figcaption>平台总体架构。图来自项目论文工作稿；点击可查看原图。</figcaption>
+<figcaption>平台总体架构：场景配置、联合仿真编排与各运行模块。点击查看原图。</figcaption>
 </figure>
 
 | 模块 | 实现与职责 |
@@ -24,7 +24,7 @@ Hydro-CPS-Sim 将水力求解、可执行 PLC 程序、工业协议与网络路�
 
 <figure>
 <a href="../../assets/closed_loop_experiment_workflow.png" target="_blank" rel="noopener"><img src="../../assets/closed_loop_experiment_workflow.png" alt="场景生成、启动、SCADA 采集、PLC 控制与水力反馈闭环流程" loading="lazy" width="2888" height="1818"></a>
-<figcaption>闭环运行的概念流程。实现细节与执行顺序以对应版本运行器为准。</figcaption>
+<figcaption>闭环运行流程：场景生成、数据采集、控制执行与水力反馈。点击查看原图。</figcaption>
 </figure>
 
 1. **环境生成**：读取水网和 YAML 配置，生成控制程序、地址映射、ns-3 拓扑与命名空间配置。
@@ -54,4 +54,4 @@ OpenPLC 是软件 PLC，命名空间中的节点仍共享主机资源。该平�
 - `src/attack/`：攻击启动与执行。
 - `src/io/`：水力接口与结果导出。
 
-设计说明参考项目论文工作稿的架构与实现章节。运行接口核对版本：[hydro-cps-sim @ 2406aa6](https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8)。
+使用方法参见[快速开始](quickstart.html)，运行参数参见[配置说明](configuration.html)。

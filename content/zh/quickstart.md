@@ -1,6 +1,6 @@
 # 快速开始
 
-本页以仓库自带的 C-Town 示例配置为入口。以下命令来自当前公开运行脚本，建议在安装成功后执行。
+安装完成后，使用 C-Town 示例运行第一个闭环仿真实验。
 
 > 每次运行会清理配置输出目录中的 `runtime/`、`reports/`、`st/` 和 `plcs/`。开始另一个实验前，请将需要比较的结果复制到独立目录。使用普通用户启动，脚本会按需请求 sudo。
 
@@ -18,7 +18,7 @@ bash scripts/run_all.sh --logic-wait 0.3
 bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
 ```
 
-这里的 `10` 只是用于演示运行参数的示例值，并不是已经验证的基准配置。
+此命令将仿真缩短为 10 轮，适合检查启动与结果导出流程。
 
 ## 自定义配置入口
 
@@ -40,7 +40,7 @@ bash scripts/run_all.sh --config examples/c_town/config.yaml
 
 ## 查看输出
 
-运行脚本会输出日志、时序统计等内容。根据当前公开入口，实验结果导出位置为配置所指定输出目录下的 `reports/csv`。
+实验结果导出到 `output_path` 指定目录下的 `reports/csv`，日志与阶段耗时分别保存在 `logs/` 和 `timing/` 中。
 
 运行结束后，终端还会打印类似下面的提示：
 
@@ -52,7 +52,4 @@ bash scripts/run_all.sh --config examples/c_town/config.yaml
 
 ## 下一步
 
-请参考[攻防实验](experiments.html)了解如何组织基线与攻击条件对照，并在[配置说明](configuration.html)中核对场景文件。
-
-
-源码核对：[hydro-cps-sim @ 2406aa6](https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8) · 2026-10-15.
+请参考[攻防实验](experiments.html)了解如何组织基线与攻击条件对照，通过[配置说明](configuration.html)调整场景参数。

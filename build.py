@@ -29,8 +29,8 @@ GROUPS = {
     'en': {'basics': 'Overview', 'start': 'Get Started', 'research': 'Experiments & Configuration', 'more': 'Research & Community'},
 }
 MESSAGES = {
- 'zh': {'tagline':'面向供水系统的高保真信息物理安全联合仿真平台','home':'返回首页','lang':'English','repo':'源代码','lab':'CPS² Lab','search':'搜索文档…','noresult':'没有找到匹配页面','copy':'复制链接','footer':'研究软件文档 · 初版草稿 · 功能以公开源码为准','preview':'文档初版','sidebar':'文档导航','menu':'菜单'},
- 'en': {'tagline':'High-fidelity co-simulation for water cyber-physical system security','home':'Home','lang':'中文','repo':'Source Code','lab':'CPS² Lab','search':'Search documentation…','noresult':'No matching pages','copy':'Copy link','footer':'Research software documentation · Working draft · Source code is authoritative','preview':'Documentation draft','sidebar':'Documentation','menu':'Menu'},
+ 'zh': {'tagline':'面向供水系统的高保真信息物理安全联合仿真平台','home':'返回首页','lang':'English','repo':'源代码','lab':'CPS² Lab','search':'搜索文档…','noresult':'没有找到匹配页面','copy':'复制链接','footer':'Hydro-CPS-Sim · CPS² Lab','preview':'Hydro-CPS-Sim 文档','sidebar':'文档导航','menu':'菜单'},
+ 'en': {'tagline':'High-fidelity co-simulation for water cyber-physical system security','home':'Home','lang':'中文','repo':'Source Code','lab':'CPS² Lab','search':'Search documentation…','noresult':'No matching pages','copy':'Copy link','footer':'Hydro-CPS-Sim · CPS² Lab','preview':'Hydro-CPS-Sim Documentation','sidebar':'Documentation','menu':'Menu'},
 }
 
 md = mistune.create_markdown(escape=False, plugins=['table','strikethrough'])

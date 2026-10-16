@@ -32,7 +32,7 @@
 <div class="nav-heading">社区与研究</div>
 <a class="nav-link" href="publications.html">论文与引用</a>
 <a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
-      <div class="sidebar-bottom">文档初版<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+      <div class="sidebar-bottom">Hydro-CPS-Sim 文档<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
     </aside>
     <main class="main"><div class="content" id="page-content">
       <div class="breadcrumbs">
@@ -40,7 +40,7 @@
         <div class="document-actions"><a href="../../en/latest/quickstart.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <h1>快速开始</h1>
-<p>本页以仓库自带的 C-Town 示例配置为入口。以下命令来自当前公开运行脚本，建议在安装成功后执行。</p>
+<p>安装完成后，使用 C-Town 示例运行第一个闭环仿真实验。</p>
 <blockquote>
 <p>每次运行会清理配置输出目录中的 <code>runtime/</code>、<code>reports/</code>、<code>st/</code> 和 <code>plcs/</code>。开始另一个实验前，请将需要比较的结果复制到独立目录。使用普通用户启动，脚本会按需请求 sudo。</p>
 </blockquote>
@@ -52,7 +52,7 @@ bash scripts/run_all.sh --logic-wait 0.3
 <p>如果希望先缩短实验轮数，可以使用运行器的 <code>--iterations</code> 参数，例如：</p>
 <pre><code class="language-bash">bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
 </code></pre>
-<p>这里的 <code>10</code> 只是用于演示运行参数的示例值，并不是已经验证的基准配置。</p>
+<p>此命令将仿真缩短为 10 轮，适合检查启动与结果导出流程。</p>
 <h2>自定义配置入口</h2>
 <pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config.yaml
 </code></pre>
@@ -89,16 +89,15 @@ bash scripts/run_all.sh --logic-wait 0.3
 </table>
 <p>具体帮助信息可由 <code>bash scripts/run_all.sh --help</code> 查询。</p>
 <h2>查看输出</h2>
-<p>运行脚本会输出日志、时序统计等内容。根据当前公开入口，实验结果导出位置为配置所指定输出目录下的 <code>reports/csv</code>。</p>
+<p>实验结果导出到 <code>output_path</code> 指定目录下的 <code>reports/csv</code>，日志与阶段耗时分别保存在 <code>logs/</code> 和 <code>timing/</code> 中。</p>
 <p>运行结束后，终端还会打印类似下面的提示：</p>
 <pre><code class="language-text">[DONE] Results: &lt;output_path&gt;/reports/csv
 </code></pre>
 <p>真实路径取决于配置文件中的 <code>output_path</code>，请勿直接复制上面的占位符作为命令。</p>
 <h2>下一步</h2>
-<p>请参考<a href="experiments.html">攻防实验</a>了解如何组织基线与攻击条件对照，并在<a href="configuration.html">配置说明</a>中核对场景文件。</p>
-<p>源码核对：<a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
+<p>请参考<a href="experiments.html">攻防实验</a>了解如何组织基线与攻击条件对照，通过<a href="configuration.html">配置说明</a>调整场景参数。</p>
 
-      <footer class="page-footer"><div>研究软件文档 · 初版草稿 · 功能以公开源码为准</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>
   </div>
 </body>

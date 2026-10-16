@@ -6,7 +6,7 @@ Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial
 
 <figure>
 <a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Scenario configuration, orchestration, physical, control, network, synchronization and logging modules" loading="lazy" width="4978" height="3116"></a>
-<figcaption>Platform architecture from the project manuscript draft. Click to view the original image.</figcaption>
+<figcaption>Platform architecture: scenario configuration, orchestration and runtime modules. Click to view the original image.</figcaption>
 </figure>
 
 | Module | Implementation and responsibility |
@@ -24,7 +24,7 @@ Hydro-CPS-Sim connects hydraulic simulation, executable PLC programs, industrial
 
 <figure>
 <a href="../../assets/closed_loop_experiment_workflow.png" target="_blank" rel="noopener"><img src="../../assets/closed_loop_experiment_workflow.png" alt="Scenario generation, process launch, SCADA acquisition, PLC execution and hydraulic feedback" loading="lazy" width="2888" height="1818"></a>
-<figcaption>Conceptual experiment workflow. Exact sequencing is defined by the corresponding runtime version.</figcaption>
+<figcaption>Closed-loop workflow: scenario generation, data acquisition, control execution and hydraulic feedback. Click to view the original image.</figcaption>
 </figure>
 
 1. **Generate the environment:** Read the model and YAML, then generate control programs, address mappings, the ns-3 topology and namespace configuration.
@@ -54,4 +54,4 @@ OpenPLC is a software PLC, and namespace endpoints still share host resources. T
 - `src/attack/`: attack launch and execution.
 - `src/io/`: hydraulic interfaces and result exports.
 
-Design descriptions follow the architecture and implementation sections of the project manuscript draft. Runtime interfaces were checked against [hydro-cps-sim @ 2406aa6](https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8).
+See [Quick Start](quickstart.html) for execution and [Configuration](configuration.html) for runtime settings.

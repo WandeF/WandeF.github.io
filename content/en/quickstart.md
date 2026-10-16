@@ -1,6 +1,6 @@
 # Quick Start
 
-This guide uses the project's C-Town example as an entry point. The commands follow the currently published run script and assume a successful installation.
+After installation, run your first closed-loop simulation with the C-Town example.
 
 > Each run clears `runtime/`, `reports/`, `st/`, and `plcs/` under the configured output directory. Copy results to a separate directory before the next experiment. Start as a normal user; the script requests sudo when needed.
 
@@ -18,7 +18,7 @@ You may override the configured number of iterations to try a shorter run:
 bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
 ```
 
-The value `10` is illustrative, not a validated benchmark configuration.
+This command limits the simulation to 10 iterations to check startup and result export.
 
 ## Select a configuration
 
@@ -38,7 +38,7 @@ Run `bash scripts/run_all.sh --help` for the definitive interface.
 
 ## Outputs
 
-According to the runner, the exported CSV files are located under the configured output directory in `reports/csv`. At completion, the script prints a message resembling:
+Results are exported to `reports/csv` under `output_path`. Logs and stage timings are saved in `logs/` and `timing/`. At completion, the script prints:
 
 ```text
 [DONE] Results: <output_path>/reports/csv
@@ -47,6 +47,3 @@ According to the runner, the exported CSV files are located under the configured
 The actual path comes from `output_path` in the configuration. The placeholder above is not a literal path.
 
 Continue with [experiments](experiments.html) and [configuration](configuration.html).
-
-
-Source review: [hydro-cps-sim @ 2406aa6](https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8) · 2026-10-15.

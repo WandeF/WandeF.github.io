@@ -32,7 +32,7 @@
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
-      <div class="sidebar-bottom">Documentation draft<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
     </aside>
     <main class="main"><div class="content" id="page-content">
       <div class="breadcrumbs">
@@ -40,8 +40,8 @@
         <div class="document-actions"><a href="../../zh/latest/installation.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <h1>Installation</h1>
-<p>These instructions are based on the published <a href="https://github.com/WandeF/hydro-cps-sim/blob/2406aa649738c585e635b3661d1b9431db73edb8/install.sh"><code>install.sh</code></a>. Review the script before running it, since it installs system packages and checks out external dependencies.</p>
-<h2>Source-defined environment requirements</h2>
+<p>Use <code>install.sh</code> to install Hydro-CPS-Sim and its dependencies. The installer configures system packages, a Conda environment, the OpenPLC command-line runtime, ns-3 and DHALSIM-epynet.</p>
+<h2>Environment requirements</h2>
 <table>
 <thead>
 <tr>
@@ -95,11 +95,10 @@ conda activate hydro-cps
 <h2>Run the project test suite</h2>
 <pre><code class="language-bash">python -m unittest discover -s tests
 </code></pre>
-<p>Successful documentation generation does <strong>not</strong> establish successful installation of the simulation runtime. The runtime must be tested separately on a compatible Linux machine.</p>
-<p>Source review: <a href="https://github.com/WandeF/hydro-cps-sim/tree/2406aa649738c585e635b3661d1b9431db73edb8">hydro-cps-sim @ 2406aa6</a> · 2026-10-15.</p>
+<p>The installer checks EPANET shared-library loading and runs the Python test suite. After installation, follow <a href="quickstart.html">Quick Start</a> to run the C-Town example.</p>
 <p>The installer rewrites five top-level path keys in every C-Town YAML and saves changed originals under <code>output/install-backups/</code>. Check paths after moving to a different machine; do not reuse developer-specific absolute paths from the source.</p>
 
-      <footer class="page-footer"><div>Research software documentation · Working draft · Source code is authoritative</div><div>CPS² Lab · Hydro-CPS-Sim</div></footer>
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>
   </div>
 </body>
