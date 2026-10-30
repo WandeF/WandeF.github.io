@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>攻击配置 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="文档导航">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="搜索文档…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a aria-current="page" class="nav-link active" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim 文档<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>攻击配置</span></div>
+        <div class="document-actions"><a href="../../en/latest/configuration-attacks.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="攻击配置">攻击配置</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#总开关与生效窗口">总开关与生效窗口</a></li><li><a href="#modbus-mitm">Modbus MITM</a></li><li><a href="#udp-dos">UDP DoS</a></li><li><a href="#plc-逻辑注入">PLC 逻辑注入</a></li><li><a href="#查看结果">查看结果</a></li></ul></nav>
+<p>使用 <code>attacks</code> 设置 MITM、UDP DoS 或 PLC 逻辑注入。你可以选择攻击目标、调整参数，并设置开始和结束轮次。</p>
+<h2 id="总开关与生效窗口">总开关与生效窗口</h2>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>类型／默认</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>attacks.enabled</code></td>
+  <td>bool；false</td>
+  <td>攻击总开关</td>
+</tr>
+<tr>
+  <td><code>attacks.scenarios</code></td>
+  <td>list</td>
+  <td>攻击场景列表，可同时安排多个独立场景</td>
+</tr>
+<tr>
+  <td><code>scenarios[].name</code></td>
+  <td>string</td>
+  <td>唯一名称，用于进程和事件记录</td>
+</tr>
+<tr>
+  <td><code>enabled</code></td>
+  <td>bool；true</td>
+  <td>单场景开关</td>
+</tr>
+<tr>
+  <td><code>type</code></td>
+  <td>string</td>
+  <td>modbus_mitm / udp_dos / openplc_logic_injection</td>
+</tr>
+<tr>
+  <td><code>trigger.type</code></td>
+  <td>iteration_window</td>
+  <td>推荐轮次触发；还兼容 iteration / round / round_window</td>
+</tr>
+<tr>
+  <td><code>trigger.start_iteration</code></td>
+  <td>int；0</td>
+  <td>首个生效轮次，包含该轮</td>
+</tr>
+<tr>
+  <td><code>trigger.end_iteration</code></td>
+  <td>int 或省略</td>
+  <td>最后生效轮次，包含该轮；省略持续到结束</td>
+</tr>
+</tbody>
+</table>
+<p>旧别名 <code>schedule</code>、start_round/end_round、start/end 仍有兼容读取。新配置统一使用 trigger 与 iteration 字段。没有轮次触发器时使用启动/停止的默认策略，建议显式写窗口。</p>
+<p><code>trigger</code> 使用控制轮次；规则的 <code>window</code> 和 DoS 的 <code>start_after_sec</code> 使用进程启动后的墙钟秒数。这两类时钟与物理模型的 <code>sim_time</code> 分别记录。</p>
+<h2 id="modbus-mitm">Modbus MITM</h2>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>attacker.endpoint</code></td>
+  <td>网络中存在的攻击者端点</td>
+</tr>
+<tr>
+  <td><code>attacker.namespace</code> / <code>ip</code></td>
+  <td>说明性身份字段，应与网络一致；MITM 实际从 endpoint/LAN 解析，不以此覆盖</td>
+</tr>
+<tr>
+  <td><code>intercept.source</code></td>
+  <td>通常为 scada；当前实际固定定位 SCADA 命名空间，不据此选择任意客户端</td>
+</tr>
+<tr>
+  <td><code>intercept.targets</code></td>
+  <td>目标 PLC 名列表</td>
+</tr>
+<tr>
+  <td><code>intercept.protocol</code></td>
+  <td>modbus_tcp 描述标识；当前实际执行 Modbus TCP 代理</td>
+</tr>
+<tr>
+  <td><code>intercept.port</code></td>
+  <td>原目标 Modbus TCP 端口，默认 502</td>
+</tr>
+<tr>
+  <td><code>intercept.listen_port_base</code></td>
+  <td>每目标代理监听端口起点；默认回退 15020；示例 15030</td>
+</tr>
+<tr>
+  <td><code>intercept.listen_ports.&lt;PLC&gt;</code></td>
+  <td>可选显式指定每目标监听端口</td>
+</tr>
+<tr>
+  <td><code>intercept.redirect</code></td>
+  <td>当前固定执行 iptables_output_dnat，不根据该字符串切换其他重定向机制</td>
+</tr>
+<tr>
+  <td><code>rules[].name</code></td>
+  <td>规则名；省略时生成 rule_N</td>
+</tr>
+<tr>
+  <td><code>rules[].target</code></td>
+  <td>对应目标 PLC，可用于筛选同场景的规则</td>
+</tr>
+<tr>
+  <td><code>rules[].variable</code></td>
+  <td>目标实际生成 ST 中的 REAL <code>%MD</code> 变量，如 PLC8_T7</td>
+</tr>
+<tr>
+  <td><code>rules[].direction</code></td>
+  <td>response（默认）或 request</td>
+</tr>
+<tr>
+  <td><code>rules[].function_codes</code></td>
+  <td>支持 3/4/16 的列表或单个整数；response 默认 3/4，request 默认 16</td>
+</tr>
+<tr>
+  <td><code>rules[].operation</code></td>
+  <td>set/replace；add/offset/bias；multiply/scale</td>
+</tr>
+<tr>
+  <td><code>rules[].value</code></td>
+  <td>数值或比例，默认 0；按目标寄存器值的逻辑单位</td>
+</tr>
+<tr>
+  <td><code>rules[].window.start_after_sec</code></td>
+  <td>相对代理启动的延迟秒数，默认 0</td>
+</tr>
+<tr>
+  <td><code>rules[].window.duration_sec</code></td>
+  <td>可选持续秒数；未设则不加此时限</td>
+</tr>
+<tr>
+  <td><code>rules[].max_events</code></td>
+  <td>可选每条规则最多匹配次数</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">attacks:
+  enabled: true
+  scenarios:
+    - name: ctown_t7_bias
+      enabled: true
+      type: modbus_mitm
+      trigger: {type: iteration_window, start_iteration: 20, end_iteration: 40}
+      attacker: {endpoint: mitm, namespace: ns-attacker, ip: 192.168.4.100}
+      intercept:
+        source: scada
+        targets: [PLC4]
+        protocol: modbus_tcp
+        port: 502
+        listen_port_base: 15030
+        redirect: iptables_output_dnat
+      rules:
+        - name: tank_level_downlink
+          target: PLC4
+          variable: PLC8_T7
+          direction: request
+          function_codes: [16]
+          operation: set
+          value: 5.2
+          window: {start_after_sec: 0.0}
+</code></pre>
+<p>上例对应 C-Town 的 PLC4 下行水位攻击：将转发的 T7 水位设为 5.2。修改其他目标时，一起更新 PLC 名、端点地址和寄存器变量。要运行透明代理对照，可以使用 add 并将 value 设为 0。</p>
+<h2 id="udp-dos">UDP DoS</h2>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>attacker.endpoint</code> / <code>namespace</code> / <code>ip</code></td>
+  <td>实际发送端点及身份</td>
+</tr>
+<tr>
+  <td><code>target.endpoint</code> / <code>namespace</code> / <code>ip</code></td>
+  <td>目标端点及身份，配置地址需要与场景匹配</td>
+</tr>
+<tr>
+  <td><code>target.protocol</code></td>
+  <td>当前 udp</td>
+</tr>
+<tr>
+  <td><code>target.port</code></td>
+  <td>UDP 目的端口；默认 502，与同号 TCP Modbus 端口不是同一传输协议</td>
+</tr>
+<tr>
+  <td><code>traffic.mode</code></td>
+  <td>当前仅 cbr，默认 cbr</td>
+</tr>
+<tr>
+  <td><code>traffic.rate</code></td>
+  <td>速率字符串，默认 500kbps，示例 120Mbps</td>
+</tr>
+<tr>
+  <td><code>traffic.packet_size</code></td>
+  <td>UDP 负载字节数，默认 512，示例 1400</td>
+</tr>
+<tr>
+  <td><code>traffic.start_after_sec</code></td>
+  <td>攻击进程启动后延迟，默认 0</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">type: udp_dos
+trigger: {type: iteration_window, start_iteration: 5, end_iteration: 90}
+attacker: {endpoint: ns_bot1, namespace: ns-bot1, ip: 192.168.255.201}
+target: {endpoint: PLC2, namespace: ns-plc2, ip: 192.168.2.1, protocol: udp, port: 502}
+traffic: {mode: cbr, rate: 120Mbps, packet_size: 1400, start_after_sec: 0.0}
+</code></pre>
+<p>这是原水网攻击场景条目的片段；完整网络见 <code>examples/c_town/config_dos_plc2_single.yaml</code>。多个发送者使用多个场景条目及独立 endpoint。流量能否改变控制取决于实际路径、瓶颈、超时与控制规则，应检查真实事件和缓存状态。</p>
+<h2 id="plc-逻辑注入">PLC 逻辑注入</h2>
+<p>目标必须是存在的 PLC，<code>target.namespace</code> 与 network endpoint 保持一致。</p>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>target.endpoint</code> / <code>namespace</code></td>
+  <td>目标 PLC 与实际命名空间</td>
+</tr>
+<tr>
+  <td><code>injection.mode</code></td>
+  <td>threshold_shift / invert_condition / force_actuator</td>
+</tr>
+<tr>
+  <td><code>injection.restore_on_stop</code></td>
+  <td>默认 true；窗口结束时恢复原程序与进程状态</td>
+</tr>
+<tr>
+  <td><code>injection.rule.actuator</code></td>
+  <td>threshold_shift/invert_condition 的执行器</td>
+</tr>
+<tr>
+  <td><code>injection.rule.dependant</code></td>
+  <td>要匹配的传感器依赖</td>
+</tr>
+<tr>
+  <td><code>injection.rule.type</code></td>
+  <td>below/above，定位原规则</td>
+</tr>
+<tr>
+  <td><code>injection.rule.original_value</code></td>
+  <td>threshold_shift 的原阈值；帮助定位原规则</td>
+</tr>
+<tr>
+  <td><code>injection.rule.injected_value</code></td>
+  <td>threshold_shift 的替换阈值</td>
+</tr>
+<tr>
+  <td><code>injection.rule.value</code></td>
+  <td>invert_condition 的匹配阈值，可回退 original_value</td>
+</tr>
+<tr>
+  <td><code>injection.actuator</code></td>
+  <td>force_actuator 的逻辑执行器</td>
+</tr>
+<tr>
+  <td><code>injection.state</code></td>
+  <td>force_actuator 的强制 BOOL/兼容状态；还兼容 value</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">type: openplc_logic_injection
+target: {endpoint: PLC4, namespace: ns-plc4}
+injection:
+  mode: threshold_shift
+  rule: {actuator: PU10, dependant: T7, type: above, original_value: 4.8, injected_value: 999.0}
+  restore_on_stop: true
+</code></pre>
+<p>该路径修改、编译并重启实际 OpenPLC 程序，不是在物理层替换输出。规则匹配失败应排查传感器拥有者、阈值和生成 ST。</p>
+<h2 id="查看结果">查看结果</h2>
+<p>先查看 attack_schedule.csv 和 attack_events.csv，了解攻击何时开始、修改了哪些数据；再比较 SCADA 观测、PLC 输出和水力结果。通信超时可从 scada_timeout_events.csv 查找。</p>
+<p>MITM 下的客户端写入确认与目标 PLC 实际收到的值可能不同，可以结合代理记录和寄存器读回查看。电网等扩展实验的数据质量设置见 <a href="upsi-configuration.html">UPSI 配置</a>。</p>
+<p>完整运行方式见<a href="experiments.html">攻防实验</a>，基础字段见<a href="configuration.html">配置说明</a>，网络端点见<a href="configuration-network.html">网络配置</a>。</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

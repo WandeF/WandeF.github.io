@@ -29,6 +29,14 @@
 <div class="nav-heading">Experiments &amp; Configuration</div>
 <a class="nav-link" href="experiments.html">Experiments</a>
 <a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
@@ -39,9 +47,9 @@
         <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Installation</span></div>
         <div class="document-actions"><a href="../../zh/latest/installation.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>Installation</h1>
+      <h1 id="installation">Installation</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#environment-requirements">Environment requirements</a></li><li><a href="#clone-the-repository">Clone the repository</a></li><li><a href="#preview-installation-steps">Preview installation steps</a></li><li><a href="#install">Install</a></li><li><a href="#run-the-tests">Run the tests</a></li><li><a href="#optional-physical-backends">Optional physical backends</a></li></ul></nav>
 <p>Use <code>install.sh</code> to install Hydro-CPS-Sim and its dependencies. The installer configures system packages, a Conda environment, the OpenPLC command-line runtime, ns-3 and DHALSIM-epynet.</p>
-<h2>Environment requirements</h2>
+<h2 id="environment-requirements">Environment requirements</h2>
 <table>
 <thead>
 <tr>
@@ -79,25 +87,27 @@
 <blockquote>
 <p><strong>Important:</strong> The installer builds the OpenPLC command-line runtime, not the full web management service.</p>
 </blockquote>
-<h2>Clone the repository</h2>
+<h2 id="clone-the-repository">Clone the repository</h2>
 <pre><code class="language-bash">git clone https://github.com/WandeF/hydro-cps-sim.git
 cd hydro-cps-sim
 </code></pre>
-<h2>Preview installation steps</h2>
+<h2 id="preview-installation-steps">Preview installation steps</h2>
 <pre><code class="language-bash">bash install.sh --dry-run
 </code></pre>
-<h2>Install</h2>
+<h2 id="install">Install</h2>
 <p>Run the installer:</p>
 <pre><code class="language-bash">bash install.sh
 conda activate hydro-cps
 </code></pre>
 <p>Building ns-3 and OpenPLC may take some time. The default environment is named <code>hydro-cps</code>; see <code>bash install.sh --help</code> for <code>--env</code>, <code>--jobs</code>, and <code>--parent</code> options.</p>
-<h2>Run the tests</h2>
+<h2 id="run-the-tests">Run the tests</h2>
 <p>The installer checks EPANET library loading and runs the Python test suite. You can also run the tests manually:</p>
 <pre><code class="language-bash">python -m unittest discover -s tests
 </code></pre>
 <p>After installation, follow <a href="quickstart.html">Quick Start</a> to run the C-Town example.</p>
 <p>The installer rewrites five top-level path keys in every C-Town YAML and saves changed originals under <code>output/install-backups/</code>. Update the paths when moving to another machine or dependency directory.</p>
+<h2 id="optional-physical-backends">Optional physical backends</h2>
+<p>Water keeps its EPANET environment. Install requirements-power.txt for pandapower and optionally requirements-power-plots.txt for figures. The thermal backend needs the project Python/PyYAML environment without EPANET or pandapower. Point PYTHON_BIN to the selected environment; full loops still require OpenPLC/ns-3. See <a href="extensions.html">Extended Experiments</a>.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

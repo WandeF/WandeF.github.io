@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>UPSI Principles &amp; Interface · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a aria-current="page" class="nav-link active" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>UPSI Principles &amp; Interface</span></div>
+        <div class="document-actions"><a href="../../zh/latest/upsi.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="upsi-principles-interface">UPSI Principles &amp; Interface</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#connect-a-physical-model">Connect a physical model</a></li><li><a href="#follow-one-control-cycle">Follow one control cycle</a></li><li><a href="#adapter-methods">Adapter methods</a></li><li><a href="#variables-and-units">Variables and units</a></li><li><a href="#time-and-stepping">Time and stepping</a></li><li><a href="#measurement-status">Measurement status</a></li><li><a href="#plugins">Plugins</a></li><li><a href="#further-reading">Further reading</a></li></ul></nav>
+<p>UPSI (Unified Physical Simulation Interface) connects physical simulators to Hydro-CPS-Sim. Use EPANET for water, pandapower for power systems, or add a model of your own.</p>
+<h2 id="connect-a-physical-model">Connect a physical model</h2>
+<p>A model supplies measurements and accepts controller outputs. A water network supplies levels, pressures and flows and accepts pump/valve commands. A thermal box supplies temperature and accepts a heater command.</p>
+<p>Their equations differ, but their role in the loop is the same. UPSI provides methods to describe variables, initialize, step and finish. An adapter calls the solver while the platform keeps the same PLC, SCADA and network workflow.</p>
+<figure><img src="../../assets/hydro_cps_sim_architecture_upsi.svg" alt="UPSI added inside the original platform's physical layer"><figcaption>UPSI connects physical simulators to the existing loop.</figcaption></figure>
+
+<h2 id="follow-one-control-cycle">Follow one control cycle</h2>
+<p>The model produces measurements. PLCs receive them, SCADA forwards remote dependencies, and PLC rules produce commands. The platform returns those commands to the model to calculate its next state.</p>
+<pre><code class="language-text">measurements → PLC / SCADA → commands → physical model → new measurements
+</code></pre>
+<p>The adapter uses native model variables; scenes use logical sensor/actuator names. SignalMapper connects them and applies unit conversions. Changing the model mainly changes the adapter and scene settings.</p>
+<h2 id="adapter-methods">Adapter methods</h2>
+<p>Inherit PhysicsBackend and implement:</p>
+<table>
+<thead>
+<tr>
+  <th>Method</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>describe()</td>
+  <td>List readable/writable variables, types, units and stepping behavior</td>
+</tr>
+<tr>
+  <td>initialize()</td>
+  <td>Load the model, apply initial inputs and return its initial state</td>
+</tr>
+<tr>
+  <td>advance(until_s, inputs)</td>
+  <td>Apply inputs, advance and return the result</td>
+</tr>
+<tr>
+  <td>close()</td>
+  <td>Release model resources</td>
+</tr>
+</tbody>
+</table>
+<p>BackendConfig supplies paths, model settings, working directory, interval and initial inputs. SignalSpec describes variables; StepResult contains time, outputs, applied inputs and status.</p>
+<p>Repeated initialize calls should not restart the model. Close should work after normal completion or partial initialization. See <a href="adapter-guide.html">Add a Physical Simulator</a>.</p>
+<h2 id="variables-and-units">Variables and units</h2>
+<table>
+<thead>
+<tr>
+  <th>Logical name</th>
+  <th>Native example</th>
+  <th>Measurement/input</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>T1</td>
+  <td>node.T1.level</td>
+  <td>Tank level</td>
+</tr>
+<tr>
+  <td>V_BUS02</td>
+  <td>res_bus.BUS_02.vm_pu</td>
+  <td>Bus2 voltage</td>
+</tr>
+<tr>
+  <td>P_GRID</td>
+  <td>metrics.total.p_grid_mw</td>
+  <td>Grid active power</td>
+</tr>
+<tr>
+  <td>TEMPERATURE</td>
+  <td>box.temperature</td>
+  <td>Box temperature</td>
+</tr>
+<tr>
+  <td>HEATER</td>
+  <td>heater.enabled</td>
+  <td>Heater enable</td>
+</tr>
+</tbody>
+</table>
+<p>Ports have input/output direction and float/int/bool/str type. The existing PLC transport uses float observations and BOOL commands. Other types can use standalone model calls and need suitable bindings for PLC transport.</p>
+<p>Floats use logical = native*scale+offset; commands use the inverse. MW→kW uses scale 1000, degC→K offset 273.15. BOOL mappings may invert polarity.</p>
+<p>Specify units and conversion coefficients. Converting pu to volts also needs the model's base voltage; water-column pressure needs density and gravity. See <a href="upsi-configuration.html">UPSI Configuration</a>.</p>
+<h2 id="time-and-stepping">Time and stepping</h2>
+<p>The platform requests until_s and the model returns actual time_s. Target backends reach the target; event_step backends may return at an internal event before continuing with another step.</p>
+<p>EPANET can advance through hydraulic events, pandapower solves the current AC operating point, and the thermal model integrates temperature. Returning actual time lets these methods use the same loop.</p>
+<p>Controller iteration, physical seconds and process duration are recorded separately. Use sim_time for physical curves and iteration to find matching communication/control records.</p>
+<h2 id="measurement-status">Measurement status</h2>
+<p>Results may include source time, quality, validity and freshness. A disconnected bus can have zero voltage marked unsupplied. Cached measurements after a network timeout retain their original source time.</p>
+<p>quality_policy selects pass-through, hold-last, skip or stop behavior at the control boundary. The physical record keeps the model's calculated result. Adapters should return complete valid outputs and raise an error when solving fails; the platform checks and records the result before continuing.</p>
+<h2 id="plugins">Plugins</h2>
+<p>EPANET and pandapower are built in. Register an independent module or installed package using physics.plugins. A scene selects one backend.</p>
+<p>Plugin selection, signal mappings and control rules are separate settings. Adding a model usually needs no scheduler, Modbus or attack-code changes. Try the <a href="extended-examples.html">thermal example</a>, then follow the <a href="adapter-guide.html">adapter tutorial</a>.</p>
+<h2 id="further-reading">Further reading</h2>
+<p>UPSI is the project's Python interface. These documents introduce related simulation, configuration and communication methods:</p>
+<table>
+<thead>
+<tr>
+  <th>Document</th>
+  <th>Topic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="https://fmi-standard.org/docs/3.0.2/">FMI 3.0.2</a></td>
+  <td>Lifecycle, variables, units and co-simulation stepping</td>
+</tr>
+<tr>
+  <td><a href="https://mosaik.readthedocs.io/en/latest/mosaik-api/high-level.html">mosaik API</a></td>
+  <td>Connecting different simulators to one experiment</td>
+</tr>
+<tr>
+  <td><a href="https://docs.python.org/3.10/library/importlib.metadata.html#entry-points">Python entry points</a></td>
+  <td>Discovering installed plugins</td>
+</tr>
+<tr>
+  <td><a href="https://yaml.org/spec/1.2.2/">YAML</a> / <a href="https://pyyaml.org/wiki/PyYAMLDocumentation">PyYAML</a></td>
+  <td>Scene syntax and parsing</td>
+</tr>
+<tr>
+  <td><a href="https://www.modbus.org/file/secure/modbusprotocolspecification.pdf">Modbus</a></td>
+  <td>Registers, coils and function codes</td>
+</tr>
+</tbody>
+</table>
+<p>UPSI adapters implement this project's API. An FMU adapter would additionally handle FMI calls/capabilities; simultaneous model coupling also needs inter-model exchange and time coordination.</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

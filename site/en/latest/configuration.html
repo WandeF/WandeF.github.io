@@ -29,6 +29,14 @@
 <div class="nav-heading">Experiments &amp; Configuration</div>
 <a class="nav-link" href="experiments.html">Experiments</a>
 <a aria-current="page" class="nav-link active" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
@@ -39,95 +47,247 @@
         <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Configuration</span></div>
         <div class="document-actions"><a href="../../zh/latest/configuration.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>Configuration</h1>
-<p>Hydro-CPS-Sim organizes experiments using YAML configuration files. The default is <code>examples/c_town/config.yaml</code>.</p>
-<h2>Configuration files</h2>
-<ul>
-<li>Input hydraulic network files and simulation settings.</li>
-<li>External paths for OpenPLC and ns-3.</li>
-<li>Output directories and run length.</li>
-<li>Network, control, and experiment settings.</li>
-</ul>
-<p>The installer updates five top-level path fields in the example configurations:</p>
+      <h1 id="configuration">Configuration</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#file-structure">File structure</a></li><li><a href="#paths-and-runtime">Paths and runtime</a></li><li><a href="#hydraulic-time-and-initial-conditions">Hydraulic time and initial conditions</a></li><li><a href="#epanet-options">EPANET options</a></li><li><a href="#plcs-and-measurements">PLCs and measurements</a></li><li><a href="#control-rules">Control rules</a></li><li><a href="#network-and-attacks">Network and attacks</a></li><li><a href="#outputs">Outputs</a></li></ul></nav>
+<p>Hydro-CPS-Sim uses YAML files to configure the water network, controllers, communication and attacks. Copy an example, change the settings you need and run it with <code>--config</code>.</p>
+<p>This page introduces the original <code>examples/c_town/config.yaml</code> water scene. To connect another physical simulator, see <a href="upsi-configuration.html">UPSI Configuration</a> under Extended Experiments.</p>
+<h2 id="file-structure">File structure</h2>
 <table>
 <thead>
 <tr>
-  <th>Key</th>
+  <th>Section</th>
   <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-  <td><code>root_path</code></td>
-  <td>Working directory for external dependencies</td>
+  <td>Model and component paths</td>
+  <td>INP, OpenPLC, ns-3 and output directories</td>
 </tr>
 <tr>
-  <td><code>openplc_path</code></td>
-  <td>OpenPLC checkout or build directory</td>
+  <td>iterations, time</td>
+  <td>Run limit and hydraulic step</td>
 </tr>
 <tr>
-  <td><code>ns3_path</code></td>
-  <td>ns-3 checkout or build directory</td>
+  <td>initial_tank_values, actuators</td>
+  <td>Initial tank levels and pump/valve states</td>
 </tr>
 <tr>
-  <td><code>inp_file</code></td>
-  <td>EPANET input file</td>
+  <td>physics</td>
+  <td>EPANET control and stepping options</td>
 </tr>
 <tr>
-  <td><code>output_path</code></td>
-  <td>Directory for generated results</td>
+  <td>plcs</td>
+  <td>Sensors, actuators and control rules</td>
+</tr>
+<tr>
+  <td>network</td>
+  <td>Communication nodes, links and addresses</td>
+</tr>
+<tr>
+  <td>attacks</td>
+  <td>Attack settings and active windows</td>
 </tr>
 </tbody>
 </table>
-<p>Update these paths when moving environments or replacing a model. Set <code>output_path</code> to a dedicated experiment output directory.</p>
-<h2>Creating a scenario</h2>
-<p>Copy <code>config.yaml</code> to create a scenario, change its water model, control or network settings, and select the file with <code>--config</code> when running the simulation.</p>
-<h2>Sensor and control mappings</h2>
-<p>The <code>plcs</code> section assigns sensors and actuators from the water model to PLCs. SCADA forwards cross-PLC data. The <code>network</code> section defines endpoints, namespaces and connections for PLC, SCADA and attack nodes.</p>
-<h2>Simulation and control parameters</h2>
+<p>The following fragment shows the main fields. Copy the complete C-Town example for its PLC list and network topology.</p>
+<pre><code class="language-yaml">root_path: /path/to/workspace
+inp_file: ctown_map.inp
+output_path: output/baseline
+openplc_path: ../../../OpenPLC_v3
+ns3_path: ../../../ns-3-dev-git
+iterations: 100
+initial_tank_values:
+  T1: '3'
+  T2: '.5'
+actuators:
+  - {name: PU1, initial_state: closed}
+  - {name: PU2, initial_state: open}
+physics:
+  inp_controls: strip
+  step_order: next-run
+  init_flag: 0
+time:
+  - duration: [EN_DURATION, 86400]
+  - hydraulic_timestep: [EN_HYDSTEP, 300]
+</code></pre>
+<h2 id="paths-and-runtime">Paths and runtime</h2>
 <table>
 <thead>
 <tr>
   <th>Field</th>
-  <th>Baseline value or role</th>
+  <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-  <td><code>iterations</code></td>
-  <td>100; runner can override</td>
+  <td>root_path</td>
+  <td>Installation workspace</td>
 </tr>
 <tr>
-  <td><code>noise_scale</code></td>
-  <td>0.0</td>
+  <td>inp_file</td>
+  <td>EPANET model with pipes, equipment and demand patterns</td>
 </tr>
 <tr>
-  <td><code>time</code></td>
-  <td>EPANET duration 86400 seconds; hydraulic step 300 seconds</td>
+  <td>output_path</td>
+  <td>This experiment's output directory</td>
 </tr>
 <tr>
-  <td><code>physics</code></td>
-  <td><code>inp_controls: strip</code>, <code>step_order: next-run</code>, <code>init_flag: 0</code></td>
+  <td>openplc_path</td>
+  <td>OpenPLC root</td>
 </tr>
 <tr>
-  <td><code>plcs</code></td>
-  <td>Sensors, actuators and control rules for PLC1–PLC8</td>
+  <td>ns3_path</td>
+  <td>ns-3 root</td>
 </tr>
 <tr>
-  <td><code>network</code></td>
-  <td>ns-3 backend, realtime scheduling, routing, nodes, links, LANs and TAPs</td>
+  <td>iterations</td>
+  <td>Run limit, 100 in the example; override with --iterations</td>
 </tr>
 <tr>
-  <td><code>attacks.enabled</code></td>
-  <td>Global switch in attack presets</td>
-</tr>
-<tr>
-  <td><code>attacks.scenarios</code></td>
-  <td>Scenario types, triggers, targets and type-specific options</td>
+  <td>network_topology_type</td>
+  <td>complex label in examples; network contains the actual connections</td>
 </tr>
 </tbody>
 </table>
-<p>Attack types include <code>modbus_mitm</code>, <code>udp_dos</code> and <code>openplc_logic_injection</code>. Use <code>trigger.type: iteration_window</code> with <code>start_iteration</code> and <code>end_iteration</code> to set the active window. Start with the <a href="experiments.html">experiment presets</a> to configure nodes, targets and rules for each type.</p>
+<p>Relative paths normally start beside the YAML file. Check paths when moving a scene, and give experiments separate output directories. The retained noise_scale/log_level fields are not used as generic noise or logging controls by the current runner.</p>
+<h2 id="hydraulic-time-and-initial-conditions">Hydraulic time and initial conditions</h2>
+<p>Each time entry contains an EPANET parameter name and a value. hydraulic_timestep: [EN_HYDSTEP, 300] sets the nominal step to 300 s. The example retains duration; the current runner configures the hydraulic horizon from step and iteration count.</p>
+<p>initial_tank_values assigns initial levels by tank name in INP units. C-Town uses T1–T7. Actuator names must match pump/valve links.</p>
+<table>
+<thead>
+<tr>
+  <th>Actuator field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>name</td>
+  <td>Pump/valve name, such as PU1 or V2</td>
+</tr>
+<tr>
+  <td>initial_state</td>
+  <td>open or closed; open enables the link and closed disables it</td>
+</tr>
+</tbody>
+</table>
+<p>Equipment without an automatic rule holds its initial state unless another experiment control changes it. Use hydraulic sim_time for physical-time plots and iteration to find the corresponding control record.</p>
+<h2 id="epanet-options">EPANET options</h2>
+<table>
+<thead>
+<tr>
+  <th>Field under physics</th>
+  <th>Default</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>inp_controls</td>
+  <td>strip</td>
+  <td>Remove runtime INP CONTROLS/RULES for external OpenPLC control; keep retains them</td>
+</tr>
+<tr>
+  <td>step_order</td>
+  <td>next-run</td>
+  <td>Native stepping order: next-run or run-next</td>
+</tr>
+<tr>
+  <td>init_flag</td>
+  <td>0</td>
+  <td>Hydraulic initialization flag</td>
+</tr>
+<tr>
+  <td>also_set_setting</td>
+  <td>false</td>
+  <td>Also write the native link setting when controlling it</td>
+</tr>
+</tbody>
+</table>
+<p>These fields can also be nested under physics.epynet; that subsection takes precedence when present. Usually keep the defaults while changing models, thresholds or attacks.</p>
+<h2 id="plcs-and-measurements">PLCs and measurements</h2>
+<p>plcs assigns sensors and outputs. One PLC owns each measurement; SCADA forwards it to other controllers when required.</p>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>name</td>
+  <td>PLC identifier matching its network endpoint</td>
+</tr>
+<tr>
+  <td>sensors</td>
+  <td>Locally measured tags</td>
+</tr>
+<tr>
+  <td>actuators</td>
+  <td>Locally controlled pumps/valves</td>
+</tr>
+<tr>
+  <td>controls</td>
+  <td>Ordered control rules</td>
+</tr>
+</tbody>
+</table>
+<p>Tank names such as T1 mean level, junction names such as J285 mean pressure, and tags ending in F such as PU1F mean link flow. Units follow INP.</p>
+<p>For example, PLC2 measures T1 and PLC1 uses it to control PU1:</p>
+<pre><code class="language-yaml">plcs:
+  - name: PLC1
+    sensors: [PU1F]
+    actuators: [PU1]
+    controls:
+      - {dependant: T1, actuator: PU1, type: below, value: 4.0, action: open}
+      - {dependant: T1, actuator: PU1, type: above, value: 6.3, action: closed}
+  - name: PLC2
+    sensors: [T1]
+    actuators: []
+    controls: []
+</code></pre>
+<p>Combine this fragment with actuator initial values and a full network. scada.name identifies SCADA; namespaces and addresses belong to network endpoints/LANs.</p>
+<h2 id="control-rules">Control rules</h2>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>dependant</td>
+  <td>Measurement used by the rule</td>
+</tr>
+<tr>
+  <td>actuator</td>
+  <td>Controlled pump/valve</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>below or above the threshold</td>
+</tr>
+<tr>
+  <td>value</td>
+  <td>Threshold in the measurement's units</td>
+</tr>
+<tr>
+  <td>action</td>
+  <td>open or closed when the condition holds</td>
+</tr>
+</tbody>
+</table>
+<p>The example opens PU1 below 4.0 and closes it above 6.3. Between the thresholds it holds state. Comparisons are strict; equality does not trigger. Later assignments can override earlier ones when several conditions hold, so avoid conflicting rules.</p>
+<h2 id="network-and-attacks">Network and attacks</h2>
+<p>See <a href="configuration-network.html">Network Configuration</a>. Match PLC, SCADA and attacker names across endpoints, LAN addresses and targets.</p>
+<p>Use attacks.enabled and attacks.scenarios to select attacks, targets and iteration windows. See <a href="configuration-attacks.html">Attack Configuration</a> and <a href="experiments.html">Experiments</a>.</p>
+<h2 id="outputs">Outputs</h2>
+<p>Results go to output_path: physics.csv, actuator_state.csv, SCADA observations and attack events. Optional reporting.key_variables selects key columns such as PLC2.PLC2_T1; otherwise water defaults apply.</p>
+<pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config.yaml --iterations 100 --logic-wait 0.3
+</code></pre>
+<p>logic-wait is wall-clock PLC scan waiting, separate from the hydraulic step. For power, thermal or another solver, continue with <a href="extensions.html">Extended Experiments</a>.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

@@ -33,3 +33,9 @@ Explore the [architecture and closed-loop workflow](architecture.html), [C-Town 
 - Research & Community
   - [Publications & Citation](publications.html)
   - [Contributing & Feedback](contributing.html)
+
+## Extended experiments
+
+Use [UPSI](upsi.html) to connect physical models. Start with [Extension Overview](extensions.html), [adapter development](adapter-guide.html) and [power/thermal scenes](extended-examples.html). Consult [water configuration](configuration.html), [network](configuration-network.html) and [attack](configuration-attacks.html) fields.
+
+For other models, see the added fields in [UPSI Configuration](upsi-configuration.html).

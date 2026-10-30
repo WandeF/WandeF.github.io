@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>UPSI 配置 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="文档导航">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="搜索文档…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a aria-current="page" class="nav-link active" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim 文档<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>UPSI 配置</span></div>
+        <div class="document-actions"><a href="../../en/latest/upsi-configuration.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="upsi-配置">UPSI 配置</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#填写配置">填写配置</a></li><li><a href="#整体结构">整体结构</a></li><li><a href="#与原配置的关系">与原配置的关系</a></li><li><a href="#physics-通用字段">physics 通用字段</a></li><li><a href="#信号映射字段">信号映射字段</a></li><li><a href="#配置控制器">配置控制器</a></li><li><a href="#质量策略">质量策略</a></li><li><a href="#各后端专用选项">各后端专用选项</a></li><li><a href="#验证与运行覆盖项">验证与运行覆盖项</a></li></ul></nav>
+<p>接入其他物理模型时，可以在原有场景配置中选择后端、声明信号，并设置采样间隔。下面介绍 UPSI 增加的配置写法。</p>
+<h2 id="填写配置">填写配置</h2>
+<p>配置文件继续使用 YAML，在顶层添加 <code>schema_version: 2</code>，选择显式信号配置。模型、信号和时间参数写在 <code>physics</code> 中。</p>
+<p>使用空格缩进，列表使用 <code>-</code>，布尔值写成 <code>true</code>/<code>false</code>，无量纲单位写成字符串 <code>'1'</code>。PyYAML 的隐式类型解析会把未加引号的 <code>on</code>/<code>off</code> 解释为布尔值；需要字符串时写成 <code>'on'</code>/<code>'off'</code>。避免重复键和含糊的数字字符串。</p>
+<p>填写字段时使用下表中的名称；未识别的字段可能被忽略。运行前可以使用本页末尾的命令检查配置。语法参考 <a href="https://yaml.org/spec/1.2.2/">YAML</a> 和 <a href="https://pyyaml.org/wiki/PyYAMLDocumentation">PyYAML</a>。</p>
+<h2 id="整体结构">整体结构</h2>
+<pre><code class="language-yaml">schema_version: 2
+output_path: output/baseline
+openplc_path: ../../../OpenPLC_v3
+ns3_path: ../../../ns-3-dev-git
+iterations: 10
+physics: {}       # 后端、模型、时间、信号映射
+actuators: []     # 逻辑执行器及初始状态
+plcs: []          # 本地信号、执行器、控制规则
+scada: {name: scada}
+network: {}       # 完整节点、链路、LAN、端点设置
+attacks: {enabled: false, scenarios: []}
+reporting: {key_variables: []}
+</code></pre>
+<p>这是结构示意，空的 <code>physics</code>、<code>plcs</code> 和 <code>network</code> 不能作为完整实验运行。可运行起点为 <code>examples/power_feeder/config_v2.yaml</code>、<code>examples/ieee33_bw/config_baseline.yaml</code> 和 <code>examples/thermal_box/config.yaml</code>。网络和攻击的完整字典分别在<a href="configuration-network.html">网络配置</a>与<a href="configuration-attacks.html">攻击配置</a>。</p>
+<h2 id="与原配置的关系">与原配置的关系</h2>
+<p>UPSI 沿用原有的 output_path、组件路径、plcs、network 和 attacks。需要更换物理模型时，再增加下面的字段：</p>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>用法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>schema_version: 2</code></td>
+  <td>使用显式物理信号配置</td>
+</tr>
+<tr>
+  <td><code>physics.backend</code></td>
+  <td>选择 EPANET、pandapower 或自己的适配器</td>
+</tr>
+<tr>
+  <td><code>physics.model.path</code></td>
+  <td>指定物理模型文件</td>
+</tr>
+<tr>
+  <td><code>physics.plugins</code></td>
+  <td>注册独立适配器</td>
+</tr>
+<tr>
+  <td><code>physics.timing</code></td>
+  <td>设置物理采样间隔</td>
+</tr>
+<tr>
+  <td><code>physics.signals</code></td>
+  <td>连接逻辑信号与物理端口</td>
+</tr>
+<tr>
+  <td><code>signals</code></td>
+  <td>可选的顶层信号类型、方向、单位和范围</td>
+</tr>
+<tr>
+  <td><code>actuators[].initial_state</code></td>
+  <td>按声明的命令类型填写，例如 BOOL 使用 true/false</td>
+</tr>
+<tr>
+  <td><code>quality_policy</code></td>
+  <td>选择失电、旧数据或缺失数据的处理方法</td>
+</tr>
+<tr>
+  <td><code>initial_state</code></td>
+  <td>可选的初始输出类型声明；起始物理值由模型初始化产生</td>
+</tr>
+</tbody>
+</table>
+<p>路径、PLC 规则、网络与攻击的基本写法见<a href="configuration.html">配置说明</a>、<a href="configuration-network.html">网络配置</a>和<a href="configuration-attacks.html">攻击配置</a>。</p>
+<h2 id="physics-通用字段">physics 通用字段</h2>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>类型／默认</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>backend</code></td>
+  <td>string；v2 必填</td>
+  <td><code>dhalsim_epynet</code>、<code>pandapower</code> 或已声明的插件名；旧配置省略时使用水网；<code>epanet</code>/<code>epynet</code> 为别名</td>
+</tr>
+<tr>
+  <td><code>model</code></td>
+  <td>mapping；v2 必填</td>
+  <td>模型声明，内置后端与恒温箱使用 <code>path</code>；插件可自定义模型参数</td>
+</tr>
+<tr>
+  <td><code>model.path</code></td>
+  <td>path</td>
+  <td>物理模型文件路径；相对 YAML 目录</td>
+</tr>
+<tr>
+  <td><code>plugins.&lt;name&gt;.factory</code></td>
+  <td><code>module:Class</code></td>
+  <td>适配器工厂，和 entry_point 二选一</td>
+</tr>
+<tr>
+  <td><code>plugins.&lt;name&gt;.entry_point</code></td>
+  <td>string</td>
+  <td>已安装 <code>hydro_cps.physics</code> 分组的命名入口</td>
+</tr>
+<tr>
+  <td><code>plugins.&lt;name&gt;.dependency</code></td>
+  <td>module string；可选</td>
+  <td>选中后端时预检导入的依赖模块</td>
+</tr>
+<tr>
+  <td><code>init_style</code></td>
+  <td><code>current</code> / <code>dhalsim</code></td>
+  <td>v2 默认 current；v1 水网默认 dhalsim；后者仅适用于声明兼容初始化的水网后端</td>
+</tr>
+<tr>
+  <td><code>timing.mode</code></td>
+  <td><code>fixed_step</code></td>
+  <td>当前单后端采样调度模式；不是求解器内部步进模式</td>
+</tr>
+<tr>
+  <td><code>timing.step_seconds</code></td>
+  <td>finite number &gt; 0；v2 必填</td>
+  <td>请求采样间隔，秒；EPANET 要求 1 s 的整数倍</td>
+</tr>
+<tr>
+  <td><code>timing.measurement_max_age_s</code></td>
+  <td>number ≥ 0；默认 0</td>
+  <td>允许的测量年龄；非零时后端必须声明异步测量能力</td>
+</tr>
+<tr>
+  <td><code>timing.tolerance.absolute_s</code></td>
+  <td>number ≥ 0</td>
+  <td>物理时间比较的绝对容差；默认 min(1e-9, step/8)，不能超过 step/4</td>
+</tr>
+<tr>
+  <td><code>timing.tolerance.relative</code></td>
+  <td>number ≥ 0</td>
+  <td>相对容差；默认 8 倍浮点 epsilon，上限 1e-6；最终容差仍受步长限制</td>
+</tr>
+<tr>
+  <td><code>signals.observations</code></td>
+  <td>mapping</td>
+  <td>逻辑测量到原生输出端口的映射</td>
+</tr>
+<tr>
+  <td><code>signals.commands</code></td>
+  <td>mapping</td>
+  <td>逻辑执行器到原生输入端口的映射，必须完整且不重复</td>
+</tr>
+<tr>
+  <td><code>quality_policy</code></td>
+  <td>mapping；可选</td>
+  <td>与顶层同名策略作用相同；重复声明时必须一致</td>
+</tr>
+<tr>
+  <td><code>model_file</code>、<code>timestep</code></td>
+  <td>v1 兼容字段</td>
+  <td>分别对应模型路径和采样间隔；timestep 与 timing.step_seconds 同时出现时必须一致</td>
+</tr>
+<tr>
+  <td><code>sensors</code>、<code>actuators</code></td>
+  <td>v1 电网兼容字段</td>
+  <td>按 <code>table</code>、<code>element</code>、<code>column</code> 声明结果读取和 BOOL 控制，归一化为 signals；可带 missing / invert</td>
+</tr>
+</tbody>
+</table>
+<p><code>init_style: current</code> 从已求解的 time-zero 快照开始；旧水网 <code>dhalsim</code> 保留第 0 行零值和第 1 行配置初值，再进入历史控制轮次。因此旧 C-Town 的 100 轮上限对应 99 次控制周期，不能直接与 current 场景的快照数量混比。</p>
+<p>后端 <code>describe().timing</code> 的 <code>target</code>/<code>event_step</code> 是后端能力，与配置中的 <code>fixed_step</code> 不同。控制轮次连续递增，物理请求使用上一实际返回时间；内部事件可以使一次物理推进短于采样间隔。</p>
+<h2 id="信号映射字段">信号映射字段</h2>
+<p>下表用于 <code>physics.signals.observations.&lt;name&gt;</code> 和 <code>commands.&lt;name&gt;</code>：</p>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>类型／默认</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>port</code></td>
+  <td>string；必填</td>
+  <td>后端声明的原生端口，方向必须正确</td>
+</tr>
+<tr>
+  <td><code>dtype</code></td>
+  <td>float/int/bool/str；v2 必填</td>
+  <td>可在顶层 signals 中补充；必须和原生类型一致</td>
+</tr>
+<tr>
+  <td><code>unit</code></td>
+  <td>string；默认原生单位</td>
+  <td>逻辑单位，不能用未引号的数字 1</td>
+</tr>
+<tr>
+  <td><code>minimum</code>、<code>maximum</code></td>
+  <td>finite number；可选</td>
+  <td>数值范围；BOOL/字符串不能设置数值边界</td>
+</tr>
+<tr>
+  <td><code>scale</code></td>
+  <td>finite number ≠ 0；默认 1</td>
+  <td><code>logical = native * scale + offset</code> 的比例；命令逆转换</td>
+</tr>
+<tr>
+  <td><code>offset</code></td>
+  <td>finite number；默认 0</td>
+  <td>同上；非恒等仿射转换仅支持 float</td>
+</tr>
+<tr>
+  <td><code>invert</code></td>
+  <td>bool；默认 false</td>
+  <td>BOOL 极性反转，仅用于布尔信号</td>
+</tr>
+<tr>
+  <td><code>missing</code></td>
+  <td>后端选项；默认 error</td>
+  <td>pandapower 支持 <code>zero_if_unsupplied</code>，只用于母线电压；不是通用缺失值补零</td>
+</tr>
+<tr>
+  <td><code>unit_context.density_kg_m3</code></td>
+  <td>number &gt; 0</td>
+  <td>水柱压力换算的显式密度</td>
+</tr>
+<tr>
+  <td><code>unit_context.gravity_m_s2</code></td>
+  <td>number &gt; 0</td>
+  <td>水柱压力换算的显式重力加速度</td>
+</tr>
+<tr>
+  <td><code>calibration_reason</code></td>
+  <td>非空字符串</td>
+  <td>同单位非恒等标定的原因；会写入信号 schema</td>
+</tr>
+</tbody>
+</table>
+<p>顶层 <code>signals.&lt;name&gt;</code> 可声明 <code>direction</code>、<code>dtype</code>、<code>unit</code>、<code>minimum</code>、<code>maximum</code>；方向和映射一致，重复元数据不得冲突。命令只能映射一次到同一原生输入，所有原生输入都必须覆盖。</p>
+<pre><code class="language-yaml">physics:
+  signals:
+    observations:
+      P_GRID_KW:
+        port: metrics.total.p_grid_mw
+        dtype: float
+        unit: kW
+        scale: 1000
+    commands:
+      LOAD24_ENABLE:
+        port: load.LOAD_BUS24.in_service
+        dtype: bool
+        unit: '1'
+</code></pre>
+<p>单位目录区分 <code>MW</code> 与 <code>Mvar</code>、电压与功率；<code>pu</code> 仅允许恒等单位转换，不自动猜基值。温度 <code>degC → K</code> 需显式 <code>offset: 273.15</code>。接口说明见 <a href="upsi.html">UPSI</a>。</p>
+<h2 id="配置控制器">配置控制器</h2>
+<p>PLC 的传感器、执行器和阈值规则继续使用原来的写法。不同之处是：测量名来自 <code>physics.signals.observations</code>，命令名来自 <code>physics.signals.commands</code>，初始值要与声明类型一致。</p>
+<pre><code class="language-yaml">actuators:
+  - {name: LOAD24_ENABLE, initial_state: true}
+plcs:
+  - {name: PLC1, sensors: [V_BUS02], actuators: [], controls: []}
+  - name: PLC3
+    sensors: [V_BUS24, P_LOAD24]
+    actuators: [LOAD24_ENABLE]
+    controls:
+      - {dependant: V_BUS02, actuator: LOAD24_ENABLE, type: below, value: 0.95, action: false}
+      - {dependant: V_BUS02, actuator: LOAD24_ENABLE, type: above, value: 1.03, action: true}
+</code></pre>
+<p>阈值使用逻辑信号的单位。这个示例中电压单位为 pu，<code>LOAD24_ENABLE: true</code> 表示投入负荷。改变命令极性时可在映射中使用 <code>invert</code>。</p>
+<h2 id="质量策略">质量策略</h2>
+<pre><code class="language-yaml">quality_policy:
+  default: pass_through
+  overrides:
+    unsupplied: hold_last
+    stale: fail_fast
+    missing: skip_write
+</code></pre>
+<p><code>default</code> 和每个 override 的动作可选 <code>pass_through</code>、<code>hold_last</code>、<code>skip_write</code>、<code>fail_fast</code>。<code>overrides</code> 的条件键为 <code>good</code>、<code>initial</code>、<code>unsupplied</code>、<code>invalid</code>、<code>missing</code>、<code>stale</code>。缺失/无效优先，其次是样本或网络陈旧，再按物理质量判断。默认透传保留兼容轨迹，但不会把不可用/非有限数据补成正常零值。保持缓存仅在 Modbus 写入成功后更新；无历史值时跳过。</p>
+<h2 id="各后端专用选项">各后端专用选项</h2>
+<h3 id="epanet">EPANET</h3>
+<p>原有 inp_controls、step_order、init_flag 和 also_set_setting 的用法见<a href="configuration.html">水网配置</a>。显式水力端口可写为 <code>node.&lt;id&gt;.level/pressure/head/demand</code> 和 <code>link.&lt;id&gt;.flow/status/setting</code>；命令使用 <code>link.&lt;id&gt;.status</code>。工程单位来自 INP。</p>
+<h3 id="pandapower">pandapower</h3>
+<p><code>solver.algorithm</code>（例如 nr）、<code>solver.max_iteration</code>、<code>solver.tolerance_mva</code> 传给真实 <code>runpp()</code>；未设置时使用 pandapower 默认值，固定 <code>numba=False</code>。solver 中未知选项会报错。</p>
+<p>模型 YAML 有两种形式：</p>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>sn_mva</code></td>
+  <td>声明式模型系统基准，默认 1 MVA</td>
+</tr>
+<tr>
+  <td><code>buses[]</code></td>
+  <td>name、vn_kv，及 create_bus 支持的参数</td>
+</tr>
+<tr>
+  <td><code>ext_grids[]</code></td>
+  <td>name、bus 别名、vm_pu，及 create_ext_grid 参数</td>
+</tr>
+<tr>
+  <td><code>lines[]</code></td>
+  <td>name、from_bus/to_bus 别名、length_km、r_ohm_per_km、x_ohm_per_km、c_nf_per_km、max_i_ka，及原生线路参数</td>
+</tr>
+<tr>
+  <td><code>loads[]</code></td>
+  <td>name、bus 别名、p_mw、q_mvar，及原生负荷参数</td>
+</tr>
+<tr>
+  <td><code>switches[]</code></td>
+  <td>name、bus、element 别名、et（l 线路 / b 母线）、closed，及原生开关参数</td>
+</tr>
+<tr>
+  <td><code>load_profiles.&lt;load&gt;</code></td>
+  <td>非空非负 scaling 列表；按迭代索引取值，超出后保持末项</td>
+</tr>
+<tr>
+  <td><code>source</code> / <code>case</code></td>
+  <td>公开模型入口固定 <code>pandapower_builtin</code> / <code>case33bw</code></td>
+</tr>
+<tr>
+  <td><code>benchmark_mode</code></td>
+  <td>公开模型入口要求 original，不允许任意物理参数覆盖</td>
+</tr>
+<tr>
+  <td><code>source_citation</code></td>
+  <td>公开模型出处</td>
+</tr>
+<tr>
+  <td><code>aliases.&lt;name&gt;</code></td>
+  <td><code>table: bus</code>、<code>paper_bus_number</code>，按源名称映射论文节点</td>
+</tr>
+<tr>
+  <td><code>controlled_elements.&lt;name&gt;</code></td>
+  <td><code>table: load</code>、<code>bus_number</code>、<code>field: in_service</code>，要求该母线负荷唯一</td>
+</tr>
+</tbody>
+</table>
+<p>公开模型保留原始数据；与手动声明式模型分支分别解析，不混写。具体原生建模参数见 <a href="https://pandapower.readthedocs.io/en/v3.2.1/elements.html">pandapower 文档</a>。</p>
+<p>读取端口为 <code>res_bus/res_line/res_load/res_ext_grid.&lt;alias&gt;.&lt;column&gt;</code>，例如 vm_pu、p_mw、q_mvar、pl_mw、loading_percent 等已支持列。派生 MW 端口为 <code>metrics.total.p_grid_mw/p_loss_mw/served_load_mw/unserved_load_mw</code>。命令端口为 <code>switch.&lt;alias&gt;.closed</code> 或 <code>load.&lt;alias&gt;.in_service</code>，均为 BOOL。</p>
+<h3 id="恒温箱">恒温箱</h3>
+<p>模型字段为 <code>ambient_c</code>（环境温度）、<code>initial_c</code>（初温）、<code>loss_per_s</code>（散热系数，s⁻¹）、<code>heater_c_per_s</code>（加热温升率，°C/s）、<code>heater_w</code>（额定功率 W）和 <code>input_dtype</code>（bool 或独立 API 的 float）。原生端口为 <code>box.temperature</code>、<code>box.heater_power</code> 和 <code>heater.enabled</code>。</p>
+<h2 id="验证与运行覆盖项">验证与运行覆盖项</h2>
+<pre><code class="language-bash">python -m src.run.config_info --config examples/power_feeder/config_v2.yaml
+python -m src.physics.contract --config examples/power_feeder/config_v2.yaml
+bash scripts/run_all.sh --config examples/power_feeder/config_v2.yaml --iterations 10 --logic-wait 0.3
+</code></pre>
+<p><code>config_info</code> 校验并打印解析值，不启动求解器；contract 真实调用所选后端，不启动网络；run_all 才运行完整控制网络。<code>--logic-wait</code> 是等待 PLC 扫描的墙钟秒数，不是模型采样步长。通信超时、同步等待和工作线程参数通过运行器 CLI 设置。网络和攻击字段继续见<a href="configuration-network.html">网络配置</a>、<a href="configuration-attacks.html">攻击配置</a>。</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

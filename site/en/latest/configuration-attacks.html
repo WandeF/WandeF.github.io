@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Attack Configuration · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a aria-current="page" class="nav-link active" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Attack Configuration</span></div>
+        <div class="document-actions"><a href="../../zh/latest/configuration-attacks.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="attack-configuration">Attack Configuration</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#switches-and-windows">Switches and windows</a></li><li><a href="#modbus-mitm-fields">Modbus MITM fields</a></li><li><a href="#udp-dos-fields">UDP DoS fields</a></li><li><a href="#plc-logic-injection">PLC logic injection</a></li><li><a href="#read-the-results">Read the results</a></li></ul></nav>
+<p>Use attacks to configure MITM, UDP DoS or PLC logic injection. Choose the target, adjust attack parameters and set the active iterations.</p>
+<h2 id="switches-and-windows">Switches and windows</h2>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>attacks.enabled</td>
+  <td>Master BOOL, false by default</td>
+</tr>
+<tr>
+  <td>attacks.scenarios</td>
+  <td>List of independently scheduled scenarios</td>
+</tr>
+<tr>
+  <td>scenarios[].name</td>
+  <td>Unique process/event identifier</td>
+</tr>
+<tr>
+  <td>enabled</td>
+  <td>Per-scenario BOOL, true by default</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>modbus_mitm / udp_dos / openplc_logic_injection</td>
+</tr>
+<tr>
+  <td>trigger.type</td>
+  <td>Prefer iteration_window; iteration/round/round_window aliases exist</td>
+</tr>
+<tr>
+  <td>trigger.start_iteration</td>
+  <td>Inclusive first cycle, default 0</td>
+</tr>
+<tr>
+  <td>trigger.end_iteration</td>
+  <td>Inclusive last cycle; omitted means no end limit</td>
+</tr>
+</tbody>
+</table>
+<p>Legacy schedule, start_round/end_round and start/end aliases remain readable. Use explicit trigger/iteration fields in new scenes. Without an iteration trigger, startup/stop defaults apply.</p>
+<p>Trigger windows use controller iterations. Rule window and traffic start_after_sec use wall-clock seconds after process startup. Both differ from physical sim_time.</p>
+<h2 id="modbus-mitm-fields">Modbus MITM fields</h2>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>attacker.endpoint</td>
+  <td>Existing attacker node</td>
+</tr>
+<tr>
+  <td>attacker.namespace / ip</td>
+  <td>Descriptive identity; MITM resolves actual identity from endpoint/LAN rather than overriding it here</td>
+</tr>
+<tr>
+  <td>intercept.source</td>
+  <td>Usually scada; actual launcher resolves the SCADA namespace rather than selecting arbitrary clients here</td>
+</tr>
+<tr>
+  <td>intercept.targets</td>
+  <td>Target PLC list</td>
+</tr>
+<tr>
+  <td>intercept.protocol</td>
+  <td>Descriptive modbus_tcp label; current execution uses Modbus TCP</td>
+</tr>
+<tr>
+  <td>intercept.port</td>
+  <td>Original target port, default 502</td>
+</tr>
+<tr>
+  <td>intercept.listen_port_base</td>
+  <td>Per-target listening base, fallback 15020; examples 15030</td>
+</tr>
+<tr>
+  <td>intercept.listen_ports.PLC</td>
+  <td>Optional explicit per-target listen port</td>
+</tr>
+<tr>
+  <td>intercept.redirect</td>
+  <td>Execution is fixed to iptables_output_dnat, not dynamically switched by this label</td>
+</tr>
+<tr>
+  <td>rules[].name</td>
+  <td>Rule name; generated rule_N if omitted</td>
+</tr>
+<tr>
+  <td>rules[].target</td>
+  <td>Target PLC filter</td>
+</tr>
+<tr>
+  <td>rules[].variable</td>
+  <td>Actual generated REAL %MD variable on the target</td>
+</tr>
+<tr>
+  <td>rules[].direction</td>
+  <td>response by default or request</td>
+</tr>
+<tr>
+  <td>rules[].function_codes</td>
+  <td>Supported 3/4/16 list or integer; response defaults 3/4, request 16</td>
+</tr>
+<tr>
+  <td>rules[].operation</td>
+  <td>set/replace, add/offset/bias or multiply/scale</td>
+</tr>
+<tr>
+  <td>rules[].value</td>
+  <td>Numeric replacement/offset/factor, default 0, using logical register units</td>
+</tr>
+<tr>
+  <td>rules[].window.start_after_sec</td>
+  <td>Delay from proxy startup, default 0</td>
+</tr>
+<tr>
+  <td>rules[].window.duration_sec</td>
+  <td>Optional duration limit</td>
+</tr>
+<tr>
+  <td>rules[].max_events</td>
+  <td>Optional maximum matches per rule</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">attacks:
+  enabled: true
+  scenarios:
+    - name: ctown_t7_bias
+      enabled: true
+      type: modbus_mitm
+      trigger: {type: iteration_window, start_iteration: 20, end_iteration: 40}
+      attacker: {endpoint: mitm, namespace: ns-attacker, ip: 192.168.4.100}
+      intercept:
+        source: scada
+        targets: [PLC4]
+        protocol: modbus_tcp
+        port: 502
+        listen_port_base: 15030
+        redirect: iptables_output_dnat
+      rules:
+        - name: tank_level_downlink
+          target: PLC4
+          variable: PLC8_T7
+          direction: request
+          function_codes: [16]
+          operation: set
+          value: 5.2
+          window: {start_after_sec: 0.0}
+</code></pre>
+<p>This C-Town fragment sets the T7 level forwarded to PLC4 to 5.2. Change names, addresses and register variables together for another target. For a transparent comparison, use add with value 0.</p>
+<h2 id="udp-dos-fields">UDP DoS fields</h2>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>attacker.endpoint / namespace / ip</td>
+  <td>Actual sender identity</td>
+</tr>
+<tr>
+  <td>target.endpoint / namespace / ip</td>
+  <td>Existing target identity</td>
+</tr>
+<tr>
+  <td>target.protocol</td>
+  <td>udp</td>
+</tr>
+<tr>
+  <td>target.port</td>
+  <td>UDP destination, default 502; distinct from same-number TCP Modbus</td>
+</tr>
+<tr>
+  <td>traffic.mode</td>
+  <td>cbr only, default cbr</td>
+</tr>
+<tr>
+  <td>traffic.rate</td>
+  <td>Rate string, default 500kbps; examples 120Mbps</td>
+</tr>
+<tr>
+  <td>traffic.packet_size</td>
+  <td>Payload bytes, default 512; examples 1400</td>
+</tr>
+<tr>
+  <td>traffic.start_after_sec</td>
+  <td>Delay from attack-process startup, default 0</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">type: udp_dos
+trigger: {type: iteration_window, start_iteration: 5, end_iteration: 90}
+attacker: {endpoint: ns_bot1, namespace: ns-bot1, ip: 192.168.255.201}
+target: {endpoint: PLC2, namespace: ns-plc2, ip: 192.168.2.1, protocol: udp, port: 502}
+traffic: {mode: cbr, rate: 120Mbps, packet_size: 1400, start_after_sec: 0.0}
+</code></pre>
+<p>This is a water-scene entry fragment; examples/c_town/config_dos_plc2_single.yaml contains the topology. Multiple senders use multiple entries/endpoints. Effects depend on actual bottlenecks, timeout/cache behavior and control thresholds.</p>
+<h2 id="plc-logic-injection">PLC logic injection</h2>
+<p>The target must be an existing PLC and its namespace must match the endpoint.</p>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>target.endpoint / namespace</td>
+  <td>Actual PLC target</td>
+</tr>
+<tr>
+  <td>injection.mode</td>
+  <td>threshold_shift / invert_condition / force_actuator</td>
+</tr>
+<tr>
+  <td>injection.restore_on_stop</td>
+  <td>true by default; restore original program/runtime at window end</td>
+</tr>
+<tr>
+  <td>injection.rule.actuator</td>
+  <td>Rule actuator for threshold_shift/invert_condition</td>
+</tr>
+<tr>
+  <td>injection.rule.dependant</td>
+  <td>Rule observation</td>
+</tr>
+<tr>
+  <td>injection.rule.type</td>
+  <td>below/above rule match</td>
+</tr>
+<tr>
+  <td>injection.rule.original_value</td>
+  <td>Original threshold for threshold_shift matching</td>
+</tr>
+<tr>
+  <td>injection.rule.injected_value</td>
+  <td>Replacement threshold</td>
+</tr>
+<tr>
+  <td>injection.rule.value</td>
+  <td>invert_condition match threshold, falling back to original_value</td>
+</tr>
+<tr>
+  <td>injection.actuator</td>
+  <td>force_actuator output</td>
+</tr>
+<tr>
+  <td>injection.state</td>
+  <td>Forced BOOL/compatible state; value alias exists</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">type: openplc_logic_injection
+target: {endpoint: PLC4, namespace: ns-plc4}
+injection:
+  mode: threshold_shift
+  rule: {actuator: PU10, dependant: T7, type: above, original_value: 4.8, injected_value: 999.0}
+  restore_on_stop: true
+</code></pre>
+<p>The path changes, compiles and restarts the real OpenPLC program. It does not substitute physical outputs. If matching fails, inspect ownership, thresholds and generated ST.</p>
+<h2 id="read-the-results">Read the results</h2>
+<p>Use attack_schedule.csv and attack_events.csv to see when attacks ran and what data changed. Compare SCADA observations, PLC outputs and hydraulic states. Communication timeouts appear in scada_timeout_events.csv.</p>
+<p>A client-confirmed MITM write can differ from the value received by the target PLC; inspect proxy records and register readback together. Data-quality settings for extended scenes are in <a href="upsi-configuration.html">UPSI Configuration</a>.</p>
+<p>See <a href="experiments.html">Experiments</a>, <a href="configuration.html">Configuration</a> and <a href="configuration-network.html">Network Configuration</a>.</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

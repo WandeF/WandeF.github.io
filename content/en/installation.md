@@ -50,3 +50,7 @@ python -m unittest discover -s tests
 After installation, follow [Quick Start](quickstart.html) to run the C-Town example.
 
 The installer rewrites five top-level path keys in every C-Town YAML and saves changed originals under `output/install-backups/`. Update the paths when moving to another machine or dependency directory.
+
+## Optional physical backends
+
+Water keeps its EPANET environment. Install requirements-power.txt for pandapower and optionally requirements-power-plots.txt for figures. The thermal backend needs the project Python/PyYAML environment without EPANET or pandapower. Point PYTHON_BIN to the selected environment; full loops still require OpenPLC/ns-3. See [Extended Experiments](extensions.html).

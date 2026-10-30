@@ -1,53 +1,50 @@
 # Architecture
 
-Hydro-CPS-Sim includes hydraulic, PLC, SCADA, network and attack modules. Data exchange and state synchronization connect these modules in a closed-loop simulation.
+Hydro-CPS-Sim connects physical processes, PLC control, SCADA, networking and attacks. Measurements reach controllers, controller outputs operate equipment, and equipment states affect the physical process.
 
-## Platform architecture
+## Platform overview
 
-<figure>
-<a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Scenario configuration, orchestration, physical, control, network, synchronization and logging modules" loading="lazy" width="4978" height="3116"></a>
-<figcaption>Platform architecture: scenario configuration, orchestration and runtime modules.</figcaption>
-</figure>
+<figure><img src="../../assets/hydro_cps_sim_architecture_upsi.svg" alt="Original Hydro-CPS-Sim architecture with UPSI added to the physical layer"><figcaption>UPSI connects physical simulators to the control loop.</figcaption></figure>
 
-| Module | Function |
+| Component | Purpose |
 | --- | --- |
-| Scenario configuration | YAML describes the water model, PLC/SCADA mappings, control rules, network, attacks and runtime settings |
-| Orchestration | Generates ST programs, compiles PLCs, creates the network environment, starts processes and exports results |
-| Physical process | DHALSIM-epynet / EPANET advances hydraulics using pump and valve states |
-| Control and supervision | OpenPLC executes logic; PLC Adapters bridge I/O; SCADA acquires and forwards data over Modbus TCP |
-| Communication | Linux network namespaces provide separate network identities connected to ns-3 through TAP/veth interfaces |
-| Attack execution | Injects MITM, DoS or logic modifications at configured interfaces |
-| Synchronization | Filesystem markers coordinate process state exchange by experiment iteration |
-| Logging | Collects attack, communication, control, actuator and hydraulic records for baseline comparisons |
+| Scenario configuration | Physical model, control rules, network and attacks |
+| Orchestrator | Generate programs, prepare networking, start modules and collect results |
+| Physical layer | Water levels, pressures and flows, or another model's states |
+| UPSI | Connect model measurements and commands with shared variable, unit and time handling |
+| Control and SCADA | OpenPLC rules, data collection and cross-PLC forwarding |
+| Network | Namespaces, TAP/veth and ns-3 connections |
+| Attacks | MITM, DoS and PLC logic injection |
+| Synchronization and recording | Coordinate modules and save physical, communication, control and attack data |
+
+## Physical models and UPSI
+
+The water scene uses EPANET. For other systems, choose pandapower, the thermal box or your own adapter through UPSI. Models keep their own equations and solvers while providing measurements and accepting control inputs.
+
+Adapters describe ports, units and stepping. The platform uses that information without requiring a new control/network workflow for every solver. See [Extended Experiments](extensions.html).
 
 ## Closed-loop workflow
 
-<figure>
-<a href="../../assets/closed_loop_experiment_workflow.png" target="_blank" rel="noopener"><img src="../../assets/closed_loop_experiment_workflow.png" alt="Scenario generation, process launch, SCADA acquisition, PLC execution and hydraulic feedback" loading="lazy" width="2888" height="1818"></a>
-<figcaption>Closed-loop workflow: scenario generation, data acquisition, control execution and hydraulic feedback.</figcaption>
-</figure>
+1. Read configuration/model and generate PLC programs and network topology.
+2. Start modules and prepare initial measurements and commands.
+3. Write local PLC measurements; let SCADA collect and forward remote dependencies.
+4. Run OpenPLC rules and read output commands.
+5. Apply commands in the physical model and calculate the next state.
+6. Save results and continue.
 
-1. **Generate the environment:** Read the model and YAML, then generate control programs, address mappings, the ns-3 topology and namespace configuration.
-2. **Initialize:** Start OpenPLC, SCADA and network processes; prepare physical state and synchronization directories.
-3. **Acquire and forward:** Obtain current sensor state and use SCADA Modbus TCP exchanges to forward cross-PLC control dependencies.
-4. **Execute control:** OpenPLC evaluates current inputs and effective rules to produce pump and valve commands.
-5. **Feed back:** Apply actuator states to the next hydraulic step to obtain updated levels, pressures and flows.
-6. **Save results:** Record the current iteration and advance to the next simulation step.
+The PLC Adapter connects to OpenPLC through local Modbus. Remote SCADA–PLC traffic uses the configured ns-3 network, where delay, congestion and attacks affect communication.
 
-## Network connections
+## Code structure
 
-Each PLC, SCADA and attack endpoint runs in a separate Linux network namespace with its own interfaces and protocol stack. ns-3 supplies configurable links, routing and network dynamics. Normal Modbus exchanges and attack traffic follow the configured network paths.
+| Path | Contents |
+| --- | --- |
+| scripts/run_all.sh | Complete experiment entry |
+| src/control/ | Generate, compile and start PLC programs |
+| src/physics/ | Physical interfaces and adapters |
+| src/plc/, scada/, comm/ | Collection, forwarding and Modbus |
+| src/network/ | Namespaces and ns-3 topology |
+| src/attack/ | Attack scheduling and execution |
+| src/runtime/, sync/ | Loop and synchronization |
+| src/io/ | Recording and result export |
 
-SCADA accesses PLC registers and coils over Modbus TCP to collect measurements and send control data. Network settings affect these requests and responses. Logs provide communication, measurement-update and control-output records.
-
-## Source entry points
-
-- `scripts/run_all.sh`: preparation, execution and cleanup.
-- `src/control/`: ST generation, compilation and OpenPLC launch.
-- `src/network/`: namespace and ns-3 topology generation.
-- `src/runtime/`, `src/sync/`: loop coordination and synchronization.
-- `src/scada/`, `src/plc/`, `src/comm/`: acquisition, adapters and Modbus exchanges.
-- `src/attack/`: attack launch and execution.
-- `src/io/`: hydraulic interfaces and result exports.
-
-See [Quick Start](quickstart.html) for execution and [Configuration](configuration.html) for runtime settings.
+Start with [Quick Start](quickstart.html), use [Configuration](configuration.html) for water scenes and [Add a Physical Simulator](adapter-guide.html) for another model.

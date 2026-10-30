@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Extension Overview · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a aria-current="page" class="nav-link active" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Extension Overview</span></div>
+        <div class="document-actions"><a href="../../zh/latest/extensions.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="extended-experiments">Extended Experiments</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#add-a-physical-model">Add a physical model</a></li><li><a href="#what-you-can-customize">What you can customize</a></li><li><a href="#run-your-experiment">Run your experiment</a></li></ul></nav>
+<p>Hydro-CPS-Sim can connect power systems, thermal systems and custom physical models as well as C-Town. UPSI gives these models a common interface while PLCs, SCADA, networking and attacks follow the same workflow.</p>
+<h2 id="add-a-physical-model">Add a physical model</h2>
+<p>Start with an example or write an adapter for another solver:</p>
+<ul>
+<li><a href="upsi.html">Learn about UPSI</a>: exchange measurements and control inputs.</li>
+<li><a href="adapter-guide.html">Write an adapter</a>: initialize, step and read results.</li>
+<li><a href="upsi-configuration.html">Configure UPSI</a>: select the backend and connect variables, units and time.</li>
+<li><a href="extended-examples.html">Run power and thermal examples</a>: try complete scenes.</li>
+</ul>
+<h2 id="what-you-can-customize">What you can customize</h2>
+<table>
+<thead>
+<tr>
+  <th>Goal</th>
+  <th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Use another water network</td>
+  <td>INP and inp_file; see <a href="configuration.html">Configuration</a></td>
+</tr>
+<tr>
+  <td>Use another physical model</td>
+  <td>physics.backend and physics.model.path</td>
+</tr>
+<tr>
+  <td>Select other measurements</td>
+  <td>physics.signals.observations</td>
+</tr>
+<tr>
+  <td>Change commands or units</td>
+  <td>physics.signals.commands and signal mappings</td>
+</tr>
+<tr>
+  <td>Adjust control thresholds</td>
+  <td>plcs.controls</td>
+</tr>
+<tr>
+  <td>Change network or attacks</td>
+  <td>network and attacks</td>
+</tr>
+<tr>
+  <td>Add a simulator</td>
+  <td>Implement an adapter and register it in physics.plugins</td>
+</tr>
+</tbody>
+</table>
+<h2 id="run-your-experiment">Run your experiment</h2>
+<p>Check model initial values and units, then run an attack-free scene. Add transparent-proxy and attack configurations when you want to compare attack behavior with the baseline.</p>
+<p>Each scene currently selects one physical backend. The model calculates system states; the platform passes them to controllers and returns the resulting commands.</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

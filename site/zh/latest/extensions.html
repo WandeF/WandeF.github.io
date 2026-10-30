@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>扩展实验概览 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="文档导航">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="搜索文档…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a aria-current="page" class="nav-link active" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim 文档<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>扩展实验概览</span></div>
+        <div class="document-actions"><a href="../../en/latest/extensions.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="扩展实验">扩展实验</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#添加一个物理模型">添加一个物理模型</a></li><li><a href="#可以修改哪些内容">可以修改哪些内容</a></li><li><a href="#运行自己的实验">运行自己的实验</a></li></ul></nav>
+<p>除了 C-Town 水网，Hydro-CPS-Sim 还可以连接电网、热系统或自己的物理模型。UPSI 为这些模型提供相同的调用方式，PLC、SCADA、网络和攻击仍按原来的流程运行。</p>
+<h2 id="添加一个物理模型">添加一个物理模型</h2>
+<p>你可以从已有示例开始，或为新的求解器编写适配器：</p>
+<ul>
+<li><a href="upsi.html">了解 UPSI</a>：模型如何交换测量与控制输入。</li>
+<li><a href="adapter-guide.html">编写适配器</a>：实现初始化、步进和结果读取。</li>
+<li><a href="upsi-configuration.html">填写 UPSI 配置</a>：选择后端、连接变量、设置单位和时间。</li>
+<li><a href="extended-examples.html">运行电网与恒温箱示例</a>：了解完整的配置和运行过程。</li>
+</ul>
+<h2 id="可以修改哪些内容">可以修改哪些内容</h2>
+<table>
+<thead>
+<tr>
+  <th>想要做什么</th>
+  <th>修改位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>换一个水网</td>
+  <td>INP 文件与 inp_file，见<a href="configuration.html">配置说明</a></td>
+</tr>
+<tr>
+  <td>换用其他物理模型</td>
+  <td>physics.backend 与 physics.model.path</td>
+</tr>
+<tr>
+  <td>使用模型中的其他测量</td>
+  <td>physics.signals.observations</td>
+</tr>
+<tr>
+  <td>改变控制输入或单位</td>
+  <td>physics.signals.commands 和信号映射</td>
+</tr>
+<tr>
+  <td>调整控制阈值</td>
+  <td>plcs 中的 controls</td>
+</tr>
+<tr>
+  <td>更换网络或攻击设置</td>
+  <td>network 与 attacks</td>
+</tr>
+<tr>
+  <td>接入新的仿真器</td>
+  <td>编写适配器，并在 physics.plugins 中注册</td>
+</tr>
+</tbody>
+</table>
+<h2 id="运行自己的实验">运行自己的实验</h2>
+<p>先运行模型，确认初值和单位，再运行无攻击场景。需要研究攻击时，可以添加透明代理和攻击配置，与基线比较。</p>
+<p>目前每个场景选择一个物理后端。物理模型负责计算系统状态，平台负责将状态送入控制器，并把控制输出交回模型。</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

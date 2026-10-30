@@ -16,3 +16,20 @@ Validation scope: website build, generated HTML/local links, bilingual search in
 ## Manuscript documentation update
 
 Architecture, workflow, C-Town dependencies and research-method descriptions were added from the author-provided manuscript on 2026-10-15. See `ASSET_SOURCES.md` for figure provenance and the distinction between manuscript scenarios and reviewed public presets. This does not extend the runtime validation scope above.
+
+## UPSI and configuration update · 2026-10-29
+
+Reviewed local project `/home/lzh/MASTER/CODE/hydro-cps-sim`, branch UPSI, commit d7fafbd. This section extends the earlier water-only source review.
+
+- Reviewed base/types, registry/factory, session, normalization/config, signal_mapper/units, time_coordinator/quality, both native adapters, legacy policy, thermal plugin, PLC/SCADA transport, network generators and attack implementations.
+- Added an explicit architecture boundary for UPSI, a standalone Chinese explanation in the author's output directory, paired English/Chinese extension tutorials and field dictionaries.
+- Configuration distinguishes actual consumed options from descriptive/historical fields. In particular endpoint tap_mode drives ns-3 access; top-level taps/applications/attack_points are not substitutes for executable network and attack settings. noise_scale/log_level and ascii_trace are not implemented generic controls in the current path.
+- Checked conceptual references against official FMI 3.0.2, mosaik API, YAML 1.2.2, PyYAML, Python package metadata and Modbus V1.1b3 documentation. UPSI is a project API; no FMU import, FMI conformance or simultaneous multi-backend coupling is claimed.
+- Build: 32 bilingual content pages plus root redirect, 32 complete search records, internal links and heading anchors checked. Navigation/search/language switching and narrow-page presentation are checked in the local browser.
+- Existing real-experiment evidence was read for examples; this documentation task does not rerun privileged simulations. The previous 90-test/full-loop validation belongs to the software integration work, not to a new test claim here.
+
+The footer and badge now use neutral project documentation labels as part of the requested wording revision. Deployment workflow, repository remotes, manuscript originals and raw experiment results are unchanged. This update is locally built; no push or deployment is part of this documentation task.
+
+## Wording and structure revision · 2026-10-29
+
+The basic configuration pages now introduce the original C-Town fields and examples. UPSI schema, typed signals, units, time and quality settings are documented separately under Extensions. Chinese and English introductions use a tutorial style following CPSim's component-and-task organization. The architecture extends the original artwork rather than replacing its visual style; see ASSET_SOURCES.md for the rendering method. No simulator code or raw experiment results were changed.

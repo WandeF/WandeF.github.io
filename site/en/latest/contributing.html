@@ -29,6 +29,14 @@
 <div class="nav-heading">Experiments &amp; Configuration</div>
 <a class="nav-link" href="experiments.html">Experiments</a>
 <a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a aria-current="page" class="nav-link active" href="contributing.html">Contributing</a></nav>
@@ -39,9 +47,9 @@
         <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Contributing</span></div>
         <div class="document-actions"><a href="../../zh/latest/contributing.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>Contributing &amp; Feedback</h1>
+      <h1 id="contributing-feedback">Contributing &amp; Feedback</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#reporting-a-problem">Reporting a problem</a></li><li><a href="#updating-the-website">Updating the website</a></li><li><a href="#contribution-areas">Contribution areas</a></li></ul></nav>
 <p>You are welcome to report issues, improve the documentation or contribute features.</p>
-<h2>Reporting a problem</h2>
+<h2 id="reporting-a-problem">Reporting a problem</h2>
 <p>Please use the project's <a href="https://github.com/WandeF/hydro-cps-sim/issues">GitHub Issues</a> and include:</p>
 <ol>
 <li>OS and Python / Conda versions.</li>
@@ -49,12 +57,12 @@
 <li>Reproduction commands and relevant errors.</li>
 <li>Expected and actual results.</li>
 </ol>
-<h2>Updating the website</h2>
+<h2 id="updating-the-website">Updating the website</h2>
 <p>Documentation repository: <a href="https://github.com/WandeF/WandeF.github.io">WandeF/WandeF.github.io</a>. Edit Markdown pages under <code>content/zh/</code> and <code>content/en/</code>, then run:</p>
 <pre><code class="language-bash">python build.py
 </code></pre>
 <p>Generated files are written to <code>site/</code>. Preview locally with <code>python -m http.server 8000 --directory site</code>. Push to <code>main</code> in <a href="https://github.com/WandeF/WandeF.github.io">WandeF/WandeF.github.io</a> to build and deploy automatically to <a href="https://wandef.github.io/">https://wandef.github.io/</a>.</p>
-<h2>Contribution areas</h2>
+<h2 id="contribution-areas">Contribution areas</h2>
 <p>Contributions can improve installation and configuration instructions, add reproducible examples, fix issues or refine translations. Briefly describe your changes and how you tested them. Include configurations and run records with experiment examples.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>

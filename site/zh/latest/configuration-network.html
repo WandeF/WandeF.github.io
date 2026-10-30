@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>网络配置 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="文档导航">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="搜索文档…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<a aria-current="page" class="nav-link active" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim 文档<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>网络配置</span></div>
+        <div class="document-actions"><a href="../../en/latest/configuration-network.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="网络配置">网络配置</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#网络层结构">网络层结构</a></li><li><a href="#节点与端点">节点与端点</a></li><li><a href="#主干链路">主干链路</a></li><li><a href="#lan-与地址">LAN 与地址</a></li><li><a href="#描述性字段">描述性字段</a></li><li><a href="#修改后检查">修改后检查</a></li></ul></nav>
+<p><code>network</code> 描述软件通信拓扑，和 INP 或电网中的物理拓扑分别维护。PLC、SCADA 和攻击端点必须有一致的名称、namespace、IP 和接入链路。</p>
+<h2 id="网络层结构">网络层结构</h2>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>类型／含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>backend</code></td>
+  <td>使用 ns3</td>
+</tr>
+<tr>
+  <td><code>topology_name</code></td>
+  <td>拓扑名称标识；输出程序名由生成/运行流程组织</td>
+</tr>
+<tr>
+  <td><code>scheduler</code></td>
+  <td>realtime 启用 ns-3 RealtimeSimulatorImpl，用于真实进程通信</td>
+</tr>
+<tr>
+  <td><code>routing</code></td>
+  <td>global 调用全局路由表填充</td>
+</tr>
+<tr>
+  <td><code>pcap</code></td>
+  <td>bool，默认 false；启用对应链路的抓包</td>
+</tr>
+<tr>
+  <td><code>ascii_trace</code></td>
+  <td>预留字段；抓包使用 pcap</td>
+</tr>
+<tr>
+  <td><code>nodes</code></td>
+  <td>routers、switches、endpoints 三类节点列表</td>
+</tr>
+<tr>
+  <td><code>backbone_links</code></td>
+  <td>点到点主干链路列表</td>
+</tr>
+<tr>
+  <td><code>lans</code></td>
+  <td>含路由器、桥接交换机及端点的 LAN 列表</td>
+</tr>
+<tr>
+  <td><code>taps</code></td>
+  <td>显式端点接入说明；当前生成器主要读取 nodes.endpoints 的 tap/tap_mode，不能仅改 taps 期待切换实际接入</td>
+</tr>
+<tr>
+  <td><code>applications</code></td>
+  <td>记录预期通信；Modbus 流量由 SCADA 和 PLC 进程产生</td>
+</tr>
+<tr>
+  <td><code>attack_points</code></td>
+  <td>记录攻击路径；攻击目标和参数填写在 attacks 中</td>
+</tr>
+</tbody>
+</table>
+<h2 id="节点与端点">节点与端点</h2>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>nodes.routers[].name</code></td>
+  <td>唯一路由器名，如 r0、r1</td>
+</tr>
+<tr>
+  <td><code>nodes.switches[].name</code></td>
+  <td>桥接交换机名，如 s1</td>
+</tr>
+<tr>
+  <td><code>nodes.endpoints[].name</code></td>
+  <td>PLC1、scada、mitm 等端点名</td>
+</tr>
+<tr>
+  <td><code>role</code></td>
+  <td>router/switch 元数据或端点角色 plc/scada/attacker；攻击解析也使用角色定位</td>
+</tr>
+<tr>
+  <td><code>endpoints[].namespace</code></td>
+  <td>Linux 命名空间名</td>
+</tr>
+<tr>
+  <td><code>endpoints[].tap</code></td>
+  <td>主机 TAP 设备名，ns-3 TapBridge 使用同名设备</td>
+</tr>
+<tr>
+  <td><code>endpoints[].tap_mode</code></td>
+  <td>use_bridge（默认）或 use_local；由 ns-3 端点读取的有效模式</td>
+</tr>
+</tbody>
+</table>
+<p>Linux 接口名称受系统长度约束，生成器对部分派生 veth 名做截断。不要将不同端点配置为相同 namespace/TAP/IP。</p>
+<pre><code class="language-yaml">network:
+  backend: ns3
+  scheduler: realtime
+  routing: global
+  pcap: false
+  nodes:
+    routers: [{name: r1}]
+    switches: [{name: s1}]
+    endpoints:
+      - {name: PLC1, role: plc, namespace: ns-demo-plc1, tap: tap-demo-plc1, tap_mode: use_bridge}
+</code></pre>
+<p>这是端点片段；完整场景还需要 SCADA、主干和相应 LAN。</p>
+<h2 id="主干链路">主干链路</h2>
+<p><code>backbone_links[]</code> 的每项包含：</p>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>name</code></td>
+  <td>唯一链路名</td>
+</tr>
+<tr>
+  <td><code>type</code></td>
+  <td>示例 point_to_point；当前该列表按 PointToPointHelper 构建，不根据任意 type 自动选择模型</td>
+</tr>
+<tr>
+  <td><code>endpoints</code></td>
+  <td>两个已声明节点名</td>
+</tr>
+<tr>
+  <td><code>subnet</code></td>
+  <td>CIDR 子网，如 10.0.1.0/24</td>
+</tr>
+<tr>
+  <td><code>data_rate</code></td>
+  <td>ns-3 数据率字符串，如 100Mbps</td>
+</tr>
+<tr>
+  <td><code>delay</code></td>
+  <td>非负时间字符串，支持 ns/us/ms/s，如 2ms</td>
+</tr>
+<tr>
+  <td><code>mtu</code></td>
+  <td>链路 MTU 字节数，示例 1500</td>
+</tr>
+<tr>
+  <td><code>interfaces.&lt;node&gt;.ip</code></td>
+  <td>指定节点在此链路上的 CIDR 地址</td>
+</tr>
+<tr>
+  <td><code>interfaces.&lt;node&gt;.ifname</code></td>
+  <td>示例中的接口标签；ns-3 使用设备对象，Linux 端点实际 veth 名由生成器派生</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">backbone_links:
+  - name: r0-r1
+    type: point_to_point
+    endpoints: [r0, r1]
+    subnet: 10.0.1.0/24
+    data_rate: 100Mbps
+    delay: 2ms
+    mtu: 1500
+    interfaces:
+      r0: {ip: 10.0.1.1/24}
+      r1: {ip: 10.0.1.2/24}
+</code></pre>
+<h2 id="lan-与地址">LAN 与地址</h2>
+<p><code>lans[]</code> 使用 CSMA 和桥接交换机，要求一个路由器、一个交换机、至少一个端点。</p>
+<table>
+<thead>
+<tr>
+  <th>字段</th>
+  <th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>name</code> / <code>type</code></td>
+  <td>LAN 名及示例标识 csma；当前固定按 CSMA/Bridge 构建</td>
+</tr>
+<tr>
+  <td><code>members</code></td>
+  <td>同一 LAN 的节点名列表</td>
+</tr>
+<tr>
+  <td><code>subnet</code> / <code>data_rate</code> / <code>delay</code> / <code>mtu</code></td>
+  <td>子网、共享信道速率、延迟和 MTU</td>
+</tr>
+<tr>
+  <td><code>interfaces.&lt;router&gt;.ip</code></td>
+  <td>LAN 网关地址</td>
+</tr>
+<tr>
+  <td><code>interfaces.&lt;endpoint&gt;.ip</code></td>
+  <td>端点 CIDR 地址，运行配置从这里提取 PLC IP</td>
+</tr>
+<tr>
+  <td><code>interfaces.&lt;endpoint&gt;.gateway</code></td>
+  <td>namespace 的默认路由网关</td>
+</tr>
+<tr>
+  <td><code>interfaces.&lt;node&gt;.ifname</code></td>
+  <td>文档接口标签；不是生成器对实际 veth 名的覆盖字段</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">lans:
+  - name: plc1_lan
+    type: csma
+    members: [r1, s1, PLC1]
+    subnet: 192.168.1.0/24
+    data_rate: 100Mbps
+    delay: 100us
+    mtu: 1500
+    interfaces:
+      r1: {ip: 192.168.1.254/24}
+      PLC1: {ip: 192.168.1.1/24, gateway: 192.168.1.254}
+</code></pre>
+<h2 id="描述性字段">描述性字段</h2>
+<p><code>taps[]</code> 常见字段为 <code>endpoint</code>、<code>tap_name</code>、<code>mode</code>、<code>host_namespace</code>；应与节点端点保持一致，但实际接入模式以 <code>nodes.endpoints[].tap_mode</code> 为准。<code>applications[]</code> 使用 <code>name</code>、<code>src</code>、<code>dst</code>、<code>protocol</code>、<code>dst_port</code> 描述预期通信。<code>attack_points[]</code> 使用 <code>name</code>、<code>type</code>、<code>targets</code> 描述路径。这些元数据不代替真实端点、程序或攻击配置。</p>
+<h2 id="修改后检查">修改后检查</h2>
+<p>名称必须在节点表、主干/LAN 成员、接口和攻击目标之间一致。IP 与网关要在对应子网内，主干与 LAN 避免重叠。新攻击者也需要真实 endpoint 和 LAN 地址。</p>
+<p>当前生成器支持上述带宽与延迟字段；没有通用的 <code>packet_loss</code> YAML 开关，也没有根据 <code>applications</code> 自动生成业务流量的机制。需要随机丢包或其他 ns-3 模型时，先扩展生成器并检查实际生成的 C++，再配置实验。</p>
+<p>使用 <code>python -m src.run.config_info --config ...</code> 查看命名空间等解析值；构建流程会生成 ns-3 C++ 与 Linux 网络脚本。完整字段起点见<a href="configuration.html">配置说明</a>，攻击配置见<a href="configuration-attacks.html">攻击配置</a>。</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

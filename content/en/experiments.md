@@ -69,3 +69,7 @@ Results are saved under `output_path` in `reports/csv/`.
 When comparing an attack run with its baseline, start with input changes, then inspect PLC outputs and hydraulic states. A timeout need not change an actuator action, and an input change may trigger a control rule in a later iteration.
 
 You can compare levels and pressures using RMSE, mean absolute deviation or peak absolute deviation. Use `sim_time` from the hydraulic records when plotting against physical time. See [Configuration](configuration.html) for network and control settings.
+
+## Extended experiments
+
+For power, thermal or custom physical models, see [Extended Experiments](extensions.html) and [UPSI Configuration](upsi-configuration.html).

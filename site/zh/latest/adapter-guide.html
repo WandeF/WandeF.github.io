@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>接入物理仿真器 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="文档导航">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="搜索文档…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a aria-current="page" class="nav-link active" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim 文档<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>接入物理仿真器</span></div>
+        <div class="document-actions"><a href="../../en/latest/adapter-guide.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="接入物理仿真器">接入物理仿真器</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#准备模型与端口">准备模型与端口</a></li><li><a href="#编写适配器">编写适配器</a></li><li><a href="#注册插件">注册插件</a></li><li><a href="#连接信号与控制器">连接信号与控制器</a></li><li><a href="#运行适配器">运行适配器</a></li><li><a href="#接入真实闭环">接入真实闭环</a></li><li><a href="#常见接入问题">常见接入问题</a></li></ul></nav>
+<p>将求解器封装为 <code>PhysicsBackend</code>，声明原生端口，并通过场景配置注册。适配器可以放在示例目录或独立 Python 包中。</p>
+<h2 id="准备模型与端口">准备模型与端口</h2>
+<p>先确认求解器的模型格式、初始条件、可写输入、可读输出、工程单位、时间接口和错误状态。例如恒温箱定义：</p>
+<table>
+<thead>
+<tr>
+  <th>端口</th>
+  <th>方向</th>
+  <th>类型</th>
+  <th>单位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>box.temperature</code></td>
+  <td>output</td>
+  <td>float</td>
+  <td>degC</td>
+</tr>
+<tr>
+  <td><code>box.heater_power</code></td>
+  <td>output</td>
+  <td>float</td>
+  <td>W</td>
+</tr>
+<tr>
+  <td><code>heater.enabled</code></td>
+  <td>input</td>
+  <td>bool</td>
+  <td>1</td>
+</tr>
+</tbody>
+</table>
+<p>EPANET 端口按节点/链接命名；pandapower 端口按结果表、别名、列命名；插件可以定义适合自身模型的稳定端口名。</p>
+<h2 id="编写适配器">编写适配器</h2>
+<p>完整示例位于项目的 <code>examples/thermal_box/adapter.py</code>。接口结构如下，其中 <code>solver</code> 表示待接入的真实求解器 API，需替换为对应实现：</p>
+<pre><code class="language-python">from src.physics.base import PhysicsBackend
+from src.physics.types import SignalSpec, StepResult
+
+class PlantBackend(PhysicsBackend):
+    def __init__(self, config):
+        self.config = config
+        # 保存配置；把求解器资源的获取放在 initialize()。
+
+    def describe(self):
+        return {
+            'signals': {
+                'plant.measurement': SignalSpec(
+                    'plant.measurement', 'output', 'float', 'K'),
+                'plant.enabled': SignalSpec(
+                    'plant.enabled', 'input', 'bool', '1'),
+            },
+            'timing': 'target',
+            'model_kind': 'your_physical_model',
+        }
+
+    def initialize(self):
+        # 加载模型、应用 self.config.initial_inputs，返回初始 StepResult。
+        # 重复调用应返回当前初始结果的独立副本，不重新加载。
+        raise NotImplementedError('Connect the real solver initialization')
+
+    def advance(self, until_s, inputs):
+        # 应用完整 inputs，求解到目标时间，再返回实际时间与完整结果。
+        raise NotImplementedError('Connect the real solver step')
+
+    def close(self):
+        # 释放已获取的资源，允许初始化失败后调用和重复调用。
+        pass
+</code></pre>
+<p>模板只展示接口，不产生模拟结果。实际返回示例为 <code>StepResult(actual_time_s, outputs, applied_inputs, diagnostics=...)</code>。必须检查实际输入类型、求解收敛、输出有限性和实际时间；不能用“上次成功值”冒充新求解结果。对内部事件提前返回的求解器，声明 <code>timing: event_step</code>；普通定点推进声明 <code>target</code>。</p>
+<h2 id="注册插件">注册插件</h2>
+<p>模块方式：</p>
+<pre><code class="language-yaml">physics:
+  backend: my_plant
+  plugins:
+    my_plant:
+      factory: my_package.adapter:PlantBackend
+      # dependency: my_solver_package  # 可选的依赖预检模块
+</code></pre>
+<p>安装包方式，在包的 <code>pyproject.toml</code> 中声明：</p>
+<pre><code class="language-toml">[project.entry-points.&quot;hydro_cps.physics&quot;]
+my_plant = &quot;my_package.adapter:PlantBackend&quot;
+</code></pre>
+<p>场景中使用 <code>entry_point: my_plant</code> 代替 <code>factory</code>，二者只能选一个。安装插件的 Python 必须与 <code>PYTHON_BIN</code> 指向的运行环境一致。内置的 <code>dhalsim_epynet</code>、<code>pandapower</code> 和别名不可被场景覆盖。</p>
+<h2 id="连接信号与控制器">连接信号与控制器</h2>
+<p>下例是插件物理部分的配置片段，需合入包含完整 <code>network</code> 和运行路径的场景：</p>
+<pre><code class="language-yaml">schema_version: 2
+physics:
+  backend: my_plant
+  plugins:
+    my_plant:
+      factory: my_package.adapter:PlantBackend
+  model:
+    path: model.yaml
+  timing:
+    mode: fixed_step
+    step_seconds: 1.0
+  signals:
+    observations:
+      TEMPERATURE:
+        port: plant.measurement
+        dtype: float
+        unit: K
+    commands:
+      HEATER:
+        port: plant.enabled
+        dtype: bool
+        unit: '1'
+actuators:
+  - {name: HEATER, initial_state: false}
+plcs:
+  - name: PLC1
+    sensors: [TEMPERATURE]
+    actuators: [HEATER]
+    controls:
+      - {dependant: TEMPERATURE, actuator: HEATER, type: below, value: 293.15, action: true}
+      - {dependant: TEMPERATURE, actuator: HEATER, type: above, value: 295.15, action: false}
+</code></pre>
+<p><code>port</code>、类型与单位必须和 <code>describe()</code> 一致。多个 PLC 的远程依赖通过传感器拥有者推导，SCADA 自动转发；不需要在后端编写 Modbus 逻辑。</p>
+<h2 id="运行适配器">运行适配器</h2>
+<p>已有恒温箱可以直接运行：</p>
+<pre><code class="language-bash">python -m src.physics.contract --config examples/thermal_box/config.yaml
+</code></pre>
+<p>新后端使用相同命令并替换配置路径。这个命令会初始化模型并推进三次，检查输入、输出与物理时间，最后释放资源。声明的可选依赖未安装时返回 <code>skipped</code>；加载、模型或求解失败时返回 <code>failed</code>。</p>
+<p>独立 SDK 调用可使用 <code>configure_plugins(raw)</code> 创建注册上下文，将其传入 <code>BackendConfig.registry</code>，再通过 <code>create_backend(name, config)</code> 创建实例。<code>exercise_backend(backend, initial_inputs, step_seconds)</code> 提供相同的可复用测试入口。</p>
+<h2 id="接入真实闭环">接入真实闭环</h2>
+<p>先运行已有恒温箱，确认环境：</p>
+<pre><code class="language-bash">PYTHON_BIN=&quot;$(command -v python)&quot; bash scripts/run_all.sh \
+  --config examples/thermal_box/config.yaml --logic-wait 0.3
+</code></pre>
+<p>然后替换为新场景。完整运行需要真实 OpenPLC、ns-3 和 namespace 权限，单独运行适配器时不需要这些组件。</p>
+<p>检查 <code>physics_state.csv</code>、<code>physics_signals.csv</code>、PLC 线圈读回、SCADA 原始记录及 <code>signal_quality.csv</code>，确认命令在下一返回物理快照中生效。新求解器至少覆盖已知轨迹、初始化重复调用、单位/类型错误、求解失败、错误时间戳和清理行为。</p>
+<h2 id="常见接入问题">常见接入问题</h2>
+<table>
+<thead>
+<tr>
+  <th>现象</th>
+  <th>检查项</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>找不到插件</td>
+  <td>模块是否可导入、包是否安装到同一 Python、factory/entry point 名称</td>
+</tr>
+<tr>
+  <td>端口或方向错误</td>
+  <td><code>describe().signals</code> 与 <code>physics.signals</code> 是否一致</td>
+</tr>
+<tr>
+  <td>单位变换失败</td>
+  <td>是否显式填写 scale/offset，量纲是否可转换</td>
+</tr>
+<tr>
+  <td>输入缺失</td>
+  <td>是否覆盖全部原生输入且没有重复映射，初始执行器是否齐全</td>
+</tr>
+<tr>
+  <td>时间停止或倒退</td>
+  <td>是否返回求解器实际时间，内部事件后是否确实前进</td>
+</tr>
+<tr>
+  <td>失败后仍有新数据</td>
+  <td>是否抛出异常而非伪造成功结果，是否使用会话发布流程</td>
+</tr>
+<tr>
+  <td>原生库有并发问题</td>
+  <td>注册隔离只保护配置上下文，需另行处理求解器线程/进程约束</td>
+</tr>
+</tbody>
+</table>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

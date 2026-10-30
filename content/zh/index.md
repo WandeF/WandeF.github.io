@@ -33,3 +33,9 @@ Hydro-CPS-Sim 将水力过程、PLC 控制、SCADA 通信与网络仿真连接�
 - 社区与研究
   - [论文与引用](publications.html)
   - [贡献与反馈](contributing.html)
+
+## 扩展实验
+
+通过 [UPSI](upsi.html) 接入不同物理模型，查看[扩展实验概览](extensions.html)、[适配器编写](adapter-guide.html)和[电网与恒温箱示例](extended-examples.html)。配置参考包含[水网配置](configuration.html)、[网络](configuration-network.html)和[攻击](configuration-attacks.html)。
+
+其他物理模型的新增字段见 [UPSI 配置](upsi-configuration.html)。

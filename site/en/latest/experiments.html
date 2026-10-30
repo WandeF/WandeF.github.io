@@ -29,6 +29,14 @@
 <div class="nav-heading">Experiments &amp; Configuration</div>
 <a aria-current="page" class="nav-link active" href="experiments.html">Experiments</a>
 <a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
@@ -39,21 +47,21 @@
         <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Experiments</span></div>
         <div class="document-actions"><a href="../../zh/latest/experiments.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>Security Experiments</h1>
+      <h1 id="security-experiments">Security Experiments</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#attack-types">Attack types</a></li><li><a href="#example-configurations">Example configurations</a></li><li><a href="#running-an-experiment">Running an experiment</a></li><li><a href="#reading-the-results">Reading the results</a></li><li><a href="#extended-experiments">Extended experiments</a></li></ul></nav>
 <p>Hydro-CPS-Sim provides MITM, DoS and PLC logic injection attacks. You can select targets and active windows to explore how attacks affect sensor data, PLC outputs and the water network.</p>
-<h2>Attack types</h2>
+<h2 id="attack-types">Attack types</h2>
 <figure>
 <a href="../../assets/attack_cross_layer_propagation_paths.png" target="_blank" rel="noopener"><img src="../../assets/attack_cross_layer_propagation_paths.png" alt="MITM, DoS and PLC logic injection paths through communication or control rules to actuators and hydraulic feedback" loading="lazy" width="4663" height="1993"></a>
 <figcaption>MITM, DoS and PLC logic injection entry points in the closed loop.</figcaption>
 </figure>
 
-<h3>MITM data manipulation</h3>
+<h3 id="mitm-data-manipulation">MITM data manipulation</h3>
 <p>MITM modifies Modbus data exchanged between SCADA and PLCs. For example, changing T7 measurements sent to PLC4 changes the controller input and can affect the on/off decision for PU10.</p>
-<h3>DoS communication interference</h3>
+<h3 id="dos-communication-interference">DoS communication interference</h3>
 <p>DoS uses UDP traffic to occupy network links and interfere with normal Modbus communication. After a timeout, SCADA may retain an earlier observation. Compare communication state, measurement updates and actuator actions to explore the effect of stale data on control.</p>
-<h3>PLC logic injection</h3>
+<h3 id="plc-logic-injection">PLC logic injection</h3>
 <p>Logic injection changes PLC rules, such as a pump-off threshold. OpenPLC executes the modified rules, and resulting pump or valve actions feed back into the hydraulic model.</p>
-<h2>Example configurations</h2>
+<h2 id="example-configurations">Example configurations</h2>
 <p>The current version provides the following example configurations. Attack windows are measured in control iterations.</p>
 <table>
 <thead>
@@ -102,7 +110,7 @@
 </tbody>
 </table>
 <p>Each configuration includes its network, control and attack settings. Start with an example and adjust the target, attack parameters and active window.</p>
-<h2>Running an experiment</h2>
+<h2 id="running-an-experiment">Running an experiment</h2>
 <p>Run an attack-free baseline first:</p>
 <pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config.yaml
 </code></pre>
@@ -110,7 +118,7 @@
 <pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config_mitm_plc4.yaml --logic-wait 0.3
 </code></pre>
 <p>Each run updates the output directory. Copy results you want to compare to a separate directory before starting the next experiment.</p>
-<h2>Reading the results</h2>
+<h2 id="reading-the-results">Reading the results</h2>
 <p>Results are saved under <code>output_path</code> in <code>reports/csv/</code>.</p>
 <table>
 <thead>
@@ -148,6 +156,8 @@
 </table>
 <p>When comparing an attack run with its baseline, start with input changes, then inspect PLC outputs and hydraulic states. A timeout need not change an actuator action, and an input change may trigger a control rule in a later iteration.</p>
 <p>You can compare levels and pressures using RMSE, mean absolute deviation or peak absolute deviation. Use <code>sim_time</code> from the hydraulic records when plotting against physical time. See <a href="configuration.html">Configuration</a> for network and control settings.</p>
+<h2 id="extended-experiments">Extended experiments</h2>
+<p>For power, thermal or custom physical models, see <a href="extensions.html">Extended Experiments</a> and <a href="upsi-configuration.html">UPSI Configuration</a>.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

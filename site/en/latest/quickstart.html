@@ -29,6 +29,14 @@
 <div class="nav-heading">Experiments &amp; Configuration</div>
 <a class="nav-link" href="experiments.html">Experiments</a>
 <a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
@@ -39,12 +47,12 @@
         <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Quick Start</span></div>
         <div class="document-actions"><a href="../../zh/latest/quickstart.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>Quick Start</h1>
+      <h1 id="quick-start">Quick Start</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#run-a-simulation">Run a simulation</a></li><li><a href="#select-a-configuration">Select a configuration</a></li><li><a href="#outputs">Outputs</a></li></ul></nav>
 <p>After installation, run your first closed-loop simulation with the C-Town example.</p>
 <blockquote>
 <p>Each run clears <code>runtime/</code>, <code>reports/</code>, <code>st/</code>, and <code>plcs/</code> under the configured output directory. Copy results to a separate directory before the next experiment. Start as a normal user; the script requests sudo when needed.</p>
 </blockquote>
-<h2>Run a simulation</h2>
+<h2 id="run-a-simulation">Run a simulation</h2>
 <pre><code class="language-bash">cd hydro-cps-sim
 conda activate hydro-cps
 bash scripts/run_all.sh --logic-wait 0.3
@@ -53,7 +61,7 @@ bash scripts/run_all.sh --logic-wait 0.3
 <pre><code class="language-bash">bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
 </code></pre>
 <p>This command limits the simulation to 10 iterations to check startup and result export.</p>
-<h2>Select a configuration</h2>
+<h2 id="select-a-configuration">Select a configuration</h2>
 <pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config.yaml
 </code></pre>
 <table>
@@ -87,7 +95,7 @@ bash scripts/run_all.sh --logic-wait 0.3
 </tbody>
 </table>
 <p>Run <code>bash scripts/run_all.sh --help</code> for the definitive interface.</p>
-<h2>Outputs</h2>
+<h2 id="outputs">Outputs</h2>
 <p>Results are exported to <code>reports/csv</code> under <code>output_path</code>. Logs and stage timings are saved in <code>logs/</code> and <code>timing/</code>. At completion, the script prints:</p>
 <pre><code class="language-text">[DONE] Results: &lt;output_path&gt;/reports/csv
 </code></pre>

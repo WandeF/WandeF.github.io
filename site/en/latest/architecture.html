@@ -29,6 +29,14 @@
 <div class="nav-heading">Experiments &amp; Configuration</div>
 <a class="nav-link" href="experiments.html">Experiments</a>
 <a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
@@ -39,84 +47,110 @@
         <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Architecture</span></div>
         <div class="document-actions"><a href="../../zh/latest/architecture.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>Architecture</h1>
-<p>Hydro-CPS-Sim includes hydraulic, PLC, SCADA, network and attack modules. Data exchange and state synchronization connect these modules in a closed-loop simulation.</p>
-<h2>Platform architecture</h2>
-<figure>
-<a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Scenario configuration, orchestration, physical, control, network, synchronization and logging modules" loading="lazy" width="4978" height="3116"></a>
-<figcaption>Platform architecture: scenario configuration, orchestration and runtime modules.</figcaption>
-</figure>
+      <h1 id="architecture">Architecture</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#platform-overview">Platform overview</a></li><li><a href="#physical-models-and-upsi">Physical models and UPSI</a></li><li><a href="#closed-loop-workflow">Closed-loop workflow</a></li><li><a href="#code-structure">Code structure</a></li></ul></nav>
+<p>Hydro-CPS-Sim connects physical processes, PLC control, SCADA, networking and attacks. Measurements reach controllers, controller outputs operate equipment, and equipment states affect the physical process.</p>
+<h2 id="platform-overview">Platform overview</h2>
+<figure><img src="../../assets/hydro_cps_sim_architecture_upsi.svg" alt="Original Hydro-CPS-Sim architecture with UPSI added to the physical layer"><figcaption>UPSI connects physical simulators to the control loop.</figcaption></figure>
 
 <table>
 <thead>
 <tr>
-  <th>Module</th>
-  <th>Function</th>
+  <th>Component</th>
+  <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
   <td>Scenario configuration</td>
-  <td>YAML describes the water model, PLC/SCADA mappings, control rules, network, attacks and runtime settings</td>
+  <td>Physical model, control rules, network and attacks</td>
 </tr>
 <tr>
-  <td>Orchestration</td>
-  <td>Generates ST programs, compiles PLCs, creates the network environment, starts processes and exports results</td>
+  <td>Orchestrator</td>
+  <td>Generate programs, prepare networking, start modules and collect results</td>
 </tr>
 <tr>
-  <td>Physical process</td>
-  <td>DHALSIM-epynet / EPANET advances hydraulics using pump and valve states</td>
+  <td>Physical layer</td>
+  <td>Water levels, pressures and flows, or another model's states</td>
 </tr>
 <tr>
-  <td>Control and supervision</td>
-  <td>OpenPLC executes logic; PLC Adapters bridge I/O; SCADA acquires and forwards data over Modbus TCP</td>
+  <td>UPSI</td>
+  <td>Connect model measurements and commands with shared variable, unit and time handling</td>
 </tr>
 <tr>
-  <td>Communication</td>
-  <td>Linux network namespaces provide separate network identities connected to ns-3 through TAP/veth interfaces</td>
+  <td>Control and SCADA</td>
+  <td>OpenPLC rules, data collection and cross-PLC forwarding</td>
 </tr>
 <tr>
-  <td>Attack execution</td>
-  <td>Injects MITM, DoS or logic modifications at configured interfaces</td>
+  <td>Network</td>
+  <td>Namespaces, TAP/veth and ns-3 connections</td>
 </tr>
 <tr>
-  <td>Synchronization</td>
-  <td>Filesystem markers coordinate process state exchange by experiment iteration</td>
+  <td>Attacks</td>
+  <td>MITM, DoS and PLC logic injection</td>
 </tr>
 <tr>
-  <td>Logging</td>
-  <td>Collects attack, communication, control, actuator and hydraulic records for baseline comparisons</td>
+  <td>Synchronization and recording</td>
+  <td>Coordinate modules and save physical, communication, control and attack data</td>
 </tr>
 </tbody>
 </table>
-<h2>Closed-loop workflow</h2>
-<figure>
-<a href="../../assets/closed_loop_experiment_workflow.png" target="_blank" rel="noopener"><img src="../../assets/closed_loop_experiment_workflow.png" alt="Scenario generation, process launch, SCADA acquisition, PLC execution and hydraulic feedback" loading="lazy" width="2888" height="1818"></a>
-<figcaption>Closed-loop workflow: scenario generation, data acquisition, control execution and hydraulic feedback.</figcaption>
-</figure>
-
+<h2 id="physical-models-and-upsi">Physical models and UPSI</h2>
+<p>The water scene uses EPANET. For other systems, choose pandapower, the thermal box or your own adapter through UPSI. Models keep their own equations and solvers while providing measurements and accepting control inputs.</p>
+<p>Adapters describe ports, units and stepping. The platform uses that information without requiring a new control/network workflow for every solver. See <a href="extensions.html">Extended Experiments</a>.</p>
+<h2 id="closed-loop-workflow">Closed-loop workflow</h2>
 <ol>
-<li><strong>Generate the environment:</strong> Read the model and YAML, then generate control programs, address mappings, the ns-3 topology and namespace configuration.</li>
-<li><strong>Initialize:</strong> Start OpenPLC, SCADA and network processes; prepare physical state and synchronization directories.</li>
-<li><strong>Acquire and forward:</strong> Obtain current sensor state and use SCADA Modbus TCP exchanges to forward cross-PLC control dependencies.</li>
-<li><strong>Execute control:</strong> OpenPLC evaluates current inputs and effective rules to produce pump and valve commands.</li>
-<li><strong>Feed back:</strong> Apply actuator states to the next hydraulic step to obtain updated levels, pressures and flows.</li>
-<li><strong>Save results:</strong> Record the current iteration and advance to the next simulation step.</li>
+<li>Read configuration/model and generate PLC programs and network topology.</li>
+<li>Start modules and prepare initial measurements and commands.</li>
+<li>Write local PLC measurements; let SCADA collect and forward remote dependencies.</li>
+<li>Run OpenPLC rules and read output commands.</li>
+<li>Apply commands in the physical model and calculate the next state.</li>
+<li>Save results and continue.</li>
 </ol>
-<h2>Network connections</h2>
-<p>Each PLC, SCADA and attack endpoint runs in a separate Linux network namespace with its own interfaces and protocol stack. ns-3 supplies configurable links, routing and network dynamics. Normal Modbus exchanges and attack traffic follow the configured network paths.</p>
-<p>SCADA accesses PLC registers and coils over Modbus TCP to collect measurements and send control data. Network settings affect these requests and responses. Logs provide communication, measurement-update and control-output records.</p>
-<h2>Source entry points</h2>
-<ul>
-<li><code>scripts/run_all.sh</code>: preparation, execution and cleanup.</li>
-<li><code>src/control/</code>: ST generation, compilation and OpenPLC launch.</li>
-<li><code>src/network/</code>: namespace and ns-3 topology generation.</li>
-<li><code>src/runtime/</code>, <code>src/sync/</code>: loop coordination and synchronization.</li>
-<li><code>src/scada/</code>, <code>src/plc/</code>, <code>src/comm/</code>: acquisition, adapters and Modbus exchanges.</li>
-<li><code>src/attack/</code>: attack launch and execution.</li>
-<li><code>src/io/</code>: hydraulic interfaces and result exports.</li>
-</ul>
-<p>See <a href="quickstart.html">Quick Start</a> for execution and <a href="configuration.html">Configuration</a> for runtime settings.</p>
+<p>The PLC Adapter connects to OpenPLC through local Modbus. Remote SCADA–PLC traffic uses the configured ns-3 network, where delay, congestion and attacks affect communication.</p>
+<h2 id="code-structure">Code structure</h2>
+<table>
+<thead>
+<tr>
+  <th>Path</th>
+  <th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>scripts/run_all.sh</td>
+  <td>Complete experiment entry</td>
+</tr>
+<tr>
+  <td>src/control/</td>
+  <td>Generate, compile and start PLC programs</td>
+</tr>
+<tr>
+  <td>src/physics/</td>
+  <td>Physical interfaces and adapters</td>
+</tr>
+<tr>
+  <td>src/plc/, scada/, comm/</td>
+  <td>Collection, forwarding and Modbus</td>
+</tr>
+<tr>
+  <td>src/network/</td>
+  <td>Namespaces and ns-3 topology</td>
+</tr>
+<tr>
+  <td>src/attack/</td>
+  <td>Attack scheduling and execution</td>
+</tr>
+<tr>
+  <td>src/runtime/, sync/</td>
+  <td>Loop and synchronization</td>
+</tr>
+<tr>
+  <td>src/io/</td>
+  <td>Recording and result export</td>
+</tr>
+</tbody>
+</table>
+<p>Start with <a href="quickstart.html">Quick Start</a>, use <a href="configuration.html">Configuration</a> for water scenes and <a href="adapter-guide.html">Add a Physical Simulator</a> for another model.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

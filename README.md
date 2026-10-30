@@ -1,38 +1,42 @@
-# Hydro-CPS-Sim · CPS² Lab Documentation
+# Hydro-CPS-Sim Documentation
 
-中英文研究软件文档网站，部署于 **https://wandef.github.io/**。
+中英文文档网站，沿用 GitHub Pages 部署结构。软件代码在相邻 `hydro-cps-sim` 项目；本仓库维护网站内容、导航、搜索与静态产物。
 
-本仓库 `WandeF/WandeF.github.io` 已替换原博客，仅维护文档；沿用原 Git 历史。软件源码在 [WandeF/hydro-cps-sim](https://github.com/WandeF/hydro-cps-sim)，本次只读核查，未修改。
-
-## 本地构建与预览
-
-需要 Python 3.10+。使用 Mistune 渲染 Markdown，不是 Sphinx，也未复制 CPSim 的主题或代码。
+## 构建与预览
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-docs.txt
-python build.py
-python check_site.py
-python -m http.server 8000 --directory site
+.venv/bin/python build.py
+.venv/bin/python check_site.py
+.venv/bin/python -m http.server 8765 --bind 127.0.0.1 --directory site
 ```
 
-访问 http://localhost:8000/ ，根路径跳转中文。中文 `/zh/latest/`，英文 `/en/latest/`，章节支持对应语言切换和本地全文搜索。直接预览已有 `site/` 时无需安装依赖。
+新环境使用 Python 3.10+ 安装 `requirements-docs.txt`。中文入口为 `/zh/latest/index.html`，英文入口为 `/en/latest/index.html`。每种语言 16 个页面，含本页目录、语言切换和本地全文搜索。
 
-## 维护与部署
+## 内容结构
 
-- `content/zh/`、`content/en/`：每种语言 9 个 Markdown 页面。
-- `assets/`、`template.html`：样式、搜索、移动导航和页面模板。
-- `build.py`：生成 `site/`；`check_site.py`：检查链接、语言页面、索引和域名配置。
-- `.github/workflows/pages.yml`：PR 构建检查；推送 `main` 自动构建、检查并部署 `site/`。
-- `SOURCE_REVIEW.md`：源码核对版本、发现的问题及验证范围。
+- 项目概览：首页、项目简介、系统架构。
+- 使用指南：安装与环境、快速开始。
+- 实验与配置：攻防实验、水网配置结构、网络配置、攻击配置。
+- 扩展实验：扩展概览、UPSI 原理与接口、接入物理仿真器、UPSI 配置、电网与恒温箱实验。
+- 社区与研究：论文与引用、贡献与反馈。
 
-GitHub Pages 的 Source 使用 **GitHub Actions**，不使用分支根目录发布。Pages 自定义域名留空，启用 HTTPS；仓库和构建产物均不应包含 `CNAME`。只上传 `site/`，源码、README 和本地配置不会进入站点产物。
+`content/zh/` 和 `content/en/` 是 Markdown 源文件；`build.py` 的 PAGES 定义双语导航与页面清单。`assets/` 与 `template.html` 保存样式、脚本、图和模板。`site/` 是自包含部署产物。
 
-修改后执行构建和检查，将源文件与 `site/` 一同提交到 `main`。在仓库 Actions 的 `Build and deploy documentation` 中查看构建和部署结果。恢复历史版本应使用 `git revert` 创建新提交，保留历史。
+## UPSI 架构图与独立说明
 
-## 内容状态
+新版图源及 PNG/SVG/PDF、独立原理说明存放在论文作图目录：
 
-安装和运行入口、配置文件与导出路径已根据软件提交 `2406aa649738c585e635b3661d1b9431db73edb8` 核查。本文档构建和在线检查不代表完整仿真已经复现。
+```text
+/home/lzh/MASTER/CODE/output/10_figures_and_manuscript/upsi/
+  draw_upsi_architecture.py
+  hydro_cps_sim_architecture_upsi.{png,svg,pdf}
+  UPSI原理与实现说明.md
+```
 
-待完善：Ubuntu 上的完整安装与基线/攻击复现、实验图表、完整配置字典、正式论文信息和经项目团队确认的许可证。未添加未经授权的许可证或虚构论文信息。
+网站使用同一 SVG，保留原论文图资产。原图来源和更新范围见 ASSET_SOURCES.md。当前接口与配置内容核对代码提交 d7fafbd，维护记录见 SOURCE_REVIEW.md。
+
+## 部署与检查
+
+`.github/workflows/pages.yml` 在 PR 上构建检查，在推送 main 时部署 site/。本地构建不会触发发布。GitHub Pages 使用 GitHub Actions Source，不配置 CNAME 或旧自定义域名。
+
+check_site.py 从 PAGES 校验双语页面、搜索条目、链接和目录锚点；新增页面不再依赖写死的旧页面数。网站为基于 Mistune 的静态生成器，结构借鉴 CPSim 的概览、入门、扩展、示例与 API 阅读路径，未迁移到 Sphinx 或复制其代码。

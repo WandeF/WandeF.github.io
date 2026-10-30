@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Network Configuration · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<a aria-current="page" class="nav-link active" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Network Configuration</span></div>
+        <div class="document-actions"><a href="../../zh/latest/configuration-network.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="network-configuration">Network Configuration</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#top-level-network-fields">Top-level network fields</a></li><li><a href="#nodes-and-endpoints">Nodes and endpoints</a></li><li><a href="#backbone-links">Backbone links</a></li><li><a href="#lans-and-addresses">LANs and addresses</a></li><li><a href="#descriptive-fields">Descriptive fields</a></li><li><a href="#checking-a-changed-network">Checking a changed network</a></li></ul></nav>
+<p>The network section describes communication topology separately from the INP or electrical model. PLC, SCADA and attacker endpoint names, namespaces, IPs and access paths must agree.</p>
+<h2 id="top-level-network-fields">Top-level network fields</h2>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>backend</td>
+  <td>Use ns3</td>
+</tr>
+<tr>
+  <td>topology_name</td>
+  <td>Topology identifier; generated program naming follows the build workflow</td>
+</tr>
+<tr>
+  <td>scheduler</td>
+  <td>realtime enables RealtimeSimulatorImpl for real process traffic</td>
+</tr>
+<tr>
+  <td>routing</td>
+  <td>global populates routing tables</td>
+</tr>
+<tr>
+  <td>pcap</td>
+  <td>BOOL, false by default; enables link captures</td>
+</tr>
+<tr>
+  <td>ascii_trace</td>
+  <td>Reserved field; use pcap for packet capture</td>
+</tr>
+<tr>
+  <td>nodes</td>
+  <td>routers, switches and endpoints lists</td>
+</tr>
+<tr>
+  <td>backbone_links</td>
+  <td>Point-to-point backbone links</td>
+</tr>
+<tr>
+  <td>lans</td>
+  <td>Router/bridge/endpoint LANs</td>
+</tr>
+<tr>
+  <td>taps</td>
+  <td>Descriptive endpoint access list; active generation reads endpoint tap/tap_mode</td>
+</tr>
+<tr>
+  <td>applications</td>
+  <td>Expected communication; SCADA and PLC processes produce Modbus traffic</td>
+</tr>
+<tr>
+  <td>attack_points</td>
+  <td>Attack paths; set targets and parameters under attacks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="nodes-and-endpoints">Nodes and endpoints</h2>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>nodes.routers[].name</td>
+  <td>Unique router name</td>
+</tr>
+<tr>
+  <td>nodes.switches[].name</td>
+  <td>Bridge-switch name</td>
+</tr>
+<tr>
+  <td>nodes.endpoints[].name</td>
+  <td>PLC1, scada, mitm etc.</td>
+</tr>
+<tr>
+  <td>role</td>
+  <td>Router/switch metadata or endpoint plc/scada/attacker role, also used by attack lookup</td>
+</tr>
+<tr>
+  <td>endpoints[].namespace</td>
+  <td>Linux network namespace</td>
+</tr>
+<tr>
+  <td>endpoints[].tap</td>
+  <td>TAP name used by TapBridge</td>
+</tr>
+<tr>
+  <td>endpoints[].tap_mode</td>
+  <td>use_bridge by default or use_local; effective ns-3 endpoint mode</td>
+</tr>
+</tbody>
+</table>
+<p>Linux interface names have length constraints; generated veth names may be shortened. Keep namespace, TAP and IP assignments unique.</p>
+<pre><code class="language-yaml">network:
+  backend: ns3
+  scheduler: realtime
+  routing: global
+  pcap: false
+  nodes:
+    routers: [{name: r1}]
+    switches: [{name: s1}]
+    endpoints:
+      - {name: PLC1, role: plc, namespace: ns-demo-plc1, tap: tap-demo-plc1, tap_mode: use_bridge}
+</code></pre>
+<p>This is a fragment; a complete scene also needs SCADA and connected backbone/LAN definitions.</p>
+<h2 id="backbone-links">Backbone links</h2>
+<table>
+<thead>
+<tr>
+  <th>Field in backbone_links[]</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>name</td>
+  <td>Unique link name</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>point_to_point metadata; the current list is built using PointToPointHelper rather than arbitrary type dispatch</td>
+</tr>
+<tr>
+  <td>endpoints</td>
+  <td>Exactly two declared nodes</td>
+</tr>
+<tr>
+  <td>subnet</td>
+  <td>CIDR network</td>
+</tr>
+<tr>
+  <td>data_rate</td>
+  <td>ns-3 rate string such as 100Mbps</td>
+</tr>
+<tr>
+  <td>delay</td>
+  <td>Nonnegative ns/us/ms/s string, such as 2ms</td>
+</tr>
+<tr>
+  <td>mtu</td>
+  <td>Bytes, commonly 1500</td>
+</tr>
+<tr>
+  <td>interfaces.NODE.ip</td>
+  <td>Exact CIDR interface address</td>
+</tr>
+<tr>
+  <td>interfaces.NODE.ifname</td>
+  <td>Example label; ns-3 uses device objects, and Linux endpoint veth names are generated</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">backbone_links:
+  - name: r0-r1
+    type: point_to_point
+    endpoints: [r0, r1]
+    subnet: 10.0.1.0/24
+    data_rate: 100Mbps
+    delay: 2ms
+    mtu: 1500
+    interfaces:
+      r0: {ip: 10.0.1.1/24}
+      r1: {ip: 10.0.1.2/24}
+</code></pre>
+<h2 id="lans-and-addresses">LANs and addresses</h2>
+<p>Each CSMA/bridge LAN requires one router, one bridge switch and at least one endpoint.</p>
+<table>
+<thead>
+<tr>
+  <th>Field in lans[]</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>name / type</td>
+  <td>LAN name and csma label; current construction uses CSMA/Bridge</td>
+</tr>
+<tr>
+  <td>members</td>
+  <td>Declared nodes in the LAN</td>
+</tr>
+<tr>
+  <td>subnet / data_rate / delay / mtu</td>
+  <td>Network, shared-medium rate, delay and MTU</td>
+</tr>
+<tr>
+  <td>interfaces.ROUTER.ip</td>
+  <td>Router/gateway address</td>
+</tr>
+<tr>
+  <td>interfaces.ENDPOINT.ip</td>
+  <td>Endpoint CIDR address; runtime extracts PLC IPs here</td>
+</tr>
+<tr>
+  <td>interfaces.ENDPOINT.gateway</td>
+  <td>Namespace default route</td>
+</tr>
+<tr>
+  <td>interfaces.NODE.ifname</td>
+  <td>Descriptive label, not an actual generated-veth-name override</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-yaml">lans:
+  - name: plc1_lan
+    type: csma
+    members: [r1, s1, PLC1]
+    subnet: 192.168.1.0/24
+    data_rate: 100Mbps
+    delay: 100us
+    mtu: 1500
+    interfaces:
+      r1: {ip: 192.168.1.254/24}
+      PLC1: {ip: 192.168.1.1/24, gateway: 192.168.1.254}
+</code></pre>
+<h2 id="descriptive-fields">Descriptive fields</h2>
+<p><code>taps[]</code> commonly contains endpoint, tap_name, mode and host_namespace. Keep it consistent, but actual endpoint mode follows nodes.endpoints[].tap_mode. applications[] contains name, src, dst, protocol and dst_port. attack_points[] contains name, type and targets. Metadata does not replace real endpoints, applications or attacks.</p>
+<h2 id="checking-a-changed-network">Checking a changed network</h2>
+<p>Match node names across members, interfaces and attacks. Keep addresses/gateways in their subnet and avoid overlapping link/LAN subnets. Add a real endpoint and LAN address for every attacker.</p>
+<p>The current generator supports bandwidth and delay as listed; there is no generic packet_loss YAML switch or automatic application traffic from applications. Additional ns-3 error models require generator implementation and inspection of generated C++.</p>
+<p>Use <code>python -m src.run.config_info --config ...</code> to inspect parsed settings. The build produces ns-3 C++ and Linux setup scripts. Continue with <a href="configuration.html">Configuration</a> and <a href="configuration-attacks.html">Attacks</a>.</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

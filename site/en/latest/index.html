@@ -29,6 +29,14 @@
 <div class="nav-heading">Experiments &amp; Configuration</div>
 <a class="nav-link" href="experiments.html">Experiments</a>
 <a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
@@ -39,11 +47,11 @@
         <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Home</span></div>
         <div class="document-actions"><a href="../../zh/latest/index.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>Hydro-CPS-Sim Documentation</h1>
+      <h1 id="hydro-cps-sim-documentation">Hydro-CPS-Sim Documentation</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#overview">Overview</a></li><li><a href="#explore-the-platform">Explore the platform</a></li><li><a href="#documentation">Documentation</a></li><li><a href="#extended-experiments">Extended experiments</a></li></ul></nav>
 <p>A co-simulation platform for water cyber-physical system security research.</p>
 <p>Hydro-CPS-Sim connects hydraulic dynamics, PLC control, SCADA communications, and network simulation to run attack experiments, explore system behavior and develop security methods.</p>
 <p>Source code: <a href="https://github.com/WandeF/hydro-cps-sim">WandeF/hydro-cps-sim</a></p>
-<h2>Overview</h2>
+<h2 id="overview">Overview</h2>
 <ul>
 <li><strong>Cross-layer co-simulation</strong>: Link hydraulic models, control logic, and communication processes to study how cyber events affect the physical network.</li>
 <li><strong>Attack experiments</strong>: Use MITM, DoS and PLC logic injection scenarios with configurable targets, parameters and active windows.</li>
@@ -51,9 +59,9 @@
 <li><strong>Research extensibility</strong>: Investigate control, network, and hydraulic effects within a modular experiment framework.</li>
 </ul>
 <p>To get started, follow <a href="installation.html">Installation</a>, then run the C-Town example in <a href="quickstart.html">Quick Start</a>.</p>
-<h2>Explore the platform</h2>
+<h2 id="explore-the-platform">Explore the platform</h2>
 <p>Explore the <a href="architecture.html">architecture and closed-loop workflow</a>, <a href="introduction.html">C-Town control dependencies</a>, and <a href="experiments.html">attack types and example configurations</a> to understand how network, control and hydraulics interact.</p>
-<h2>Documentation</h2>
+<h2 id="documentation">Documentation</h2>
 <ul>
 <li>Overview<ul>
 <li><a href="introduction.html">Introduction</a></li>
@@ -76,6 +84,9 @@
 </ul>
 </li>
 </ul>
+<h2 id="extended-experiments">Extended experiments</h2>
+<p>Use <a href="upsi.html">UPSI</a> to connect physical models. Start with <a href="extensions.html">Extension Overview</a>, <a href="adapter-guide.html">adapter development</a> and <a href="extended-examples.html">power/thermal scenes</a>. Consult <a href="configuration.html">water configuration</a>, <a href="configuration-network.html">network</a> and <a href="configuration-attacks.html">attack</a> fields.</p>
+<p>For other models, see the added fields in <a href="upsi-configuration.html">UPSI Configuration</a>.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

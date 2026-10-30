@@ -69,3 +69,7 @@ bash scripts/run_all.sh --config examples/c_town/config_mitm_plc4.yaml --logic-w
 比较攻击运行和基线时，可以先查看输入数据是否改变，再查看 PLC 输出和水力状态。通信超时不一定改变泵阀动作，输入变化也可能在后续轮次才触发控制规则。
 
 水位和压力可使用 RMSE、平均绝对偏差或最大绝对偏差进行比较。按物理时间绘图时，使用水力记录中的 `sim_time`。网络和控制配置见[配置说明](configuration.html)。
+
+## 扩展实验
+
+需要运行电网、恒温箱或自己的物理模型时，查看[扩展实验](extensions.html)和[UPSI 配置](upsi-configuration.html)。

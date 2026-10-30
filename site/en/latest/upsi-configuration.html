@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>UPSI Configuration · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a aria-current="page" class="nav-link active" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>UPSI Configuration</span></div>
+        <div class="document-actions"><a href="../../zh/latest/upsi-configuration.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="upsi-configuration">UPSI Configuration</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#write-the-configuration">Write the configuration</a></li><li><a href="#scene-structure">Scene structure</a></li><li><a href="#reuse-an-existing-scene">Reuse an existing scene</a></li><li><a href="#common-physics-fields">Common physics fields</a></li><li><a href="#signal-mapping-fields">Signal mapping fields</a></li><li><a href="#configure-the-controller">Configure the controller</a></li><li><a href="#quality-policy">Quality policy</a></li><li><a href="#backend-specific-options">Backend-specific options</a></li><li><a href="#check-and-run">Check and run</a></li></ul></nav>
+<p>Select a physical backend, connect its signals and choose a sampling interval to use another physical model. This page introduces the UPSI additions to the existing scene format.</p>
+<h2 id="write-the-configuration">Write the configuration</h2>
+<p>Keep the YAML format and add <code>schema_version: 2</code> at the top level to use explicit signal configuration. Put model, signal and timing settings under <code>physics</code>.</p>
+<p>Use spaces, lists with <code>-</code>, explicit true/false and the quoted dimensionless unit <code>'1'</code>. PyYAML implicitly resolves unquoted on/off as booleans; quote them when strings are intended. Avoid duplicate keys and ambiguous numeric strings. See <a href="https://yaml.org/spec/1.2.2/">YAML</a> and <a href="https://pyyaml.org/wiki/PyYAMLDocumentation">PyYAML</a>.</p>
+<p>Use the field names listed below. Unrecognized fields may be ignored. Before running a scene, check the configuration with the commands at the end of this page.</p>
+<h2 id="scene-structure">Scene structure</h2>
+<pre><code class="language-yaml">schema_version: 2
+output_path: output/baseline
+openplc_path: ../../../OpenPLC_v3
+ns3_path: ../../../ns-3-dev-git
+iterations: 10
+physics: {}
+actuators: []
+plcs: []
+scada: {name: scada}
+network: {}
+attacks: {enabled: false, scenarios: []}
+reporting: {key_variables: []}
+</code></pre>
+<p>This is an outline, not a runnable empty scene. Complete starting points are examples/power_feeder/config_v2.yaml, examples/ieee33_bw/config_baseline.yaml and examples/thermal_box/config.yaml. See <a href="configuration-network.html">Network Configuration</a> and <a href="configuration-attacks.html">Attack Configuration</a> for their dictionaries.</p>
+<h2 id="reuse-an-existing-scene">Reuse an existing scene</h2>
+<p>Keep the original output/component paths, PLC rules, network and attacks. Add the following when selecting another physical model:</p>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>schema_version: 2</td>
+  <td>Explicit physical-signal configuration</td>
+</tr>
+<tr>
+  <td>physics.backend</td>
+  <td>Select EPANET, pandapower or your adapter</td>
+</tr>
+<tr>
+  <td>physics.model.path</td>
+  <td>Physical model file</td>
+</tr>
+<tr>
+  <td>physics.plugins</td>
+  <td>Register an independent adapter</td>
+</tr>
+<tr>
+  <td>physics.timing</td>
+  <td>Physical sampling interval</td>
+</tr>
+<tr>
+  <td>physics.signals</td>
+  <td>Logical names mapped to native ports</td>
+</tr>
+<tr>
+  <td>signals</td>
+  <td>Optional top-level direction, type, unit and bounds</td>
+</tr>
+<tr>
+  <td>actuators[].initial_state</td>
+  <td>Initial command with its declared type, e.g. true/false</td>
+</tr>
+<tr>
+  <td>quality_policy</td>
+  <td>Handling unsupplied, old or missing samples</td>
+</tr>
+<tr>
+  <td>initial_state</td>
+  <td>Optional typed initial-output declarations; the model supplies solved initial values</td>
+</tr>
+</tbody>
+</table>
+<p>Common settings are described in <a href="configuration.html">Configuration</a>, <a href="configuration-network.html">Network</a> and <a href="configuration-attacks.html">Attacks</a>.</p>
+<h2 id="common-physics-fields">Common physics fields</h2>
+<table>
+<thead>
+<tr>
+  <th>Field below physics</th>
+  <th>Type / default</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>backend</td>
+  <td>v2 required string</td>
+  <td>dhalsim_epynet, pandapower or a declared plugin; legacy default water, with epanet/epynet aliases</td>
+</tr>
+<tr>
+  <td>model</td>
+  <td>v2 required mapping</td>
+  <td>Model declaration; built-ins and thermal use path; plugins may define other parameters</td>
+</tr>
+<tr>
+  <td>model.path</td>
+  <td>path</td>
+  <td>Model file relative to scene directory</td>
+</tr>
+<tr>
+  <td>plugins.NAME.factory</td>
+  <td>module:Class</td>
+  <td>Exactly one of factory and entry_point</td>
+</tr>
+<tr>
+  <td>plugins.NAME.entry_point</td>
+  <td>string</td>
+  <td>Named installed hydro_cps.physics entry point</td>
+</tr>
+<tr>
+  <td>plugins.NAME.dependency</td>
+  <td>optional module</td>
+  <td>Selected-backend import preflight</td>
+</tr>
+<tr>
+  <td>init_style</td>
+  <td>current / dhalsim</td>
+  <td>v2 defaults current; legacy water defaults dhalsim, restricted to compatible water backends</td>
+</tr>
+<tr>
+  <td>timing.mode</td>
+  <td>fixed_step</td>
+  <td>Current single-backend sampling schedule, distinct from internal solver stepping</td>
+</tr>
+<tr>
+  <td>timing.step_seconds</td>
+  <td>finite number &gt; 0; v2 required</td>
+  <td>Requested interval in seconds; EPANET needs multiples of 1 s</td>
+</tr>
+<tr>
+  <td>timing.measurement_max_age_s</td>
+  <td>number ≥ 0; 0</td>
+  <td>Nonzero age requires backend asynchronous-measurement capability</td>
+</tr>
+<tr>
+  <td>timing.tolerance.absolute_s</td>
+  <td>number ≥ 0</td>
+  <td>Default min(1e-9, step/8), at most step/4</td>
+</tr>
+<tr>
+  <td>timing.tolerance.relative</td>
+  <td>number ≥ 0</td>
+  <td>Default 8× floating epsilon, at most 1e-6; final tolerance is also step-bounded</td>
+</tr>
+<tr>
+  <td>signals.observations</td>
+  <td>mapping</td>
+  <td>Logical observations to native output ports</td>
+</tr>
+<tr>
+  <td>signals.commands</td>
+  <td>mapping</td>
+  <td>Complete, unique logical commands to native input ports</td>
+</tr>
+<tr>
+  <td>quality_policy</td>
+  <td>optional mapping</td>
+  <td>Same as top level; duplicate declarations must agree</td>
+</tr>
+<tr>
+  <td>model_file, timestep</td>
+  <td>legacy fields</td>
+  <td>Model path and interval; timestep and timing.step_seconds must agree if both present</td>
+</tr>
+<tr>
+  <td>sensors, actuators</td>
+  <td>legacy power mappings</td>
+  <td>table / element / column, with missing or invert where applicable; normalized to signals</td>
+</tr>
+</tbody>
+</table>
+<p>Current initialization starts from a solved time-zero snapshot. Legacy water dhalsim retains zero row 0 and configured row 1 before its historical cycle convention; a 100-round water limit therefore has 99 control cycles. Compare initialization semantics before counting snapshots.</p>
+<p>Backend describe().timing target/event_step declares solver capability, whereas scene timing.mode fixed_step selects the sampling schedule. Requests start from the last actual reached time, so internal events may shorten advancement.</p>
+<h2 id="signal-mapping-fields">Signal mapping fields</h2>
+<p>Applies below physics.signals.observations.NAME or commands.NAME:</p>
+<table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Type / default</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>port</td>
+  <td>required string</td>
+  <td>Declared native port with correct direction</td>
+</tr>
+<tr>
+  <td>dtype</td>
+  <td>float/int/bool/str; v2 required</td>
+  <td>May be supplemented by top-level signals; must match native type</td>
+</tr>
+<tr>
+  <td>unit</td>
+  <td>native unit</td>
+  <td>String logical unit; use quoted '1'</td>
+</tr>
+<tr>
+  <td>minimum, maximum</td>
+  <td>optional finite numbers</td>
+  <td>Numerical bounds; not valid for BOOL/string</td>
+</tr>
+<tr>
+  <td>scale</td>
+  <td>finite nonzero number; 1</td>
+  <td>logical = native*scale+offset; commands use inverse</td>
+</tr>
+<tr>
+  <td>offset</td>
+  <td>finite number; 0</td>
+  <td>Nonidentity affine transforms require float</td>
+</tr>
+<tr>
+  <td>invert</td>
+  <td>bool; false</td>
+  <td>BOOL polarity inversion</td>
+</tr>
+<tr>
+  <td>missing</td>
+  <td>backend option; error</td>
+  <td>Power supports zero_if_unsupplied for bus voltage only, not generic zero fill</td>
+</tr>
+<tr>
+  <td>unit_context.density_kg_m3</td>
+  <td>positive number</td>
+  <td>Explicit water-column pressure conversion context</td>
+</tr>
+<tr>
+  <td>unit_context.gravity_m_s2</td>
+  <td>positive number</td>
+  <td>Explicit gravity for that conversion</td>
+</tr>
+<tr>
+  <td>calibration_reason</td>
+  <td>nonempty string</td>
+  <td>Reason for same-unit nonidentity calibration; recorded in schema</td>
+</tr>
+</tbody>
+</table>
+<p>Top-level signals.NAME accepts direction, dtype, unit, minimum and maximum. Direction and duplicate metadata must agree with mappings. Every native input needs exactly one command; duplicate command ports fail.</p>
+<pre><code class="language-yaml">physics:
+  signals:
+    observations:
+      P_GRID_KW: {port: metrics.total.p_grid_mw, dtype: float, unit: kW, scale: 1000}
+    commands:
+      LOAD24_ENABLE: {port: load.LOAD_BUS24.in_service, dtype: bool, unit: '1'}
+</code></pre>
+<p>MW→kW uses scale 1000; degC→K uses offset 273.15. The unit catalog separates active/reactive power and incompatible dimensions. Per-unit voltage allows identity without guessing a voltage base. See <a href="upsi.html">UPSI</a>.</p>
+<h2 id="configure-the-controller">Configure the controller</h2>
+<p>Sensor ownership and threshold rules keep their original structure. Measurement names now refer to physics.signals.observations and commands to physics.signals.commands. Match each initial value to its declared type.</p>
+<pre><code class="language-yaml">actuators:
+  - {name: LOAD24_ENABLE, initial_state: true}
+plcs:
+  - {name: PLC1, sensors: [V_BUS02], actuators: [], controls: []}
+  - name: PLC3
+    sensors: [V_BUS24, P_LOAD24]
+    actuators: [LOAD24_ENABLE]
+    controls:
+      - {dependant: V_BUS02, actuator: LOAD24_ENABLE, type: below, value: 0.95, action: false}
+      - {dependant: V_BUS02, actuator: LOAD24_ENABLE, type: above, value: 1.03, action: true}
+</code></pre>
+<p>Thresholds use logical units, here pu. LOAD24_ENABLE true connects the load. Use invert in a BOOL mapping when the native command polarity differs.</p>
+<h2 id="quality-policy">Quality policy</h2>
+<pre><code class="language-yaml">quality_policy:
+  default: pass_through
+  overrides:
+    unsupplied: hold_last
+    stale: fail_fast
+    missing: skip_write
+</code></pre>
+<p>Actions are pass_through, hold_last, skip_write and fail_fast. Override conditions are good, initial, unsupplied, invalid, missing and stale. Missing/invalid takes precedence, then stale sample/transport, then source quality. Default pass-through preserves compatible finite data but does not fill unusable values with good zeros. Hold caches update only on successful writes; without history they skip.</p>
+<h2 id="backend-specific-options">Backend-specific options</h2>
+<h3 id="epanet">EPANET</h3>
+<p>See <a href="configuration.html">water configuration</a> for inp_controls, step_order, init_flag and also_set_setting. Explicit ports use node.ID.level/pressure/head/demand and link.ID.flow/status/setting; commands use link.ID.status. Units follow INP.</p>
+<h3 id="pandapower">pandapower</h3>
+<p>Solver options algorithm, max_iteration and tolerance_mva are passed to real runpp; omitted values use pandapower defaults, with numba=False. Unknown solver options fail.</p>
+<table>
+<thead>
+<tr>
+  <th>Model YAML field</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>sn_mva</td>
+  <td>Declarative network base, default 1 MVA</td>
+</tr>
+<tr>
+  <td>buses[]</td>
+  <td>name, vn_kv and native create_bus parameters</td>
+</tr>
+<tr>
+  <td>ext_grids[]</td>
+  <td>name, bus alias, vm_pu and native external-grid parameters</td>
+</tr>
+<tr>
+  <td>lines[]</td>
+  <td>name, from_bus/to_bus aliases, length_km, r_ohm_per_km, x_ohm_per_km, c_nf_per_km, max_i_ka and native line parameters</td>
+</tr>
+<tr>
+  <td>loads[]</td>
+  <td>name, bus alias, p_mw, q_mvar and native load parameters</td>
+</tr>
+<tr>
+  <td>switches[]</td>
+  <td>name, bus, element alias, et=l line or b bus, closed and native switch parameters</td>
+</tr>
+<tr>
+  <td>load_profiles.LOAD</td>
+  <td>Nonempty nonnegative scaling list indexed by iteration, holding its last value afterwards</td>
+</tr>
+<tr>
+  <td>source / case</td>
+  <td>Public-model whitelist: pandapower_builtin / case33bw</td>
+</tr>
+<tr>
+  <td>benchmark_mode</td>
+  <td>original required for public source; physical overrides rejected</td>
+</tr>
+<tr>
+  <td>source_citation</td>
+  <td>Public model provenance</td>
+</tr>
+<tr>
+  <td>aliases.NAME</td>
+  <td>table=bus and paper_bus_number; source-name-based paper mapping</td>
+</tr>
+<tr>
+  <td>controlled_elements.NAME</td>
+  <td>table=load, bus_number, field=in_service; exactly one load must match</td>
+</tr>
+</tbody>
+</table>
+<p>Public-source and manually declared models follow separate loading paths. Native parameters are documented in <a href="https://pandapower.readthedocs.io/en/v3.2.1/elements.html">pandapower</a>.</p>
+<p>Result ports are res_bus/res_line/res_load/res_ext_grid.ALIAS.COLUMN, e.g. supported vm_pu, p_mw, q_mvar, pl_mw and loading_percent columns. Derived MW ports are metrics.total.p_grid_mw/p_loss_mw/served_load_mw/unserved_load_mw. BOOL commands use switch.ALIAS.closed or load.ALIAS.in_service.</p>
+<h3 id="thermal-box">Thermal box</h3>
+<p>Model fields are ambient_c, initial_c, loss_per_s (s⁻¹), heater_c_per_s (°C/s), heater_w (W) and input_dtype (bool, or float for the standalone analog API). Ports are box.temperature, box.heater_power and heater.enabled.</p>
+<h2 id="check-and-run">Check and run</h2>
+<pre><code class="language-bash">python -m src.run.config_info --config examples/power_feeder/config_v2.yaml
+python -m src.physics.contract --config examples/power_feeder/config_v2.yaml
+bash scripts/run_all.sh --config examples/power_feeder/config_v2.yaml --iterations 10 --logic-wait 0.3
+</code></pre>
+<p>config_info validates/prints configuration without a solver run. Contract actually runs the backend without networking. run_all executes the full loop. logic-wait is wall-clock PLC scan waiting, not physical sampling time. Communication timeout, synchronization and worker options belong to runner CLI settings; do not invent equivalent YAML keys. Continue with <a href="configuration-network.html">Network</a> and <a href="configuration-attacks.html">Attack Configuration</a>.</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

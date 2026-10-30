@@ -3,6 +3,7 @@
 from __future__ import annotations
 import html
 import json
+import re
 from pathlib import Path
 from html.parser import HTMLParser
 
@@ -21,19 +22,24 @@ PAGES = [
     ('start', 'quickstart', '快速开始', 'Quick Start'),
     ('research', 'experiments', '攻防实验', 'Experiments'),
     ('research', 'configuration', '配置说明', 'Configuration'),
+    ('research', 'configuration-network', '网络配置', 'Network Configuration'),
+    ('research', 'configuration-attacks', '攻击配置', 'Attack Configuration'),
+    ('extensions', 'extensions', '扩展实验概览', 'Extension Overview'),
+    ('extensions', 'upsi', 'UPSI 原理与接口', 'UPSI Principles & Interface'),
+    ('extensions', 'adapter-guide', '接入物理仿真器', 'Add a Physical Simulator'),
+    ('extensions', 'upsi-configuration', 'UPSI 配置', 'UPSI Configuration'),
+    ('extensions', 'extended-examples', '电网与恒温箱实验', 'Power & Thermal Experiments'),
     ('more', 'publications', '论文与引用', 'Publications'),
     ('more', 'contributing', '贡献与反馈', 'Contributing'),
 ]
 GROUPS = {
-    'zh': {'basics': '项目概览', 'start': '使用指南', 'research': '实验与配置', 'more': '社区与研究'},
-    'en': {'basics': 'Overview', 'start': 'Get Started', 'research': 'Experiments & Configuration', 'more': 'Research & Community'},
+    'zh': {'basics': '项目概览', 'start': '使用指南', 'research': '实验与配置', 'extensions': '扩展实验', 'more': '社区与研究'},
+    'en': {'basics': 'Overview', 'start': 'Get Started', 'research': 'Experiments & Configuration', 'extensions': 'Extended Experiments', 'more': 'Research & Community'},
 }
 MESSAGES = {
  'zh': {'tagline':'面向供水系统的高保真信息物理安全联合仿真平台','home':'返回首页','lang':'English','repo':'源代码','lab':'CPS² Lab','search':'搜索文档…','noresult':'没有找到匹配页面','copy':'复制链接','footer':'Hydro-CPS-Sim · CPS² Lab','preview':'Hydro-CPS-Sim 文档','sidebar':'文档导航','menu':'菜单'},
  'en': {'tagline':'High-fidelity co-simulation for water cyber-physical system security','home':'Home','lang':'中文','repo':'Source Code','lab':'CPS² Lab','search':'Search documentation…','noresult':'No matching pages','copy':'Copy link','footer':'Hydro-CPS-Sim · CPS² Lab','preview':'Hydro-CPS-Sim Documentation','sidebar':'Documentation','menu':'Menu'},
 }
-
-md = mistune.create_markdown(escape=False, plugins=['table','strikethrough'])
 
 class PlainText(HTMLParser):
     def __init__(self):
@@ -50,9 +56,25 @@ def plain_text(markup):
     return ' '.join(' '.join(parser.parts).split())
 
 
+class DocumentationRenderer(mistune.HTMLRenderer):
+    def __init__(self):
+        super().__init__(escape=False)
+        self.headings = []
+        self.seen = {}
+
+    def heading(self, text, level, **attrs):
+        label = plain_text(text)
+        base = re.sub(r'[^\w-]+','-',label.lower()).strip('-') or 'section'
+        count = self.seen.get(base,0)+1
+        self.seen[base] = count
+        anchor = base if count == 1 else f'{base}-{count}'
+        if level in (2,3): self.headings.append((level,label,anchor))
+        return f'<h{level} id="{html.escape(anchor,quote=True)}">{text}</h{level}>\n'
+
+
 def nav_html(lang: str, active: str) -> str:
     out = []
-    for group in ('basics','start','research','more'):
+    for group in ('basics','start','research','extensions','more'):
         out.append(f'<div class="nav-heading">{html.escape(GROUPS[lang][group])}</div>')
         for g, slug, zh_name, en_name in PAGES:
             if g != group:
@@ -66,7 +88,13 @@ def nav_html(lang: str, active: str) -> str:
 
 def build_one(lang: str, slug: str, label: str):
     content = (ROOT / 'content' / lang / f'{slug}.md').read_text(encoding='utf-8')
-    body = md(content)
+    renderer = DocumentationRenderer()
+    body = mistune.create_markdown(renderer=renderer, escape=False, plugins=['table','strikethrough'])(content)
+    if renderer.headings:
+        title = '本页内容' if lang == 'zh' else 'On this page'
+        entries = ''.join(f'<li><a href="#{anchor}">{html.escape(label)}</a></li>'
+                          for level,label,anchor in renderer.headings if level == 2)
+        body = body.replace('</h1>', '</h1>'+f'<nav class="page-toc" aria-label="{title}"><strong>{title}</strong><ul>{entries}</ul></nav>',1)
     strings = MESSAGES[lang]
     other = 'en' if lang == 'zh' else 'zh'
     page_title = f'{label} · Hydro-CPS-Sim'
@@ -97,7 +125,7 @@ def build_one(lang: str, slug: str, label: str):
     page = OUTPUT / lang / 'latest' / f'{slug}.html'
     page.parent.mkdir(parents=True, exist_ok=True)
     page.write_text(tmpl, encoding='utf-8')
-    return {'lang':lang, 'slug':slug, 'title':label, 'description':plain_text(body)[:145], 'text':plain_text(body), 'url':f'{lang}/latest/{slug}.html'}
+    return {'lang':lang, 'slug':slug, 'title':label, 'description':plain_text((re.search(r'<p>(.*?)</p>', body, re.S) or [None,body])[1])[:145], 'text':plain_text(body), 'url':f'{lang}/latest/{slug}.html'}
 
 
 def main():

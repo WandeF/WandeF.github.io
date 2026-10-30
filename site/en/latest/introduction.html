@@ -29,6 +29,14 @@
 <div class="nav-heading">Experiments &amp; Configuration</div>
 <a class="nav-link" href="experiments.html">Experiments</a>
 <a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
 <div class="nav-heading">Research &amp; Community</div>
 <a class="nav-link" href="publications.html">Publications</a>
 <a class="nav-link" href="contributing.html">Contributing</a></nav>
@@ -39,30 +47,30 @@
         <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Introduction</span></div>
         <div class="document-actions"><a href="../../zh/latest/introduction.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>Introduction</h1>
-<h2>Water cyber-physical systems</h2>
+      <h1 id="introduction">Introduction</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#water-cyber-physical-systems">Water cyber-physical systems</a></li><li><a href="#platform-overview">Platform overview</a></li><li><a href="#platform-components">Platform components</a></li><li><a href="#c-town-example">C-Town example</a></li><li><a href="#requirements-and-extension">Requirements and extension</a></li></ul></nav>
+<h2 id="water-cyber-physical-systems">Water cyber-physical systems</h2>
 <p>A water cyber-physical system connects a distribution network with sensors, controllers and communication networks. Sensors measure tank levels, pressures and flows. PLCs use these measurements to control pumps and valves, while SCADA monitors the system and forwards data. Actuator actions change the network state, and new measurements enter the next control cycle.</p>
 <p>Studying security in these systems involves network communication, control programs and hydraulics together. Modified sensor data can change a pump decision, while a communication failure can leave a controller using an earlier measurement.</p>
-<h2>Platform overview</h2>
+<h2 id="platform-overview">Platform overview</h2>
 <p>Hydro-CPS-Sim is a co-simulation platform for water-system security research. It connects EPANET hydraulics, OpenPLC programs, Modbus TCP communication and ns-3 networking in one closed loop, with support for MITM, DoS and PLC logic injection experiments.</p>
 <p>You can select a water model, control rules, network topology and attack scenario through configuration files. The platform starts the components, coordinates data exchange and hydraulic computation, and saves logs and CSV results. Source code is available in the <a href="https://github.com/WandeF/hydro-cps-sim">GitHub repository</a>.</p>
-<h2>Platform components</h2>
-<h3>Hydraulic simulation</h3>
+<h2 id="platform-components">Platform components</h2>
+<h3 id="hydraulic-simulation">Hydraulic simulation</h3>
 <p>DHALSIM-epynet / EPANET computes tank levels, node pressures and pipe flows. Pump and valve states from the PLCs update the hydraulic model, so control changes affect subsequent hydraulic states.</p>
-<h3>PLCs and SCADA</h3>
+<h3 id="plcs-and-scada">PLCs and SCADA</h3>
 <p>OpenPLC executes Structured Text (ST) control programs. SCADA reads sensor measurements over Modbus TCP and forwards cross-PLC dependencies to the relevant controllers. PLC Adapters connect hydraulic data with PLC inputs and outputs.</p>
-<h3>Communication network</h3>
+<h3 id="communication-network">Communication network</h3>
 <p>Linux network namespaces provide separate network environments for PLC, SCADA and attack endpoints. TAP/veth interfaces connect them to ns-3, where you can configure link bandwidth, delay and topology.</p>
-<h3>Attacks and logging</h3>
+<h3 id="attacks-and-logging">Attacks and logging</h3>
 <p>The platform provides Modbus data manipulation, UDP DoS and PLC logic injection. Attacks can act on communication data, network paths or control rules. Sensor observations, actuator states, attack events and hydraulic variables are recorded during execution for comparison across experiments.</p>
-<h2>C-Town example</h2>
+<h2 id="c-town-example">C-Town example</h2>
 <p>The C-Town example contains several PLC control regions. Some controllers use tank measurements acquired in other regions, with SCADA forwarding the data.</p>
 <figure>
 <a href="../../assets/ctown_water_topology.png" target="_blank" rel="noopener"><img src="../../assets/ctown_water_topology.png" alt="C-Town network, PLC1 to PLC8 regions, cross-region tank-level dependencies and attack entry points" loading="lazy" width="6240" height="6675"></a>
 <figcaption>C-Town network topology, PLC control regions and cross-region data dependencies.</figcaption>
 </figure>
 
-<h3>Logical relationships between PLCs</h3>
+<h3 id="logical-relationships-between-plcs">Logical relationships between PLCs</h3>
 <table>
 <thead>
 <tr>
@@ -94,7 +102,7 @@
 </tbody>
 </table>
 <p>PLC4 also monitors local T6 and uses T5 and T7 measurements to control the corresponding pumps.</p>
-<h2>Requirements and extension</h2>
+<h2 id="requirements-and-extension">Requirements and extension</h2>
 <p>The platform runs on Ubuntu and uses Python to coordinate hydraulic, control and network components. Components are organized into separate modules. You can adjust scenarios through YAML configuration or extend the control, network and attack modules. See <a href="installation.html">Installation</a> for requirements and <a href="quickstart.html">Quick Start</a> for your first experiment.</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>

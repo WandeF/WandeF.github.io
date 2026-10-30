@@ -72,3 +72,9 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .content figure>a{display:block}
 .content figure img{display:block;width:100%;height:auto}
 .content figcaption{padding:10px 0;color:var(--muted);font-size:13px;line-height:1.6;background:#fcfcfc}
+/* Section links keep longer configuration chapters easy to scan. */
+.page-toc{margin:0 0 26px;padding:14px 18px;border-left:3px solid #6ab0de;background:#f1f6fa;font-size:14px}
+.page-toc strong{display:block;margin-bottom:6px}
+.content .page-toc ul{margin:0;padding-left:20px;columns:2;column-gap:24px}
+.content .page-toc li{break-inside:avoid;margin:3px 0}
+@media(max-width:760px){.content .page-toc ul{columns:1}}

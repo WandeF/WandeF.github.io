@@ -29,6 +29,14 @@
 <div class="nav-heading">实验与配置</div>
 <a aria-current="page" class="nav-link active" href="experiments.html">攻防实验</a>
 <a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
 <div class="nav-heading">社区与研究</div>
 <a class="nav-link" href="publications.html">论文与引用</a>
 <a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
@@ -39,21 +47,21 @@
         <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>攻防实验</span></div>
         <div class="document-actions"><a href="../../en/latest/experiments.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>攻防实验</h1>
+      <h1 id="攻防实验">攻防实验</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#攻击类型">攻击类型</a></li><li><a href="#示例配置">示例配置</a></li><li><a href="#运行实验">运行实验</a></li><li><a href="#查看结果">查看结果</a></li><li><a href="#扩展实验">扩展实验</a></li></ul></nav>
 <p>Hydro-CPS-Sim 提供 MITM、DoS 和 PLC 逻辑注入三类攻击。你可以设置攻击目标和生效窗口，观察攻击如何影响传感器数据、PLC 输出和水网状态。</p>
-<h2>攻击类型</h2>
+<h2 id="攻击类型">攻击类型</h2>
 <figure>
 <a href="../../assets/attack_cross_layer_propagation_paths.png" target="_blank" rel="noopener"><img src="../../assets/attack_cross_layer_propagation_paths.png" alt="MITM、DoS 和 PLC 逻辑注入经通信或控制规则影响泵阀并反馈至水力过程的路径" loading="lazy" width="4663" height="1993"></a>
 <figcaption>MITM、DoS 和 PLC 逻辑注入在闭环中的作用位置。</figcaption>
 </figure>
 
-<h3>MITM 数据篡改</h3>
+<h3 id="mitm-数据篡改">MITM 数据篡改</h3>
 <p>MITM 修改 SCADA 与 PLC 之间的 Modbus 数据。例如，修改发送至 PLC4 的 T7 水位，可以改变控制器看到的输入值，从而影响 PU10 的启停判断。</p>
-<h3>DoS 通信干扰</h3>
+<h3 id="dos-通信干扰">DoS 通信干扰</h3>
 <p>DoS 通过 UDP 流量占用网络链路，影响正常的 Modbus 通信。采集超时时，SCADA 可能继续使用之前保存的观测值。你可以比较通信状态、数据更新时间和泵阀动作，了解旧数据对控制的影响。</p>
-<h3>PLC 逻辑注入</h3>
+<h3 id="plc-逻辑注入">PLC 逻辑注入</h3>
 <p>逻辑注入修改 PLC 中的控制规则，例如水泵的关闭阈值。修改后的规则由 OpenPLC 执行，并通过泵阀动作影响水力过程。</p>
-<h2>示例配置</h2>
+<h2 id="示例配置">示例配置</h2>
 <p>当前版本提供以下示例配置，攻击窗口以控制轮次表示。</p>
 <table>
 <thead>
@@ -102,7 +110,7 @@
 </tbody>
 </table>
 <p>每个配置包含对应的网络、控制和攻击设置。你可以从示例开始，调整目标、攻击参数和时间窗口。</p>
-<h2>运行实验</h2>
+<h2 id="运行实验">运行实验</h2>
 <p>先运行无攻击基线：</p>
 <pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config.yaml
 </code></pre>
@@ -110,7 +118,7 @@
 <pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config_mitm_plc4.yaml --logic-wait 0.3
 </code></pre>
 <p>每次运行会更新输出目录。将需要比较的结果复制到独立目录后，再开始下一次实验。</p>
-<h2>查看结果</h2>
+<h2 id="查看结果">查看结果</h2>
 <p>结果保存在 <code>output_path</code> 下的 <code>reports/csv/</code> 中。</p>
 <table>
 <thead>
@@ -148,6 +156,8 @@
 </table>
 <p>比较攻击运行和基线时，可以先查看输入数据是否改变，再查看 PLC 输出和水力状态。通信超时不一定改变泵阀动作，输入变化也可能在后续轮次才触发控制规则。</p>
 <p>水位和压力可使用 RMSE、平均绝对偏差或最大绝对偏差进行比较。按物理时间绘图时，使用水力记录中的 <code>sim_time</code>。网络和控制配置见<a href="configuration.html">配置说明</a>。</p>
+<h2 id="扩展实验">扩展实验</h2>
+<p>需要运行电网、恒温箱或自己的物理模型时，查看<a href="extensions.html">扩展实验</a>和<a href="upsi-configuration.html">UPSI 配置</a>。</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

@@ -29,6 +29,14 @@
 <div class="nav-heading">实验与配置</div>
 <a class="nav-link" href="experiments.html">攻防实验</a>
 <a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
 <div class="nav-heading">社区与研究</div>
 <a class="nav-link" href="publications.html">论文与引用</a>
 <a aria-current="page" class="nav-link active" href="contributing.html">贡献与反馈</a></nav>
@@ -39,9 +47,9 @@
         <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>贡献与反馈</span></div>
         <div class="document-actions"><a href="../../en/latest/contributing.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>贡献与反馈</h1>
+      <h1 id="贡献与反馈">贡献与反馈</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#报告问题">报告问题</a></li><li><a href="#网站文档更新">网站文档更新</a></li><li><a href="#贡献范围">贡献范围</a></li></ul></nav>
 <p>欢迎提交问题、改进文档或参与功能开发。</p>
-<h2>报告问题</h2>
+<h2 id="报告问题">报告问题</h2>
 <p>遇到问题时，可以在 <a href="https://github.com/WandeF/hydro-cps-sim/issues">GitHub Issues</a> 中反馈。请附上：</p>
 <ol>
 <li>操作系统、Python / Conda 版本。</li>
@@ -49,12 +57,12 @@
 <li>重现问题的命令与关键报错。</li>
 <li>预期结果与实际结果。</li>
 </ol>
-<h2>网站文档更新</h2>
+<h2 id="网站文档更新">网站文档更新</h2>
 <p>文档仓库：<a href="https://github.com/WandeF/WandeF.github.io">WandeF/WandeF.github.io</a>。修改位于 <code>content/zh/</code> 和 <code>content/en/</code> 的 Markdown 文件后执行：</p>
 <pre><code class="language-bash">python build.py
 </code></pre>
 <p>构建产物写入 <code>site/</code>。本地通过 <code>python -m http.server 8000 --directory site</code> 即可预览；推送到 <code>main</code> 后，GitHub Actions 自动构建并部署到 <a href="https://wandef.github.io/">https://wandef.github.io/</a>。</p>
-<h2>贡献范围</h2>
+<h2 id="贡献范围">贡献范围</h2>
 <p>欢迎改进安装与配置说明、补充可复现示例、修复问题并完善中英文翻译。提交修改时，简要说明改动和测试方法。实验示例可附上配置与运行记录。</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>

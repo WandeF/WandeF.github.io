@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Check the actual deployment artifact, including links and language pairs."""
 import json
+from build import PAGES
 import re
 from html.parser import HTMLParser
 from pathlib import Path
@@ -37,7 +38,7 @@ def main():
             url = urlsplit(link)
             if url.scheme or url.netloc:
                 continue
-            target = ((ROOT if url.path.startswith('/') else path.parent) / unquote(url.path).lstrip('/')).resolve()
+            target = path if not url.path else ((ROOT if url.path.startswith('/') else path.parent) / unquote(url.path).lstrip('/')).resolve()
             if target.is_dir():
                 target /= 'index.html'
             if not target.is_relative_to(ROOT.resolve()) or not target.is_file():
@@ -45,11 +46,9 @@ def main():
             elif url.fragment and target in pages and unquote(url.fragment) not in pages[target].ids:
                 errors.append(f'{path}: missing anchor {link}')
     index = json.loads((ROOT / 'search-index.json').read_text())
-    expected = {f'{lang}/latest/{slug}.html' for lang in ('zh', 'en') for slug in
-                ('index', 'introduction', 'architecture', 'installation', 'quickstart',
-                 'experiments', 'configuration', 'publications', 'contributing')}
-    if {entry['url'] for entry in index} != expected or len(index) != 18:
-        errors.append('Search index must contain exactly 18 bilingual pages')
+    expected = {f'{lang}/latest/{slug}.html' for lang in ('zh','en') for _,slug,_,_ in PAGES}
+    if {entry['url'] for entry in index} != expected or len(index) != len(expected):
+        errors.append(f'Search index must contain exactly {len(expected)} bilingual pages')
     for entry in index:
         if not (ROOT / entry['url']).is_file() or not entry.get('text'):
             errors.append(f'Invalid search entry: {entry["url"]}')
@@ -62,7 +61,7 @@ def main():
         errors.append('Missing .nojekyll')
     if errors:
         raise SystemExit('\n'.join(errors))
-    print(f'PASS: {len(pages)} HTML pages, 18 full-text search entries, local links, language pairs and domain configuration')
+    print(f'PASS: {len(pages)} HTML pages, {len(expected)} full-text search entries, local links, language pairs and domain configuration')
 
 
 if __name__ == '__main__':

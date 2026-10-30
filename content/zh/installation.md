@@ -52,3 +52,7 @@ python -m unittest discover -s tests
 安装完成后，继续[快速开始](quickstart.html)运行 C-Town 示例。
 
 安装脚本会更新所有 C-Town 示例 YAML 的五个顶层路径键，并将修改前的文件保存到 `output/install-backups/`。更换机器或依赖目录时，更新配置中的路径。
+
+## 可选物理后端
+
+水网保留原有 EPANET 环境。电网使用 `python -m pip install -r requirements-power.txt` 安装 pandapower；绘图可安装 `requirements-power-plots.txt`。恒温箱物理插件使用项目的 Python/PyYAML 环境，不需要 EPANET 或 pandapower。将 `PYTHON_BIN` 指向安装所选后端的同一个 Python，完整场景仍需要 OpenPLC 与 ns-3。接入方式见[扩展实验](extensions.html)。

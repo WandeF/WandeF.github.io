@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Add a Physical Simulator · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a aria-current="page" class="nav-link active" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a class="nav-link" href="extended-examples.html">Power &amp; Thermal Experiments</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Add a Physical Simulator</span></div>
+        <div class="document-actions"><a href="../../zh/latest/adapter-guide.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="add-a-physical-simulator">Add a Physical Simulator</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#model-and-port-design">Model and port design</a></li><li><a href="#implement-the-lifecycle">Implement the lifecycle</a></li><li><a href="#register-the-plugin">Register the plugin</a></li><li><a href="#connect-logical-signals-and-plcs">Connect logical signals and PLCs</a></li><li><a href="#run-the-adapter">Run the adapter</a></li><li><a href="#run-the-real-loop">Run the real loop</a></li><li><a href="#troubleshooting">Troubleshooting</a></li></ul></nav>
+<p>Wrap the solver as a <code>PhysicsBackend</code>, describe native ports and register it in the scene. Keep the adapter beside an example or in a separate Python package.</p>
+<h2 id="model-and-port-design">Model and port design</h2>
+<p>Identify model files, initial conditions, writable inputs, readable outputs, engineering units, physical-time API and failure states. The thermal example declares:</p>
+<table>
+<thead>
+<tr>
+  <th>Port</th>
+  <th>Direction</th>
+  <th>Type</th>
+  <th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>box.temperature</td>
+  <td>output</td>
+  <td>float</td>
+  <td>degC</td>
+</tr>
+<tr>
+  <td>box.heater_power</td>
+  <td>output</td>
+  <td>float</td>
+  <td>W</td>
+</tr>
+<tr>
+  <td>heater.enabled</td>
+  <td>input</td>
+  <td>bool</td>
+  <td>1</td>
+</tr>
+</tbody>
+</table>
+<p>EPANET uses node/link ports; pandapower uses result table, alias and column ports. Independent plugins can choose stable domain-specific names.</p>
+<h2 id="implement-the-lifecycle">Implement the lifecycle</h2>
+<p><code>examples/thermal_box/adapter.py</code> is a complete analytical solver adapter. A new class has this structure; the initialization and solve methods must be connected to a real solver:</p>
+<pre><code class="language-python">from src.physics.base import PhysicsBackend
+from src.physics.types import SignalSpec, StepResult
+
+class PlantBackend(PhysicsBackend):
+    def __init__(self, config):
+        self.config = config
+
+    def describe(self):
+        return {'signals': {
+            'plant.measurement': SignalSpec('plant.measurement', 'output', 'float', 'K'),
+            'plant.enabled': SignalSpec('plant.enabled', 'input', 'bool', '1'),
+        }, 'timing': 'target', 'model_kind': 'your_physical_model'}
+
+    def initialize(self):
+        raise NotImplementedError('Connect the real solver initialization')
+
+    def advance(self, until_s, inputs):
+        raise NotImplementedError('Connect the real solver step')
+
+    def close(self):
+        pass
+</code></pre>
+<p>This template produces no simulated results. Acquire solver resources in initialize, apply <code>config.initial_inputs</code>, and return <code>StepResult(actual_time_s, outputs, applied_inputs, diagnostics=...)</code>. Repeated initialization must not reset the model. Close safely after partial initialization and repeated calls.</p>
+<p>Check input types, convergence, finite outputs and actual reached time. Do not relabel cached values as newly solved observations. Declare event_step for internal-event early returns, or target for reaching each request.</p>
+<h2 id="register-the-plugin">Register the plugin</h2>
+<pre><code class="language-yaml">physics:
+  backend: my_plant
+  plugins:
+    my_plant:
+      factory: my_package.adapter:PlantBackend
+      # dependency: my_solver_package
+</code></pre>
+<p>An installed package can instead declare:</p>
+<pre><code class="language-toml">[project.entry-points.&quot;hydro_cps.physics&quot;]
+my_plant = &quot;my_package.adapter:PlantBackend&quot;
+</code></pre>
+<p>Select it with <code>entry_point: my_plant</code> instead of factory. Exactly one source is required. Install the package into the Python used by PYTHON_BIN. Built-in names and aliases cannot be replaced.</p>
+<h2 id="connect-logical-signals-and-plcs">Connect logical signals and PLCs</h2>
+<p>Merge this physical/control fragment into a scene containing complete network and runtime paths:</p>
+<pre><code class="language-yaml">schema_version: 2
+physics:
+  backend: my_plant
+  plugins:
+    my_plant: {factory: 'my_package.adapter:PlantBackend'}
+  model: {path: model.yaml}
+  timing: {mode: fixed_step, step_seconds: 1.0}
+  signals:
+    observations:
+      TEMPERATURE: {port: plant.measurement, dtype: float, unit: K}
+    commands:
+      HEATER: {port: plant.enabled, dtype: bool, unit: '1'}
+actuators:
+  - {name: HEATER, initial_state: false}
+plcs:
+  - name: PLC1
+    sensors: [TEMPERATURE]
+    actuators: [HEATER]
+    controls:
+      - {dependant: TEMPERATURE, actuator: HEATER, type: below, value: 293.15, action: true}
+      - {dependant: TEMPERATURE, actuator: HEATER, type: above, value: 295.15, action: false}
+</code></pre>
+<p>Ports, types and units must match describe. Remote dependencies follow sensor ownership and are forwarded by SCADA; adapters need no Modbus code.</p>
+<h2 id="run-the-adapter">Run the adapter</h2>
+<pre><code class="language-bash">python -m src.physics.contract --config examples/thermal_box/config.yaml
+</code></pre>
+<p>Replace the scene path for a new backend. The checker actually initializes and advances three times, validates complete data, applied inputs and physical time, and attempts cleanup. Missing declared optional dependencies are skipped; loading/model/solve errors fail.</p>
+<p>Standalone applications can pass <code>registry = configure_plugins(raw)</code> into <code>BackendConfig.registry</code>, create the backend with <code>create_backend(name, config)</code> and reuse <code>exercise_backend(backend, initial_inputs, step_seconds)</code>.</p>
+<h2 id="run-the-real-loop">Run the real loop</h2>
+<pre><code class="language-bash">PYTHON_BIN=&quot;$(command -v python)&quot; bash scripts/run_all.sh \
+  --config examples/thermal_box/config.yaml --logic-wait 0.3
+</code></pre>
+<p>Verify the existing example first, then substitute the new scene. A full run needs real OpenPLC, ns-3 and namespace privileges; the standalone contract check does not.</p>
+<p>Inspect physical_state/signals CSV, actual PLC coils, raw SCADA data and signal_quality. Confirm command k is applied in the next returned physical snapshot. Cover known trajectories, repeated initialize/close, unit/type errors, failed solves, incorrect time/timestamps and cleanup.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+  <th>Symptom</th>
+  <th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Plugin not found</td>
+  <td>Importable package/module, same Python environment, factory or entry-point name</td>
+</tr>
+<tr>
+  <td>Port/direction error</td>
+  <td>Describe metadata versus scene mappings</td>
+</tr>
+<tr>
+  <td>Unit error</td>
+  <td>Explicit scale/offset and compatible dimensions</td>
+</tr>
+<tr>
+  <td>Missing inputs</td>
+  <td>Complete unique native-input mappings and initial commands</td>
+</tr>
+<tr>
+  <td>Stalled/backward time</td>
+  <td>Actual solver time and internal-event progress</td>
+</tr>
+<tr>
+  <td>New data after failed solve</td>
+  <td>Raise an error and use session-controlled publication</td>
+</tr>
+<tr>
+  <td>Native concurrency issue</td>
+  <td>Registry isolation does not make a solver thread-safe</td>
+</tr>
+</tbody>
+</table>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

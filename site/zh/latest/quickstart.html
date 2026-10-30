@@ -29,6 +29,14 @@
 <div class="nav-heading">实验与配置</div>
 <a class="nav-link" href="experiments.html">攻防实验</a>
 <a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
 <div class="nav-heading">社区与研究</div>
 <a class="nav-link" href="publications.html">论文与引用</a>
 <a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
@@ -39,12 +47,12 @@
         <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>快速开始</span></div>
         <div class="document-actions"><a href="../../en/latest/quickstart.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>快速开始</h1>
+      <h1 id="快速开始">快速开始</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#运行一个示例">运行一个示例</a></li><li><a href="#自定义配置入口">自定义配置入口</a></li><li><a href="#查看输出">查看输出</a></li><li><a href="#下一步">下一步</a></li></ul></nav>
 <p>安装完成后，使用 C-Town 示例运行第一个闭环仿真实验。</p>
 <blockquote>
 <p>每次运行会清理配置输出目录中的 <code>runtime/</code>、<code>reports/</code>、<code>st/</code> 和 <code>plcs/</code>。开始另一个实验前，请将需要比较的结果复制到独立目录。使用普通用户启动，脚本会按需请求 sudo。</p>
 </blockquote>
-<h2>运行一个示例</h2>
+<h2 id="运行一个示例">运行一个示例</h2>
 <pre><code class="language-bash">cd hydro-cps-sim
 conda activate hydro-cps
 bash scripts/run_all.sh --logic-wait 0.3
@@ -53,7 +61,7 @@ bash scripts/run_all.sh --logic-wait 0.3
 <pre><code class="language-bash">bash scripts/run_all.sh --iterations 10 --logic-wait 0.3
 </code></pre>
 <p>此命令将仿真缩短为 10 轮，适合检查启动与结果导出流程。</p>
-<h2>自定义配置入口</h2>
+<h2 id="自定义配置入口">自定义配置入口</h2>
 <pre><code class="language-bash">bash scripts/run_all.sh --config examples/c_town/config.yaml
 </code></pre>
 <p>运行器的可选参数包括：</p>
@@ -88,13 +96,13 @@ bash scripts/run_all.sh --logic-wait 0.3
 </tbody>
 </table>
 <p>具体帮助信息可由 <code>bash scripts/run_all.sh --help</code> 查询。</p>
-<h2>查看输出</h2>
+<h2 id="查看输出">查看输出</h2>
 <p>实验结果导出到 <code>output_path</code> 指定目录下的 <code>reports/csv</code>，日志与阶段耗时分别保存在 <code>logs/</code> 和 <code>timing/</code> 中。</p>
 <p>运行结束后，终端显示结果位置：</p>
 <pre><code class="language-text">[DONE] Results: &lt;output_path&gt;/reports/csv
 </code></pre>
 <p>其中 <code>&lt;output_path&gt;</code> 对应配置中的输出目录。</p>
-<h2>下一步</h2>
+<h2 id="下一步">下一步</h2>
 <p>请参考<a href="experiments.html">攻防实验</a>了解如何组织基线与攻击条件对照，通过<a href="configuration.html">配置说明</a>调整场景参数。</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>

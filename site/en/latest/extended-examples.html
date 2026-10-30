@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="High-fidelity co-simulation for water cyber-physical system security"><title>Power &amp; Thermal Experiments · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="en">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ Menu</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="Documentation">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="Search documentation…" autocomplete="off" aria-label="Search documentation…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">Overview</div>
+<a class="nav-link" href="index.html">Home</a>
+<a class="nav-link" href="introduction.html">Introduction</a>
+<a class="nav-link" href="architecture.html">Architecture</a>
+<div class="nav-heading">Get Started</div>
+<a class="nav-link" href="installation.html">Installation</a>
+<a class="nav-link" href="quickstart.html">Quick Start</a>
+<div class="nav-heading">Experiments &amp; Configuration</div>
+<a class="nav-link" href="experiments.html">Experiments</a>
+<a class="nav-link" href="configuration.html">Configuration</a>
+<a class="nav-link" href="configuration-network.html">Network Configuration</a>
+<a class="nav-link" href="configuration-attacks.html">Attack Configuration</a>
+<div class="nav-heading">Extended Experiments</div>
+<a class="nav-link" href="extensions.html">Extension Overview</a>
+<a class="nav-link" href="upsi.html">UPSI Principles &amp; Interface</a>
+<a class="nav-link" href="adapter-guide.html">Add a Physical Simulator</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI Configuration</a>
+<a aria-current="page" class="nav-link active" href="extended-examples.html">Power &amp; Thermal Experiments</a>
+<div class="nav-heading">Research &amp; Community</div>
+<a class="nav-link" href="publications.html">Publications</a>
+<a class="nav-link" href="contributing.html">Contributing</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim Documentation<p>High-fidelity co-simulation for water cyber-physical system security</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">Docs</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>Power &amp; Thermal Experiments</span></div>
+        <div class="document-actions"><a href="../../zh/latest/extended-examples.html" aria-label="Switch language">中文</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="power-thermal-experiments">Power &amp; Thermal Experiments</h1><nav class="page-toc" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#four-bus-feeder">Four-bus feeder</a></li><li><a href="#ieee33-benchmark">IEEE33 benchmark</a></li><li><a href="#thermal-box-plugin">Thermal-box plugin</a></li><li><a href="#outputs-and-figures">Outputs and figures</a></li></ul></nav>
+<p>These examples show how to run power and thermal models with UPSI. Run them directly or change the models and control rules for your own experiments.</p>
+<h2 id="four-bus-feeder">Four-bus feeder</h2>
+<p>The 20 kV radial model has grid, feeder, control and flexible buses, a 0.2 MW essential load and a 0.8 MW switched load. PLC1 measures voltage and power; PLC2 receives V_CONTROL, disconnecting below 0.95 pu and reconnecting above 1.03 pu.</p>
+<pre><code class="language-bash">python -m pip install -r requirements-power.txt
+python -m src.physics.contract --config examples/power_feeder/config_v2.yaml
+PYTHON_BIN=&quot;$(command -v python)&quot; bash scripts/run_power_experiments.sh
+python scripts/check_power_results.py
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Configuration in examples/power_feeder</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>config.yaml</td>
+  <td>Attack-free baseline</td>
+</tr>
+<tr>
+  <td>config_mitm_transparent.yaml</td>
+  <td>Same proxy/path, zero bias</td>
+</tr>
+<tr>
+  <td>config_mitm.yaml</td>
+  <td>−0.15 pu on SCADA→PLC2 PLC1_V_CONTROL FC16 writes, cycles 3–6</td>
+</tr>
+<tr>
+  <td>config_v2.yaml</td>
+  <td>Explicit UPSI v2 baseline</td>
+</tr>
+</tbody>
+</table>
+<p>With these settings, the example shows transparent equality, the first actual coil deviation at cycle 3 and the first physical load-power change at 4: 0.8→0 MW. Disconnected bus voltage zero is explicitly marked unsupplied.</p>
+<h2 id="ieee33-benchmark">IEEE33 benchmark</h2>
+<p><code>examples/ieee33_bw/model.yaml</code> loads <code>pandapower.networks.case33bw()</code>, preserving public source voltage, impedances, loads and five open ties. The 12.66 kV model has 33 buses, 37 lines and 3.715 MW / 2.300 MVAr demand.</p>
+<pre><code class="language-bash">python scripts/ieee33_reference.py
+python -m src.physics.contract --config examples/ieee33_bw/config_baseline.yaml
+PYTHON_BIN=&quot;$(command -v python)&quot; bash scripts/run_ieee33_experiments.sh
+python scripts/check_ieee33_results.py
+</code></pre>
+<p>PLC1 measures Bus2, PLC2 monitors remote voltages, and PLC3 controls the existing Bus24 0.420 MW / 0.200 MVAr load using forwarded Bus2 voltage. The derived MITM subtracts 0.10 pu during cycles 20–40.</p>
+<table>
+<thead>
+<tr>
+  <th>Metric</th>
+  <th>Example result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Original minimum voltage</td>
+  <td>About 0.91309048 pu, Bus18</td>
+</tr>
+<tr>
+  <td>Original line loss</td>
+  <td>About 202.677 kW</td>
+</tr>
+<tr>
+  <td>Baseline / transparent / MITM</td>
+  <td>100 cycles each; transparent equals baseline</td>
+</tr>
+<tr>
+  <td>First command / physical difference</td>
+  <td>20 / 21</td>
+</tr>
+<tr>
+  <td>Bus24 load</td>
+  <td>0.420→0 MW; bus stays energized</td>
+</tr>
+</tbody>
+</table>
+<p>PLC remote control, thresholds and attacks are derived platform experiments; <a href="https://matpower.org/docs/ref/matpower6.0/case33bw.html">MATPOWER case33bw</a> supplies the benchmark network. Results are AC quasi-steady snapshots, without electromagnetic or frequency dynamics.</p>
+<h2 id="thermal-box-plugin">Thermal-box plugin</h2>
+<p>The independent <code>examples/thermal_box/adapter.py</code> solves:</p>
+<pre><code class="language-text">dT/dt = -0.1 × (T - 18) + 0.8 × HEATER
+heater power = 800 × HEATER W
+</code></pre>
+<p>Initial temperature is 19 °C and ambient temperature 18 °C. PLC1 provides temperature/power; PLC2 heats below 20 °C, stops above 22 °C and holds in between.</p>
+<pre><code class="language-bash">python -m src.physics.contract --config examples/thermal_box/config.yaml
+PYTHON_BIN=&quot;$(command -v python)&quot; bash scripts/run_all.sh \
+  --config examples/thermal_box/config.yaml --logic-wait 0.3
+</code></pre>
+<p>In the ten-cycle real loop, heating stops at command 6, cooling first appears in physical snapshot 7, and temperature at 10 s is about 20.7874 °C. The backend uses analytical integration without EPANET or pandapower.</p>
+<h2 id="outputs-and-figures">Outputs and figures</h2>
+<table>
+<thead>
+<tr>
+  <th>Scene</th>
+  <th>Output root</th>
+  <th>Plot command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Four-bus</td>
+  <td>examples/power_feeder/output/</td>
+  <td>python scripts/plot_example_results.py --example power_feeder</td>
+</tr>
+<tr>
+  <td>IEEE33</td>
+  <td>output/ieee33_bw/</td>
+  <td>python scripts/plot_ieee33_results.py</td>
+</tr>
+<tr>
+  <td>Thermal</td>
+  <td>examples/thermal_box/output/baseline/</td>
+  <td>python scripts/plot_example_results.py --example thermal_box</td>
+</tr>
+</tbody>
+</table>
+<p>Install requirements-power-plots.txt for the shared plotting environment. The output directory contains physical states, PLC inputs/outputs and attack events. Follow the measurements, controller decisions and physical response to explore the experiment.</p>
+<p>Detailed project records are docs/upsi-validation.md, docs/upsi-hardening-validation.md and docs/ieee33-validation.md. Follow <a href="adapter-guide.html">Add a Physical Simulator</a> to implement another model or solver.</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

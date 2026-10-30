@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向供水系统的高保真信息物理安全联合仿真平台"><title>UPSI 原理与接口 · Hydro-CPS-Sim</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-lang="zh">
+  <header class="site-header">
+    <a href="index.html" class="brand">Hydro-CPS-Sim</a>
+    <button id="menu-button" class="menu-button" aria-controls="doc-nav" aria-expanded="false">☰ 菜单</button>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="doc-nav" aria-label="文档导航">
+      <div class="sidebar-top">
+        <a class="sidebar-brand" href="index.html">Hydro-CPS-Sim</a>
+        <div class="sidebar-version">CPS² Lab · latest</div>
+        <div class="sidebar-search"><input id="search" type="search" placeholder="搜索文档…" autocomplete="off" aria-label="搜索文档…"></div>
+        <div id="search-results" class="search-results" aria-live="polite" hidden></div>
+      </div>
+      <nav class="nav"><div class="nav-heading">项目概览</div>
+<a class="nav-link" href="index.html">首页</a>
+<a class="nav-link" href="introduction.html">项目简介</a>
+<a class="nav-link" href="architecture.html">系统架构</a>
+<div class="nav-heading">使用指南</div>
+<a class="nav-link" href="installation.html">安装与环境</a>
+<a class="nav-link" href="quickstart.html">快速开始</a>
+<div class="nav-heading">实验与配置</div>
+<a class="nav-link" href="experiments.html">攻防实验</a>
+<a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a aria-current="page" class="nav-link active" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
+<div class="nav-heading">社区与研究</div>
+<a class="nav-link" href="publications.html">论文与引用</a>
+<a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
+      <div class="sidebar-bottom">Hydro-CPS-Sim 文档<p>面向供水系统的高保真信息物理安全联合仿真平台</p></div>
+    </aside>
+    <main class="main"><div class="content" id="page-content">
+      <div class="breadcrumbs">
+        <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>UPSI 原理与接口</span></div>
+        <div class="document-actions"><a href="../../en/latest/upsi.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <h1 id="upsi-原理与接口">UPSI 原理与接口</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#模型如何连接到平台">模型如何连接到平台</a></li><li><a href="#一次控制过程">一次控制过程</a></li><li><a href="#适配器提供哪些方法">适配器提供哪些方法</a></li><li><a href="#变量与单位">变量与单位</a></li><li><a href="#时间与模型步进">时间与模型步进</a></li><li><a href="#如何处理测量状态">如何处理测量状态</a></li><li><a href="#插件与扩展">插件与扩展</a></li><li><a href="#进一步阅读">进一步阅读</a></li></ul></nav>
+<p>UPSI（Unified Physical Simulation Interface）用于连接不同的物理仿真器。你可以使用 EPANET 运行水网，使用 pandapower 运行电网，也可以添加自己的物理模型。</p>
+<h2 id="模型如何连接到平台">模型如何连接到平台</h2>
+<p>物理模型向平台提供测量值，并接收控制器的输出。例如，水网提供水位、压力和流量，接收泵阀命令；恒温箱提供温度，接收加热开关。</p>
+<p>这些模型的方程和求解方法不同，但在闭环中的作用相同。UPSI 约定了描述变量、初始化、步进和结束运行的方法。适配器负责调用具体求解器，平台继续使用相同的 PLC、SCADA 和网络流程。</p>
+<figure><img src="../../assets/hydro_cps_sim_architecture_upsi.svg" alt="在原平台架构的物理层中加入 UPSI"><figcaption>UPSI 连接物理仿真器与原有控制闭环。</figcaption></figure>
+
+<h2 id="一次控制过程">一次控制过程</h2>
+<p>每轮运行中，物理模型先给出当前测量。平台将测量送入 PLC，SCADA 负责采集和转发远程依赖。PLC 执行控制规则后，平台读出命令并交回模型，计算下一状态。</p>
+<pre><code class="language-text">物理测量 → PLC / SCADA → 控制命令 → 物理模型 → 新测量
+</code></pre>
+<p>适配器使用模型自己的变量名，场景使用传感器和执行器名称。<code>SignalMapper</code> 将两者连接起来，并完成需要的单位转换。这样，更换模型时主要修改适配器和场景配置。</p>
+<h2 id="适配器提供哪些方法">适配器提供哪些方法</h2>
+<p>适配器继承 <code>PhysicsBackend</code>，实现四个方法：</p>
+<table>
+<thead>
+<tr>
+  <th>方法</th>
+  <th>做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>describe()</code></td>
+  <td>列出模型可以读取和写入的变量，包括类型、单位和步进方式</td>
+</tr>
+<tr>
+  <td><code>initialize()</code></td>
+  <td>加载模型、设置初始输入，返回初始状态</td>
+</tr>
+<tr>
+  <td><code>advance(until_s, inputs)</code></td>
+  <td>应用控制输入，推进模型并返回计算结果</td>
+</tr>
+<tr>
+  <td><code>close()</code></td>
+  <td>释放模型资源</td>
+</tr>
+</tbody>
+</table>
+<p><code>BackendConfig</code> 提供场景路径、模型设置、运行目录、步长和初始输入。<code>SignalSpec</code> 描述变量，<code>StepResult</code> 保存每次计算返回的时间、输出、实际输入及状态。</p>
+<p>重复调用 initialize 不应重新开始仿真。close 应能在正常结束或初始化出错后使用。完整写法见<a href="adapter-guide.html">接入物理仿真器</a>。</p>
+<h2 id="变量与单位">变量与单位</h2>
+<table>
+<thead>
+<tr>
+  <th>场景中的名字</th>
+  <th>模型端口示例</th>
+  <th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>T1</td>
+  <td>node.T1.level</td>
+  <td>水箱水位</td>
+</tr>
+<tr>
+  <td>V_BUS02</td>
+  <td>res_bus.BUS_02.vm_pu</td>
+  <td>Bus2 电压</td>
+</tr>
+<tr>
+  <td>P_GRID</td>
+  <td>metrics.total.p_grid_mw</td>
+  <td>网侧有功功率</td>
+</tr>
+<tr>
+  <td>TEMPERATURE</td>
+  <td>box.temperature</td>
+  <td>箱内温度</td>
+</tr>
+<tr>
+  <td>HEATER</td>
+  <td>heater.enabled</td>
+  <td>加热开关</td>
+</tr>
+</tbody>
+</table>
+<p>每个端口有输入或输出方向，以及 float、int、bool 或 str 类型。现有 PLC 通信使用 float 测量和 bool 命令。其他类型可用于独立模型调用，连接 PLC 时需要相应的数据绑定。</p>
+<p>浮点变量可以通过 <code>logical = native * scale + offset</code> 换算单位，命令使用逆变换。例如 MW 转 kW 使用 scale 1000，摄氏温度转 K 使用 offset 273.15。布尔命令可以使用 invert 改变极性。</p>
+<p>单位和换算系数需要明确填写。pu 电压换成 V 还需要模型基值；水柱压力转换需要密度和重力加速度。字段说明见 <a href="upsi-configuration.html">UPSI 配置</a>。</p>
+<h2 id="时间与模型步进">时间与模型步进</h2>
+<p>平台请求模型推进到 <code>until_s</code>，模型返回实际到达的 <code>time_s</code>。普通模型使用 target，推进到目标时间；有内部事件的模型可以使用 event_step，在事件处先返回，再继续下一次推进。</p>
+<p>EPANET 可能按水力事件推进；pandapower 每次计算当前运行点的 AC 潮流；恒温箱对温度方程积分。UPSI 使用返回的实际时间，让这些求解方式都能接入闭环。</p>
+<p>控制轮次、物理秒数和程序运行耗时分别记录。画物理曲线时使用 sim_time，查看通信或控制过程时可以按 iteration 查找。</p>
+<h2 id="如何处理测量状态">如何处理测量状态</h2>
+<p>结果除了测量值，还可以带源时间、quality、validity 和 freshness。例如，负荷母线失电时，电压为 0 并标记 unsupplied；网络超时后继续使用的旧测量保留原来的源时间。</p>
+<p>你可以选择直接使用数据、保持上次成功写入值、跳过写入或在异常时停止。它们通过 quality_policy 设置，作用于控制侧的数据处理，物理结果仍按模型计算值保存。</p>
+<p>编写适配器时，返回完整且有效的结果；求解出错时抛出异常。平台负责检查结果、保存数据和协调下一轮运行。</p>
+<h2 id="插件与扩展">插件与扩展</h2>
+<p>EPANET 和 pandapower 是内置后端。自己的适配器可以放在独立模块或安装包中，通过 physics.plugins 注册。每个场景选择一个后端。</p>
+<p>插件的选择、变量映射和控制规则分别配置。添加新模型时，通常不需要修改主调度、Modbus 或攻击代码。先尝试<a href="extended-examples.html">恒温箱示例</a>，再按照<a href="adapter-guide.html">适配器教程</a>接入自己的求解器。</p>
+<h2 id="进一步阅读">进一步阅读</h2>
+<p>UPSI 是项目提供的 Python 接口。下面的文档介绍了相关的联合仿真、配置和通信方法：</p>
+<table>
+<thead>
+<tr>
+  <th>文档</th>
+  <th>阅读内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="https://fmi-standard.org/docs/3.0.2/">FMI 3.0.2</a></td>
+  <td>仿真模型的生命周期、变量、单位和联合仿真步进</td>
+</tr>
+<tr>
+  <td><a href="https://mosaik.readthedocs.io/en/latest/mosaik-api/high-level.html">mosaik Simulator API</a></td>
+  <td>将不同仿真器连接到同一实验的接口设计</td>
+</tr>
+<tr>
+  <td><a href="https://docs.python.org/3.10/library/importlib.metadata.html#entry-points">Python entry points</a></td>
+  <td>安装包中的插件发现与加载</td>
+</tr>
+<tr>
+  <td><a href="https://yaml.org/spec/1.2.2/">YAML</a> 与 <a href="https://pyyaml.org/wiki/PyYAMLDocumentation">PyYAML</a></td>
+  <td>场景文件的语法与解析</td>
+</tr>
+<tr>
+  <td><a href="https://www.modbus.org/file/secure/modbusprotocolspecification.pdf">Modbus Application Protocol</a></td>
+  <td>PLC 寄存器、线圈和功能码</td>
+</tr>
+</tbody>
+</table>
+<p>UPSI 的适配器使用本项目的接口；接入 FMU 仍需编写处理 FMI API 和模型能力的适配器。多个物理模型同时耦合也需要进一步设置时间协调与模型间的数据交换。</p>
+
+      <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
+    </div></main>
+  </div>
+</body>
+</html>

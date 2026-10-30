@@ -29,6 +29,14 @@
 <div class="nav-heading">实验与配置</div>
 <a class="nav-link" href="experiments.html">攻防实验</a>
 <a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
 <div class="nav-heading">社区与研究</div>
 <a class="nav-link" href="publications.html">论文与引用</a>
 <a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
@@ -39,13 +47,10 @@
         <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>系统架构</span></div>
         <div class="document-actions"><a href="../../en/latest/architecture.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>系统架构</h1>
-<p>Hydro-CPS-Sim 由水力仿真、PLC 控制、SCADA、网络和攻击模块组成。各模块通过数据交换和状态同步共同完成闭环仿真。</p>
-<h2>平台总体架构</h2>
-<figure>
-<a href="../../assets/hydro_cps_sim_architecture.png" target="_blank" rel="noopener"><img src="../../assets/hydro_cps_sim_architecture.png" alt="Hydro-CPS-Sim 场景配置、编排、物理、控制、网络、同步与记录模块架构图" loading="lazy" width="4978" height="3116"></a>
-<figcaption>平台总体架构：场景配置、联合仿真编排与各运行模块。</figcaption>
-</figure>
+      <h1 id="系统架构">系统架构</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#平台总体架构">平台总体架构</a></li><li><a href="#物理模型与-upsi">物理模型与 UPSI</a></li><li><a href="#闭环运行流程">闭环运行流程</a></li><li><a href="#查看和扩展代码">查看和扩展代码</a></li></ul></nav>
+<p>Hydro-CPS-Sim 将物理过程、PLC 控制、SCADA、网络和攻击连接起来。传感器数据进入控制器，控制器输出作用于设备，设备状态再影响物理过程。</p>
+<h2 id="平台总体架构">平台总体架构</h2>
+<figure><img src="../../assets/hydro_cps_sim_architecture_upsi.svg" alt="在原平台架构中增加 UPSI 的 Hydro-CPS-Sim 架构图"><figcaption>Hydro-CPS-Sim 总体架构。UPSI 连接物理仿真器与控制闭环。</figcaption></figure>
 
 <table>
 <thead>
@@ -57,66 +62,95 @@
 <tbody>
 <tr>
   <td>场景配置</td>
-  <td>YAML 描述水网、PLC/SCADA 映射、控制规则、网络、攻击与运行参数</td>
+  <td>设置水网或其他物理模型、控制规则、网络和攻击</td>
 </tr>
 <tr>
-  <td>联合仿真编排</td>
-  <td>生成 ST 程序、编译 PLC、生成网络环境、启动进程并导出结果</td>
+  <td>联合仿真调度</td>
+  <td>生成程序、准备网络、启动各模块并收集结果</td>
 </tr>
 <tr>
-  <td>物理过程</td>
-  <td>DHALSIM-epynet / EPANET 推进水力状态，接收泵阀动作</td>
+  <td>物理层</td>
+  <td>计算水位、压力、流量，或其他模型的物理状态</td>
 </tr>
 <tr>
-  <td>控制与监控</td>
-  <td>OpenPLC 执行控制逻辑；PLC Adapter 衔接输入输出；SCADA 通过 Modbus TCP 采集与转发数据</td>
+  <td>UPSI</td>
+  <td>将物理模型的测量和控制输入连接到平台，统一变量、单位和时间</td>
 </tr>
 <tr>
-  <td>网络通信</td>
-  <td>Linux network namespace 提供独立网络身份，经 TAP/veth 接入 ns-3</td>
+  <td>控制与 SCADA</td>
+  <td>OpenPLC 执行控制规则，SCADA 采集数据并转发跨 PLC 依赖</td>
 </tr>
 <tr>
-  <td>攻击执行</td>
-  <td>在配置的协议、网络或控制入口执行 MITM、DoS 或逻辑注入</td>
+  <td>网络层</td>
+  <td>使用 namespace、TAP/veth 与 ns-3 连接各通信节点</td>
 </tr>
 <tr>
-  <td>同步</td>
-  <td>通过文件系统标志协调多进程，按实验轮次交换状态</td>
+  <td>攻击层</td>
+  <td>提供 MITM、DoS 和 PLC 逻辑注入</td>
 </tr>
 <tr>
-  <td>数据记录</td>
-  <td>汇集攻击、通信、控制、执行器与水力记录，供基线对照使用</td>
+  <td>同步与记录</td>
+  <td>协调各模块，保存状态、通信、控制与攻击数据</td>
 </tr>
 </tbody>
 </table>
-<h2>闭环运行流程</h2>
-<figure>
-<a href="../../assets/closed_loop_experiment_workflow.png" target="_blank" rel="noopener"><img src="../../assets/closed_loop_experiment_workflow.png" alt="场景生成、启动、SCADA 采集、PLC 控制与水力反馈闭环流程" loading="lazy" width="2888" height="1818"></a>
-<figcaption>闭环运行流程：场景生成、数据采集、控制执行与水力反馈。</figcaption>
-</figure>
-
+<h2 id="物理模型与-upsi">物理模型与 UPSI</h2>
+<p>水网使用 EPANET 计算水力状态。需要研究其他系统时，可以通过 UPSI 选择 pandapower、恒温箱或自己的适配器。各模型使用不同的方程和求解方法，但都向控制器提供测量，并接收控制输入。</p>
+<p>模型的端口、单位和步进方式由适配器说明。平台使用这些信息调用模型，不需要为每个求解器重新编写控制和网络流程。具体用法见<a href="extensions.html">扩展实验</a>。</p>
+<h2 id="闭环运行流程">闭环运行流程</h2>
 <ol>
-<li><strong>环境生成</strong>：读取水网和 YAML 配置，生成控制程序、地址映射、ns-3 拓扑与命名空间配置。</li>
-<li><strong>初始化</strong>：启动 OpenPLC、SCADA 与网络进程，准备物理状态和同步目录。</li>
-<li><strong>采集与转发</strong>：水力模块提供当前传感器状态，SCADA 通过 Modbus TCP 采集数据并转发跨 PLC 控制依赖。</li>
-<li><strong>控制执行</strong>：OpenPLC 根据当前输入和有效规则生成泵阀命令。</li>
-<li><strong>水力反馈</strong>：执行器状态进入下一步水力求解，产生新的水位、压力和流量。</li>
-<li><strong>保存结果</strong>：记录当前轮次的数据，然后进入下一轮仿真。</li>
+<li>读取配置和模型，生成 PLC 程序与网络拓扑。</li>
+<li>启动各模块，准备初始测量和执行器状态。</li>
+<li>PLC Adapter 将物理测量写入本地 PLC；SCADA 采集数据并转发远程依赖。</li>
+<li>OpenPLC 根据输入执行控制规则，输出泵阀或其他设备命令。</li>
+<li>物理模型接收命令，计算下一状态。</li>
+<li>保存结果，进入下一轮。</li>
 </ol>
-<h2>网络连接</h2>
-<p>每个 PLC、SCADA 和攻击节点运行在各自的 Linux network namespace 中，拥有独立接口和协议栈。ns-3 为这些端点提供可配置的链路、路由与网络动态。正常 Modbus 通信和攻击流量通过配置的网络路径交互。</p>
-<p>SCADA 通过 Modbus TCP 访问 PLC 的寄存器和线圈，完成传感器采集和控制数据下发。网络参数影响这些请求和响应，你可以通过日志查看通信、数据更新与控制输出。</p>
-<h2>代码入口</h2>
-<ul>
-<li><code>scripts/run_all.sh</code>：环境准备、运行和清理的总入口。</li>
-<li><code>src/control/</code>：ST 程序生成、编译与 OpenPLC 启动。</li>
-<li><code>src/network/</code>：命名空间与 ns-3 拓扑生成。</li>
-<li><code>src/runtime/</code>、<code>src/sync/</code>：闭环协调与同步。</li>
-<li><code>src/scada/</code>、<code>src/plc/</code>、<code>src/comm/</code>：数据采集、适配与 Modbus 交互。</li>
-<li><code>src/attack/</code>：攻击启动与执行。</li>
-<li><code>src/io/</code>：水力接口与结果导出。</li>
-</ul>
-<p>使用方法参见<a href="quickstart.html">快速开始</a>，运行参数参见<a href="configuration.html">配置说明</a>。</p>
+<p>PLC Adapter 通过本地 Modbus 接口连接 OpenPLC。SCADA 与各 PLC 之间的通信经过配置的 ns-3 网络，时延、拥塞和攻击会影响这条通信路径。</p>
+<h2 id="查看和扩展代码">查看和扩展代码</h2>
+<table>
+<thead>
+<tr>
+  <th>目录</th>
+  <th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>scripts/run_all.sh</td>
+  <td>完整实验入口</td>
+</tr>
+<tr>
+  <td>src/control/</td>
+  <td>PLC 程序生成、编译和启动</td>
+</tr>
+<tr>
+  <td>src/physics/</td>
+  <td>物理模型接口和适配器</td>
+</tr>
+<tr>
+  <td>src/plc/、src/scada/、src/comm/</td>
+  <td>数据采集、转发与 Modbus 交互</td>
+</tr>
+<tr>
+  <td>src/network/</td>
+  <td>namespace 与 ns-3 拓扑</td>
+</tr>
+<tr>
+  <td>src/attack/</td>
+  <td>攻击调度和执行</td>
+</tr>
+<tr>
+  <td>src/runtime/、src/sync/</td>
+  <td>闭环运行与同步</td>
+</tr>
+<tr>
+  <td>src/io/</td>
+  <td>数据保存与结果导出</td>
+</tr>
+</tbody>
+</table>
+<p>开始运行请查看<a href="quickstart.html">快速开始</a>。水网参数见<a href="configuration.html">配置说明</a>，新增物理模型见<a href="adapter-guide.html">接入物理仿真器</a>。</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>

@@ -29,6 +29,14 @@
 <div class="nav-heading">实验与配置</div>
 <a class="nav-link" href="experiments.html">攻防实验</a>
 <a class="nav-link" href="configuration.html">配置说明</a>
+<a class="nav-link" href="configuration-network.html">网络配置</a>
+<a class="nav-link" href="configuration-attacks.html">攻击配置</a>
+<div class="nav-heading">扩展实验</div>
+<a class="nav-link" href="extensions.html">扩展实验概览</a>
+<a class="nav-link" href="upsi.html">UPSI 原理与接口</a>
+<a class="nav-link" href="adapter-guide.html">接入物理仿真器</a>
+<a class="nav-link" href="upsi-configuration.html">UPSI 配置</a>
+<a class="nav-link" href="extended-examples.html">电网与恒温箱实验</a>
 <div class="nav-heading">社区与研究</div>
 <a class="nav-link" href="publications.html">论文与引用</a>
 <a class="nav-link" href="contributing.html">贡献与反馈</a></nav>
@@ -39,9 +47,9 @@
         <div class="breadcrumb-path"><a href="index.html">文档</a><span class="breadcrumb-separator" aria-hidden="true">»</span><span>安装与环境</span></div>
         <div class="document-actions"><a href="../../en/latest/installation.html" aria-label="Switch language">English</a><a href="https://github.com/WandeF/hydro-cps-sim" target="_blank" rel="noopener">GitHub</a></div>
       </div>
-      <h1>安装与环境</h1>
+      <h1 id="安装与环境">安装与环境</h1><nav class="page-toc" aria-label="本页内容"><strong>本页内容</strong><ul><li><a href="#支持的环境">支持的环境</a></li><li><a href="#获取源码">获取源码</a></li><li><a href="#查看安装计划">查看安装计划</a></li><li><a href="#正式安装">正式安装</a></li><li><a href="#安装完成后的自检">安装完成后的自检</a></li><li><a href="#可选物理后端">可选物理后端</a></li></ul></nav>
 <p>使用 <code>install.sh</code> 安装 Hydro-CPS-Sim 及其依赖。安装过程会配置系统软件包、Conda 环境、OpenPLC 命令行运行时、ns-3 和 DHALSIM-epynet。</p>
-<h2>支持的环境</h2>
+<h2 id="支持的环境">支持的环境</h2>
 <table>
 <thead>
 <tr>
@@ -79,26 +87,28 @@
 <blockquote>
 <p>安装包含 OpenPLC 命令行运行时，不包含 Web 管理服务。</p>
 </blockquote>
-<h2>获取源码</h2>
+<h2 id="获取源码">获取源码</h2>
 <pre><code class="language-bash">git clone https://github.com/WandeF/hydro-cps-sim.git
 cd hydro-cps-sim
 </code></pre>
-<h2>查看安装计划</h2>
+<h2 id="查看安装计划">查看安装计划</h2>
 <p>查看安装计划，不修改系统：</p>
 <pre><code class="language-bash">bash install.sh --dry-run
 </code></pre>
-<h2>正式安装</h2>
+<h2 id="正式安装">正式安装</h2>
 <p>运行安装脚本：</p>
 <pre><code class="language-bash">bash install.sh
 conda activate hydro-cps
 </code></pre>
 <p>安装过程中可能需要较长时间编译 OpenPLC 和 ns-3。默认环境名为 <code>hydro-cps</code>；脚本也支持 <code>--env</code>、<code>--jobs</code>、<code>--parent</code> 等参数，详见 <code>bash install.sh --help</code>。</p>
-<h2>安装完成后的自检</h2>
+<h2 id="安装完成后的自检">安装完成后的自检</h2>
 <p>安装程序会检查 EPANET 动态库并运行 Python 单元测试。你也可以手动运行测试：</p>
 <pre><code class="language-bash">python -m unittest discover -s tests
 </code></pre>
 <p>安装完成后，继续<a href="quickstart.html">快速开始</a>运行 C-Town 示例。</p>
 <p>安装脚本会更新所有 C-Town 示例 YAML 的五个顶层路径键，并将修改前的文件保存到 <code>output/install-backups/</code>。更换机器或依赖目录时，更新配置中的路径。</p>
+<h2 id="可选物理后端">可选物理后端</h2>
+<p>水网保留原有 EPANET 环境。电网使用 <code>python -m pip install -r requirements-power.txt</code> 安装 pandapower；绘图可安装 <code>requirements-power-plots.txt</code>。恒温箱物理插件使用项目的 Python/PyYAML 环境，不需要 EPANET 或 pandapower。将 <code>PYTHON_BIN</code> 指向安装所选后端的同一个 Python，完整场景仍需要 OpenPLC 与 ns-3。接入方式见<a href="extensions.html">扩展实验</a>。</p>
 
       <footer class="page-footer">Hydro-CPS-Sim · CPS² Lab</footer>
     </div></main>
