@@ -67,7 +67,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
  html{scroll-padding-top:72px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-.content figure{margin:24px 0;background:#fff}
+.content figure{width:50%;margin:24px 0;background:#fff}
 .content figure>a{display:block}
 .content figure img{display:block;width:100%;height:auto}
 .content figcaption{padding:10px 0;color:var(--muted);font-size:13px;line-height:1.6;background:#fcfcfc}
