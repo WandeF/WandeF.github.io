@@ -24,3 +24,9 @@ No raw-data audit or simulator execution was performed for this documentation up
 The renderer, provenance record and SVG/PNG/PDF files are in `/home/lzh/MASTER/CODE/output/10_figures_and_manuscript/upsi/`. The renderer uses CairoSVG. The paper's original images and TeX were not overwritten. One physical backend is selected per scene.
 
 The extension chapters describe the implemented UPSI interface at project commit d7fafbd, with conceptual comparisons to FMI, mosaik, YAML/PyYAML, Python entry points and Modbus. Basic configuration chapters introduce the existing C-Town configuration; added UPSI rules are collected under Extensions → UPSI Configuration.
+
+## UPSI connection detail · 2026-10-30
+
+`assets/upsi_physical_connections.{svg,png}` is an original vector explanation of UPSI, simulator-specific adapters and physical simulators, placed in the bilingual UPSI principles pages. It uses Times New Roman, rounded panels, monochrome outline symbols and colors sampled from the existing manuscript architecture: physical fills `#fef7e9` / `#fdf9ed`, physical outlines `#d9bc8a`, control fill `#edf4e9`, and control outlines `#9eab97`. Red measurement and blue command arrows follow the original visual key; dashed black arrows identify stepping calls. Three backend rows are alternatives, not coupled models.
+
+The reproducible renderer is `scripts/draw_upsi_connection.py` (CairoSVG required for rendering, not for site builds). SVG/PNG/PDF copies are saved in `/home/lzh/MASTER/CODE/output/10_figures_and_manuscript/upsi/`. The paper directory was not mounted during this update; the reference artwork was the unchanged paper image already stored in `assets/hydro_cps_sim_architecture.png`. No original paper assets were modified.

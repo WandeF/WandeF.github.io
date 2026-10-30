@@ -8,7 +8,7 @@ A model supplies measurements and accepts controller outputs. A water network su
 
 Their equations differ, but their role in the loop is the same. UPSI provides methods to describe variables, initialize, step and finish. An adapter calls the solver while the platform keeps the same PLC, SCADA and network workflow.
 
-<figure><img src="../../assets/hydro_cps_sim_architecture_upsi.svg" alt="UPSI added inside the original platform's physical layer"><figcaption>UPSI connects physical simulators to the existing loop.</figcaption></figure>
+<figure><img src="../../assets/upsi_physical_connections.svg" alt="UPSI, simulator-specific adapters and physical simulators: measurements return along red arrows, commands follow blue arrows, and dashed black arrows show stepping calls"><figcaption>Adapters connect UPSI to each simulator. Red arrows return measurements and results; blue arrows carry control inputs; dashed black arrows show stepping calls. A scene selects one backend.</figcaption></figure>
 
 ## Follow one control cycle
 

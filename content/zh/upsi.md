@@ -8,7 +8,7 @@ UPSI（Unified Physical Simulation Interface）用于连接不同的物理仿真
 
 这些模型的方程和求解方法不同，但在闭环中的作用相同。UPSI 约定了描述变量、初始化、步进和结束运行的方法。适配器负责调用具体求解器，平台继续使用相同的 PLC、SCADA 和网络流程。
 
-<figure><img src="../../assets/hydro_cps_sim_architecture_upsi.svg" alt="在原平台架构的物理层中加入 UPSI"><figcaption>UPSI 连接物理仿真器与原有控制闭环。</figcaption></figure>
+<figure><img src="../../assets/upsi_physical_connections.svg" alt="UPSI、专用适配器与物理仿真器之间的连接：红色箭头返回测量，蓝色箭头传递命令，黑色虚线表示步进调用"><figcaption>UPSI 通过各仿真器的适配器读写物理模型。红色为测量与计算结果，蓝色为控制输入，黑色虚线为步进调用；每个场景选择一个后端。</figcaption></figure>
 
 ## 一次控制过程
 

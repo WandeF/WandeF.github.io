@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1110" viewBox="0 0 1680 1110">
+<title>UPSI, adapters and physical simulators</title>
+<desc>One adapter connects one selected physical simulator to UPSI. Red arrows return measurements, blue arrows carry commands, and dashed black arrows indicate stepping calls. Three rows show alternative backends, not simultaneous coupling.</desc>
+<defs>
+<marker id="measurement" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,3.5 L0,7 Z" fill="#ff4775"/></marker>
+<marker id="command" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,3.5 L0,7 Z" fill="#5287e8"/></marker>
+<marker id="step" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,3.5 L0,7 Z" fill="#222222"/></marker>
+</defs><rect width="1680" height="1110" fill="white"/>
+<rect x="40" y="28" width="450" height="150" rx="12" fill="#edf4e9" stroke="#9eab97" stroke-width="2"/>
+<g transform="translate(62 56)" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+<rect x="1" y="1" width="30" height="22"/><path d="M9,29 H24 M16,23 V29 M7,7 V17 M13,7 V17 M19,7 V17 M25,7 V17"/>
+</g>
+<text x="286" y="65" text-anchor="middle" font-family="Times New Roman" font-size="29" font-weight="bold" fill="black">Control &amp; SCADA Layer</text>
+<text x="265" y="107" text-anchor="middle" font-family="Times New Roman" font-size="25" font-weight="normal" fill="black">PLC / SCADA / Network</text>
+<text x="265" y="147" text-anchor="middle" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Shared control and communication loop</text>
+<text x="1080" y="68" text-anchor="middle" font-family="Times New Roman" font-size="33" font-weight="bold" fill="black">UPSI and Physical Simulator Integration</text>
+<text x="1080" y="112" text-anchor="middle" font-family="Times New Roman" font-size="25" font-weight="normal" fill="black">Unified operations, simulator-specific adapters</text>
+<text x="1080" y="151" text-anchor="middle" font-family="Times New Roman" font-size="24" font-weight="normal" fill="black">Select one backend per scene</text>
+<rect x="25" y="266" width="1630" height="685" rx="12" fill="#fef7e9" stroke="#d9bc8a" stroke-width="2"/>
+<text x="840" y="306" text-anchor="middle" font-family="Times New Roman" font-size="32" font-weight="bold" fill="black">Physical Layer</text>
+<path d="M156,342 L156,178" fill="none" stroke="#ff4775" stroke-width="2.5" marker-end="url(#measurement)"/>
+<text x="142" y="229" text-anchor="end" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Measurements</text>
+<path d="M355,178 L355,342" fill="none" stroke="#5287e8" stroke-width="2.5" marker-end="url(#command)"/>
+<text x="369" y="229" text-anchor="start" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Commands</text>
+<rect x="55" y="342" width="405" height="563" rx="12" fill="#fdf9ed" stroke="#d9bc8a" stroke-width="2"/>
+<g transform="translate(83 370)" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="15" cy="5" rx="13" ry="5"/><path d="M2,5 V29 C2,36 28,36 28,29 V5 M2,13 C2,20 28,20 28,13 M2,21 C2,28 28,28 28,21"/>
+</g>
+<text x="275" y="401" text-anchor="middle" font-family="Times New Roman" font-size="32" font-weight="bold" fill="black">1) UPSI</text>
+<text x="257" y="449" text-anchor="middle" font-family="Times New Roman" font-size="23" font-weight="normal" fill="black">Unified Physical Simulation Interface</text>
+<text x="257" y="497" text-anchor="middle" font-family="Times New Roman" font-size="25" font-weight="normal" fill="black">Signals, units &amp; physical time</text>
+<path d="M85,525 H430" stroke="#d9bc8a" stroke-width="1.5"/>
+<text x="257" y="573" text-anchor="middle" font-family="Times New Roman" font-size="26" font-weight="bold" fill="black">describe()</text>
+<text x="257" y="606" text-anchor="middle" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Ports, types and capabilities</text>
+<text x="257" y="657" text-anchor="middle" font-family="Times New Roman" font-size="26" font-weight="bold" fill="black">initialize()</text>
+<text x="257" y="690" text-anchor="middle" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Model settings and initial state</text>
+<text x="257" y="741" text-anchor="middle" font-family="Times New Roman" font-size="26" font-weight="bold" fill="black">advance(until_s, inputs)</text>
+<text x="257" y="774" text-anchor="middle" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Control inputs and target time</text>
+<text x="257" y="825" text-anchor="middle" font-family="Times New Roman" font-size="26" font-weight="bold" fill="black">close()</text>
+<text x="257" y="858" text-anchor="middle" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Release model resources</text>
+<text x="802" y="342" text-anchor="middle" font-family="Times New Roman" font-size="28" font-weight="bold" fill="black">2) Simulator-specific Adapters</text>
+<text x="1390" y="342" text-anchor="middle" font-family="Times New Roman" font-size="28" font-weight="bold" fill="black">3) Physical Simulators</text>
+<rect x="630" y="370" width="345" height="155" rx="8" fill="#fdf9ed" stroke="#d9bc8a" stroke-width="2"/>
+<g transform="translate(647 388)" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+<path d="M3,2 H21 L29,10 V34 H3 Z M21,2 V10 H29 M9,15 H23 M9,21 H23 M9,27 H19"/>
+</g>
+<text x="819" y="410" text-anchor="middle" font-family="Times New Roman" font-size="27" font-weight="bold" fill="black">EPANET adapter</text>
+<text x="802" y="455" text-anchor="middle" font-family="Times New Roman" font-size="23" font-weight="normal" fill="black">Water-network variables</text>
+<text x="802" y="495" text-anchor="middle" font-family="Times New Roman" font-size="21" font-weight="normal" fill="black">Native API calls &amp; result mapping</text>
+<rect x="1190" y="370" width="420" height="155" rx="8" fill="#fdf9ed" stroke="#d9bc8a" stroke-width="2"/>
+<g transform="translate(1208 388)" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+<path d="M16,1 C12,9 5,16 5,22 A11,11 0 0 0 27,22 C27,16 20,9 16,1 Z M2,35 Q9,30 16,35 T30,35"/>
+</g>
+<text x="1420" y="410" text-anchor="middle" font-family="Times New Roman" font-size="28" font-weight="bold" fill="black">EPANET</text>
+<text x="1400" y="455" text-anchor="middle" font-family="Times New Roman" font-size="23" font-weight="normal" fill="black">Levels / pressures / flows</text>
+<text x="1400" y="495" text-anchor="middle" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Model equations &amp; numerical solver</text>
+<path d="M630,402 L460,402" fill="none" stroke="#ff4775" stroke-width="2.5" marker-end="url(#measurement)"/>
+<path d="M460,448 L630,448" fill="none" stroke="#5287e8" stroke-width="2.5" marker-end="url(#command)"/>
+<path d="M460,492 L630,492" fill="none" stroke="#222222" stroke-width="2.5" stroke-dasharray="9 6" marker-end="url(#step)"/>
+<path d="M1190,402 L975,402" fill="none" stroke="#ff4775" stroke-width="2.5" marker-end="url(#measurement)"/>
+<path d="M975,448 L1190,448" fill="none" stroke="#5287e8" stroke-width="2.5" marker-end="url(#command)"/>
+<path d="M975,492 L1190,492" fill="none" stroke="#222222" stroke-width="2.5" stroke-dasharray="9 6" marker-end="url(#step)"/>
+<rect x="630" y="550" width="345" height="155" rx="8" fill="#fdf9ed" stroke="#d9bc8a" stroke-width="2"/>
+<g transform="translate(647 568)" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+<path d="M3,2 H21 L29,10 V34 H3 Z M21,2 V10 H29 M9,15 H23 M9,21 H23 M9,27 H19"/>
+</g>
+<text x="819" y="590" text-anchor="middle" font-family="Times New Roman" font-size="27" font-weight="bold" fill="black">pandapower adapter</text>
+<text x="802" y="635" text-anchor="middle" font-family="Times New Roman" font-size="23" font-weight="normal" fill="black">Power-system variables</text>
+<text x="802" y="675" text-anchor="middle" font-family="Times New Roman" font-size="21" font-weight="normal" fill="black">Native API calls &amp; result mapping</text>
+<rect x="1190" y="550" width="420" height="155" rx="8" fill="#fdf9ed" stroke="#d9bc8a" stroke-width="2"/>
+<g transform="translate(1208 568)" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+<path d="M19,1 L4,21 H15 L11,36 L29,14 H17 Z"/>
+</g>
+<text x="1420" y="590" text-anchor="middle" font-family="Times New Roman" font-size="28" font-weight="bold" fill="black">pandapower</text>
+<text x="1400" y="635" text-anchor="middle" font-family="Times New Roman" font-size="23" font-weight="normal" fill="black">Voltages / currents / power</text>
+<text x="1400" y="675" text-anchor="middle" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Model equations &amp; numerical solver</text>
+<path d="M630,582 L460,582" fill="none" stroke="#ff4775" stroke-width="2.5" marker-end="url(#measurement)"/>
+<path d="M460,628 L630,628" fill="none" stroke="#5287e8" stroke-width="2.5" marker-end="url(#command)"/>
+<path d="M460,672 L630,672" fill="none" stroke="#222222" stroke-width="2.5" stroke-dasharray="9 6" marker-end="url(#step)"/>
+<path d="M1190,582 L975,582" fill="none" stroke="#ff4775" stroke-width="2.5" marker-end="url(#measurement)"/>
+<path d="M975,628 L1190,628" fill="none" stroke="#5287e8" stroke-width="2.5" marker-end="url(#command)"/>
+<path d="M975,672 L1190,672" fill="none" stroke="#222222" stroke-width="2.5" stroke-dasharray="9 6" marker-end="url(#step)"/>
+<rect x="630" y="730" width="345" height="155" rx="8" fill="#fdf9ed" stroke="#d9bc8a" stroke-width="2"/>
+<g transform="translate(647 748)" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+<path d="M3,2 H21 L29,10 V34 H3 Z M21,2 V10 H29 M9,15 H23 M9,21 H23 M9,27 H19"/>
+</g>
+<text x="819" y="770" text-anchor="middle" font-family="Times New Roman" font-size="27" font-weight="bold" fill="black">Thermal-box adapter</text>
+<text x="802" y="815" text-anchor="middle" font-family="Times New Roman" font-size="23" font-weight="normal" fill="black">Thermal-model variables</text>
+<text x="802" y="855" text-anchor="middle" font-family="Times New Roman" font-size="21" font-weight="normal" fill="black">Native API calls &amp; result mapping</text>
+<rect x="1190" y="730" width="420" height="155" rx="8" fill="#fdf9ed" stroke="#d9bc8a" stroke-width="2"/>
+<g transform="translate(1208 748)" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+<path d="M10,4 A5,5 0 0 1 20,4 V23 A9,9 0 1 1 10,23 Z M15,10 V28 M23,8 H29 M23,15 H29"/>
+</g>
+<text x="1420" y="770" text-anchor="middle" font-family="Times New Roman" font-size="28" font-weight="bold" fill="black">Thermal model</text>
+<text x="1400" y="815" text-anchor="middle" font-family="Times New Roman" font-size="23" font-weight="normal" fill="black">Temperature / heater state</text>
+<text x="1400" y="855" text-anchor="middle" font-family="Times New Roman" font-size="22" font-weight="normal" fill="black">Model equations &amp; numerical solver</text>
+<path d="M630,762 L460,762" fill="none" stroke="#ff4775" stroke-width="2.5" marker-end="url(#measurement)"/>
+<path d="M460,808 L630,808" fill="none" stroke="#5287e8" stroke-width="2.5" marker-end="url(#command)"/>
+<path d="M460,852 L630,852" fill="none" stroke="#222222" stroke-width="2.5" stroke-dasharray="9 6" marker-end="url(#step)"/>
+<path d="M1190,762 L975,762" fill="none" stroke="#ff4775" stroke-width="2.5" marker-end="url(#measurement)"/>
+<path d="M975,808 L1190,808" fill="none" stroke="#5287e8" stroke-width="2.5" marker-end="url(#command)"/>
+<path d="M975,852 L1190,852" fill="none" stroke="#222222" stroke-width="2.5" stroke-dasharray="9 6" marker-end="url(#step)"/>
+<rect x="40" y="978" width="1600" height="104" rx="8" fill="#fff" stroke="#9eab97" stroke-width="2"/>
+<path d="M68,1008 L148,1008" fill="none" stroke="#ff4775" stroke-width="2.5" marker-end="url(#measurement)"/>
+<text x="163" y="1016" text-anchor="start" font-family="Times New Roman" font-size="24" font-weight="normal" fill="black">Measurements / results</text>
+<text x="163" y="1054" text-anchor="start" font-family="Times New Roman" font-size="21" font-weight="normal" fill="black">outputs, time_s, status</text>
+<path d="M610,1008 L690,1008" fill="none" stroke="#5287e8" stroke-width="2.5" marker-end="url(#command)"/>
+<text x="705" y="1016" text-anchor="start" font-family="Times New Roman" font-size="24" font-weight="normal" fill="black">Control inputs</text>
+<text x="705" y="1054" text-anchor="start" font-family="Times New Roman" font-size="21" font-weight="normal" fill="black">pump / switch / heater commands</text>
+<path d="M1160,1008 L1240,1008" fill="none" stroke="#222222" stroke-width="2.5" stroke-dasharray="9 6" marker-end="url(#step)"/>
+<text x="1255" y="1016" text-anchor="start" font-family="Times New Roman" font-size="24" font-weight="normal" fill="black">Stepping calls</text>
+<text x="1255" y="1054" text-anchor="start" font-family="Times New Roman" font-size="21" font-weight="normal" fill="black">advance(until_s, inputs)</text>
+</svg>

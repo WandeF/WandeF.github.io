@@ -52,7 +52,7 @@
 <h2 id="connect-a-physical-model">Connect a physical model</h2>
 <p>A model supplies measurements and accepts controller outputs. A water network supplies levels, pressures and flows and accepts pump/valve commands. A thermal box supplies temperature and accepts a heater command.</p>
 <p>Their equations differ, but their role in the loop is the same. UPSI provides methods to describe variables, initialize, step and finish. An adapter calls the solver while the platform keeps the same PLC, SCADA and network workflow.</p>
-<figure><img src="../../assets/hydro_cps_sim_architecture_upsi.svg" alt="UPSI added inside the original platform's physical layer"><figcaption>UPSI connects physical simulators to the existing loop.</figcaption></figure>
+<figure><img src="../../assets/upsi_physical_connections.svg" alt="UPSI, simulator-specific adapters and physical simulators: measurements return along red arrows, commands follow blue arrows, and dashed black arrows show stepping calls"><figcaption>Adapters connect UPSI to each simulator. Red arrows return measurements and results; blue arrows carry control inputs; dashed black arrows show stepping calls. A scene selects one backend.</figcaption></figure>
 
 <h2 id="follow-one-control-cycle">Follow one control cycle</h2>
 <p>The model produces measurements. PLCs receive them, SCADA forwards remote dependencies, and PLC rules produce commands. The platform returns those commands to the model to calculate its next state.</p>
